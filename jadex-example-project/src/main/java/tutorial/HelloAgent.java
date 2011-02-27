@@ -13,6 +13,7 @@ public class HelloAgent extends MicroAgent
 	public void executeBody()
 	{
 		System.out.println("Hello world!");
+		System.out.println("I am Liane :)");
 		killAgent();
 	}
 }
