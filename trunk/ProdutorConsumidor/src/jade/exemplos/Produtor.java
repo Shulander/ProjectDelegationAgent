@@ -1,20 +1,41 @@
 package jade.exemplos;
 
 import jade.core.*;
+import jade.lang.acl.ACLMessage;
 
 public class Produtor extends Agent 
 {
 	protected void setup () 
 	{
-		double produto = produz ();
-		//se buffer esta cheio, dorme
-		//se nao, coloca item no buffer
-		
+		String produto = produz ();
+		//pergunta estadoBuffer
+		enviaMensagem ("estadoBuffer");
+		//recebe a resposta
+		ACLMessage resposta = receive();
+		if (resposta == null) {
+			System.out.println ("Erro ao receber resposta do buffer!");
+			doDelete ();
+		} 			
+		//se buffer esta cheio
+		if (resposta.getContent() == "buffer_cheio") {
+			doWait (); //dorme
+		} else { //se nao
+			//envia nova mensagem pedindo para inserir produto no buffer
+			enviaMensagem (produto);
+		}	
 	}
 	
-	double produz ()
+	void enviaMensagem (String msg)
 	{
-		return Math.random();
+		ACLMessage pergunta = new ACLMessage(ACLMessage.REQUEST);
+		pergunta.setContent (msg);
+		pergunta.addReceiver(new AID("buffer", AID.ISLOCALNAME));
+		send (pergunta);
+	}
+	
+	String produz ()
+	{
+		return String.valueOf(Math.random());
 	}
 
 }
