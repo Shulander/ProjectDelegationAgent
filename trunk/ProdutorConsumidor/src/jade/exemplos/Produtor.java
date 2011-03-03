@@ -15,9 +15,10 @@ public class Produtor extends Agent
 		if (resposta == null) {
 			System.out.println ("Erro ao receber resposta do buffer!");
 			doDelete ();
-		} 			
+		} 	
+		System.out.println("msg: "+resposta.getContent());		
 		//se buffer esta cheio
-		if (resposta.getContent() == "buffer_cheio") {
+		if (resposta.getContent().equals("buffer_cheio")) {
 			doWait (); //dorme
 		} else { //se nao
 			//envia nova mensagem pedindo para inserir produto no buffer

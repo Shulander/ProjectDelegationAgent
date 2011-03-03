@@ -1,19 +1,21 @@
 package jade.exemplos;
 
-import java.util.Vector;
-import java.util.concurrent.CyclicBarrier;
-
-import jade.core.*;
+import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Buffer extends Agent 
 {
-	private Vector buffer;
+	private List<String> buffer;
 	private static final int TAM_MAX = 10;
 	
 	protected void setup () 
 	{
+		buffer = new LinkedList<String>();
 		String nickname = "buffer";
 		AID id = new AID (nickname, AID.ISLOCALNAME);
 		addBehaviour(new CyclicBehaviour(this) {						
@@ -21,7 +23,8 @@ public class Buffer extends Agent
 			{
 				ACLMessage msg = receive ();
 				if (msg != null) {
-					if (msg.getContent() == "estadoBuffer") {
+					System.out.println("msg: "+msg.getContent());
+					if (msg.getContent().equals("estadoBuffer")) {
 						enviaMensagem (getEstadoBuffer(), "produtor");
 					} else {
 						System.out.println ("Bufer: Erro ao receber mensagens!");
