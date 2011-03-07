@@ -1,11 +1,21 @@
 package pacote.mestrado;
 
-public class Habilidade 
+import java.io.Serializable;
+
+public class Habilidade implements Serializable
 {
 	private int id;
 	private String tipo;
 	private String nome;
 	private String nivel;
+	
+	Habilidade (int id, String tipo, String nome, String nivel)
+	{
+		this.id = id;
+		this.tipo = tipo;
+		this.nome = nome;
+		this.nivel = nivel;
+	}
 	
 	public int getId() 
 	{
@@ -45,6 +55,16 @@ public class Habilidade
 	public void setNivel(String nivel) 
 	{
 		this.nivel = nivel;
+	}
+	
+	public void imprime ()
+	{
+		System.out.println("--Habilidade--");
+		System.out.println("ID: "+this.id);
+		System.out.println("Nome: "+this.nome);
+		System.out.println("Tipo: " + this.tipo);
+		System.out.println("Nível: " + this.nivel);
+		System.out.println("--------------");
 	}
 
 }
