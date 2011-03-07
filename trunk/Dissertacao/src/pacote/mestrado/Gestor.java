@@ -1,19 +1,20 @@
 package pacote.mestrado;
 
+import jade.core.Agent;
+import jade.core.behaviours.CyclicBehaviour;
+import jade.lang.acl.ACLMessage;
+
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
-import jade.core.*;
-import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.CyclicBehaviour;
-import jade.lang.acl.ACLMessage;
 
 public class Gestor extends Agent
 {
+	private static final long serialVersionUID = -7779496563622856447L;
+	
 	private ArrayList<Atividade> listaAtividades = new ArrayList<Atividade>();
 	private Hashtable<Integer, Atividade> prioridadeAtividades; //par prioridade e atividade
 
@@ -94,6 +95,8 @@ public class Gestor extends Agent
 	
 	private class InformaTarefas extends CyclicBehaviour 
 	{
+		private static final long serialVersionUID = -1703109073768236603L;
+
 		public void action() 
 		{
 			ACLMessage msg = receive ();

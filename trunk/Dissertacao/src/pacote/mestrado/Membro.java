@@ -1,22 +1,22 @@
 package pacote.mestrado;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
-
-import jade.core.*;
-import jade.core.behaviours.Behaviour;
+import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
+
 public class Membro extends Agent 
 {
+	private static final long serialVersionUID = -4300677614968664782L;
+	
 	private int passo = 0;
 	private int id;
 	private String nome;
@@ -78,10 +78,12 @@ public class Membro extends Agent
 	
 	private class Plano extends CyclicBehaviour
 	{
+		private static final long serialVersionUID = -8069717410691786862L;
+
 		public void action() 
 		{
 			System.out.println(getAID().getLocalName()+" - Passo: "+passo);
-			ArrayList<Atividade> lista = new ArrayList<Atividade>();
+			List<Atividade> lista = new ArrayList<Atividade>();
 			 switch (passo) {
 			 	case 0:
 			 		solicitaListaAtividades();
@@ -131,16 +133,17 @@ public class Membro extends Agent
 		System.out.println(getAID().getLocalName()+": Enviei mensagem ao gestor.");
 	}
 	
-	public ArrayList recebeListaAtividades ()
+	@SuppressWarnings("unchecked")
+	public List<Atividade> recebeListaAtividades ()
 	{
 		System.out.println (getAID().getLocalName()+": Esperando receber lista de atividades do gestor.");
 		ACLMessage resposta = blockingReceive();
-		ArrayList<Atividade> listaAtividades = new ArrayList<Atividade>();
+		List<Atividade> listaAtividades = new ArrayList<Atividade>();
 		if (resposta == null) {
 			System.out.println (getAID().getLocalName()+": Erro ao receber a lista de atividades do gestor!");
 		} else {
 			try {
-				listaAtividades = (ArrayList<Atividade>) resposta.getContentObject();
+				listaAtividades = (List<Atividade>) resposta.getContentObject();
 			} catch (UnreadableException e) {
 				System.out.println("Problema ao converter a lista de atividades");
 				e.printStackTrace();

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class Habilidade implements Serializable
 {
+	private static final long serialVersionUID = 8586683260521276748L;
+	
 	private int id;
 	private String tipo;
 	private String nome;

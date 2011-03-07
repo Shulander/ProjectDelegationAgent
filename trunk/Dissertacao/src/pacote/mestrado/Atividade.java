@@ -6,7 +6,9 @@ import java.util.Date;
 
 public class Atividade implements Serializable
 {
-	private int id;
+	private static final long serialVersionUID = 8586977373449624267L;
+	
+	private Integer id;
 	private String nome;
 	private String tipo;
 	private ArrayList<Integer> atividadesPredecessoras; //ids das atividades que precedem a atividade
@@ -28,7 +30,7 @@ public class Atividade implements Serializable
 	
 	void calculaDuracao ()
 	{
-		this.duracao = 0; //calcular duracao
+		this.setDuracao(0); //calcular duracao
 	}
 	
 	
@@ -153,6 +155,14 @@ public class Atividade implements Serializable
 			System.out.println("Esta atividade nao possui requisitos.");
 		}
 		
+	}
+
+	public void setDuracao(double duracao) {
+		this.duracao = duracao;
+	}
+
+	public double getDuracao() {
+		return duracao;
 	}
 	
 
