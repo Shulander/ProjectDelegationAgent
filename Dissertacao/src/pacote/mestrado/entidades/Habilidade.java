@@ -2,20 +2,19 @@ package pacote.mestrado.entidades;
 
 import java.io.Serializable;
 
+import pacote.mestrado.dominios.TipoHabilidade;
 import pacote.mestrado.dominios.TipoNivel;
 
 public class Habilidade implements Serializable {
 	private static final long serialVersionUID = 8586683260521276748L;
 
 	private int id;
-	private String tipo;
-	private String nome;
+	private TipoHabilidade tipo;
 	private TipoNivel nivel;
 
-	public Habilidade(int id, String tipo, String nome, TipoNivel nivel) {
+	public Habilidade(int id, TipoHabilidade tipo, TipoNivel nivel) {
 		this.id = id;
 		this.tipo = tipo;
-		this.nome = nome;
 		this.nivel = nivel;
 	}
 
@@ -27,20 +26,12 @@ public class Habilidade implements Serializable {
 		this.id = id;
 	}
 
-	public String getTipo() {
+	public TipoHabilidade getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(TipoHabilidade tipo) {
 		this.tipo = tipo;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
 	}
 
 	public TipoNivel getNivel() {
@@ -55,7 +46,6 @@ public class Habilidade implements Serializable {
 		StringBuilder str = new StringBuilder();
 		str.append("--Habilidade--"+"\n");
 		str.append("ID: " + this.id+"\n");
-		str.append("Nome: " + this.nome+"\n");
 		str.append("Tipo: " + this.tipo+"\n");
 		str.append("Nível: " + this.nivel+"\n");
 		str.append("--------------");

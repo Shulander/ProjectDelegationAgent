@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
+import pacote.mestrado.dominios.TipoHabilidade;
 import pacote.mestrado.dominios.TipoNivel;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
@@ -38,9 +39,12 @@ public class Membro extends Agent {
 		this.id = 1;
 		this.nome = "Joaninha";
 		habilidades = new ArrayList<Habilidade>();
-		habilidades.add(new Habilidade(1, "Modelagem", "UML", TipoNivel.SENIOR));
-		habilidades.add(new Habilidade(2, "Social","Relacionamento com cliente", TipoNivel.SENIOR));
-		habilidades.add(new Habilidade(3, "Social", "Gestao de time", TipoNivel.MASTER));
+		habilidades
+				.add(new Habilidade(1, TipoHabilidade.UML, TipoNivel.SENIOR));
+		habilidades.add(new Habilidade(2,
+				TipoHabilidade.RELACIONAMENTO_CLIENTE, TipoNivel.SENIOR));
+		habilidades.add(new Habilidade(3, TipoHabilidade.GESTAO_TIME,
+				TipoNivel.MASTER));
 		SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 		Date horario1 = new Date();
 		Date horario2 = new Date();
@@ -87,7 +91,6 @@ public class Membro extends Agent {
 			switch (passo) {
 			case 0:
 				solicitaListaAtividades();
-				passo++;
 				break;
 			case 1:
 				lista = recebeListaAtividades();
@@ -105,17 +108,18 @@ public class Membro extends Agent {
 					System.out.println(getAID().getLocalName()
 							+ "Lista de atividades está vazia! WTF :(");
 				}
-				passo++;
 				break;
 			case 2:
 				// escolher atividade compativel com a do membro
 				buscarAtividade();
-			case 3:
-				doDelete();
 				break;
+			default:
+				doDelete();
 			}
+			++passo;
 		}
 	}
+
 
 	public void buscarAtividade() {
 
