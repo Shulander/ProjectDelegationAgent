@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 
+import pacote.mestrado.dominios.TipoHabilidade;
 import pacote.mestrado.dominios.TipoNivel;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
@@ -53,12 +54,9 @@ public class Gestor extends Agent {
 		}
 		at1.setDataEntrega(dataEntrega);
 		at1.setOrcamento(305.5);
-		Habilidade hab1 = new Habilidade(1, "Linguagem de Programacao", "Java",
-				TipoNivel.PLENO);
-		Habilidade hab2 = new Habilidade(2, "Linguagem de Programacao", "HTML",
-				TipoNivel.PLENO);
-		Habilidade hab3 = new Habilidade(3, "Social", "Trabalho em equipe",
-				TipoNivel.JUNIOR);
+		Habilidade hab1 = new Habilidade(1, TipoHabilidade.JAVA, TipoNivel.PLENO);
+		Habilidade hab2 = new Habilidade(2, TipoHabilidade.HTML, TipoNivel.PLENO);
+		Habilidade hab3 = new Habilidade(3, TipoHabilidade.TRABALHO_EQUIPE, TipoNivel.JUNIOR);
 		at1.getRequisitosHabilidades().add(hab1);
 		at1.getRequisitosHabilidades().add(hab2);
 		at1.getRequisitosHabilidades().add(hab3);
@@ -86,11 +84,9 @@ public class Gestor extends Agent {
 		}
 		at2.setDataEntrega(dataEntregaAt2);
 		at2.setOrcamento(150.0);
-		Habilidade hab11 = new Habilidade(1, "Modelagem", "UML", TipoNivel.PLENO);
-		Habilidade hab22 = new Habilidade(2, "Social",
-				"Relacionamento com cliente", TipoNivel.PLENO);
-		Habilidade hab33 = new Habilidade(3, "Social", "Gestao de time",
-				TipoNivel.JUNIOR);
+		Habilidade hab11 = new Habilidade(1, TipoHabilidade.UML, TipoNivel.PLENO);
+		Habilidade hab22 = new Habilidade(2, TipoHabilidade.RELACIONAMENTO_CLIENTE, TipoNivel.PLENO);
+		Habilidade hab33 = new Habilidade(3, TipoHabilidade.GESTAO_TIME, TipoNivel.JUNIOR);
 		at2.getRequisitosHabilidades().add(hab11);
 		at2.getRequisitosHabilidades().add(hab22);
 		at2.getRequisitosHabilidades().add(hab33);
@@ -105,7 +101,7 @@ public class Gestor extends Agent {
 		private static final long serialVersionUID = -1703109073768236603L;
 
 		public void action() {
-			ACLMessage msg = receive();
+			ACLMessage msg = blockingReceive();
 			if (msg != null) {
 				System.out.println("Gestor recebeu msg= " + msg.getContent()
 						+ " de " + msg.getSender().getLocalName() + ".");
