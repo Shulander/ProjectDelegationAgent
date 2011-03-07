@@ -1,7 +1,13 @@
 package pacote.mestrado;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 import jade.core.*;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
@@ -11,60 +17,136 @@ import jade.lang.acl.UnreadableException;
 
 public class Membro extends Agent 
 {
+	private int passo = 0;
 	private int id;
 	private String nome;
-	private ArrayList<String> tiposAtividades; //tipos de atividade que tem habilidades para executar
 	private ArrayList<Habilidade> habilidades; //habilidades que a pessoa possui
-	private Calendar agenda; //tempo disponivel da pessoa
-	private float salario; //homem/hora
+	private Hashtable<Date, Atividade> agenda; //tempo disponivel da pessoa
+	private double salario; //homem/hora
 	
 	protected void setup ()
 	{
-		System.out.println ("Agent "+getAID().getLocalName()+" in action! :)");
-		addBehaviour(new BuscaTarefas());
-		addBehaviour(new RecebeTarefas());
+		System.out.println ("Agente "+getAID().getLocalName()+" vivo! :)");
+		inicializaMembro ();
+		addBehaviour(new Plano());
 	}
 	
-	private class BuscaTarefas extends CyclicBehaviour
+	public void inicializaMembro ()
 	{
-		public void action() 
-		{
-			ACLMessage pergunta = new ACLMessage(ACLMessage.REQUEST);
-			pergunta.setContent ("BuscaTarefas");
-			pergunta.addReceiver(new AID("gestor", AID.ISLOCALNAME));
-			send (pergunta);			
-		}
+		this.id = 1;
+		this.nome = "Joaninha";
+		habilidades = new ArrayList<Habilidade>();
+		habilidades.add(new Habilidade(1, "Modelagem", "UML", "Senior"));
+		habilidades.add(new Habilidade(2, "Social", "Relacionamento com cliente", "Senior"));
+		habilidades.add(new Habilidade(3, "Social", "Gestao de time", "Avancado"));
+		SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+		Date horario1 = new Date ();
+		Date horario2 = new Date ();
+		Date horario3 = new Date ();
+		Date horario4 = new Date ();
+		Date horario5 = new Date ();
+		Date horario6 = new Date ();
+		Date horario7 = new Date ();
+		Date horario8 = new Date ();
 		
+		try {
+			horario1 = formatador.parse("05/03/2011 09:00");
+			horario2 = formatador.parse("05/03/2011 10:00");
+			horario3 = formatador.parse("05/03/2011 11:00");
+			horario4 = formatador.parse("05/03/2011 13:00");
+			horario5 = formatador.parse("05/03/2011 14:00");
+			horario6 = formatador.parse("05/03/2011 15:00");
+			horario7 = formatador.parse("05/03/2011 16:00");
+			horario8 = formatador.parse("05/03/2011 17:00");
+		} catch (ParseException e) {
+			System.out.println("Problema ao converter horario!");
+			e.printStackTrace();
+		}
+		agenda = new Hashtable<Date, Atividade>();
+		agenda.put(horario1 , new Atividade());
+		agenda.put(horario2 , new Atividade());
+		agenda.put(horario3 , new Atividade());
+		agenda.put(horario4 , new Atividade());
+		agenda.put(horario5 , new Atividade());
+		agenda.put(horario6 , new Atividade());
+		agenda.put(horario7 , new Atividade());
+		agenda.put(horario8 , new Atividade());
+		System.out.println(agenda);
+		
+		this.salario = 20;
 	}
 	
-	private class RecebeTarefas extends CyclicBehaviour
+	private class Plano extends CyclicBehaviour
 	{
 		public void action() 
 		{
-			//recebe a lista de tarefas
-			ACLMessage resposta = receive();
-			if (resposta == null) {
-				System.out.println ("Membro: Erro ao receber a lista de atividades do gestor!");
-			} else {
-				ArrayList<Atividade> listaAtiv = new ArrayList<Atividade>();
-				try {
-					listaAtiv = (ArrayList<Atividade>) resposta.getContentObject();
-				} catch (UnreadableException e) {
-					System.out.println("Problema ao converter a lista de atividades");
-					e.printStackTrace();
-				}
-				if (!listaAtiv.isEmpty()) {
-					//percorre lista de atividades
-					for (Atividade at : listaAtiv) {  
-					    System.out.println (at.getNome());  
+			System.out.println(getAID().getLocalName()+" - Passo: "+passo);
+			ArrayList<Atividade> lista = new ArrayList<Atividade>();
+			 switch (passo) {
+			 	case 0:
+			 		solicitaListaAtividades();
+			 		passo++;
+			 		break;
+			 	case 1:
+			 		lista = recebeListaAtividades();	 		
+			 		if (!lista.isEmpty()) {
+			 			System.out.println(getAID().getLocalName()+ " recebeu lista de atividades");
+			 			/*System.out.println(getAID().getLocalName()+" - Lista de Atividades");
+			 			//percorre lista de atividades
+						for (Atividade at : lista) {  
+						    at.imprime (); 
+						}
+						System.out.println("-------------------------------------------");*/
+					} else {
+						System.out.println (getAID().getLocalName()+"Lista de atividades está vazia! WTF :(");
 					}
-				} else {
-					System.out.println ("Lista de atividades está vazia! WTF :(");
-				}
-			}
-			
-		}
+			 		passo++;			 		
+			 		break;
+			 	case 2:
+			 		//escolher atividade compativel com a do membro
+			 		buscarAtividade ();
+			 	case 3:
+			 		doDelete ();
+			 		break;
+			 }			 
+		}		
+	}
+	
+	public void buscarAtividade ()
+	{
 		
+	}
+	
+	protected void takeDown ()
+	{
+		System.out.println ("Agente " +getAID().getLocalName()+ " está morto.");
+	}
+	
+	public void solicitaListaAtividades ()
+	{
+		ACLMessage consulta = new ACLMessage(ACLMessage.REQUEST);
+		consulta.setContent ("ListaAtividades");
+		consulta.addReceiver(new AID("gestor", AID.ISLOCALNAME));
+		send (consulta);
+		System.out.println(getAID().getLocalName()+": Enviei mensagem ao gestor.");
+	}
+	
+	public ArrayList recebeListaAtividades ()
+	{
+		System.out.println (getAID().getLocalName()+": Esperando receber lista de atividades do gestor.");
+		ACLMessage resposta = blockingReceive();
+		ArrayList<Atividade> listaAtividades = new ArrayList<Atividade>();
+		if (resposta == null) {
+			System.out.println (getAID().getLocalName()+": Erro ao receber a lista de atividades do gestor!");
+		} else {
+			try {
+				listaAtividades = (ArrayList<Atividade>) resposta.getContentObject();
+			} catch (UnreadableException e) {
+				System.out.println("Problema ao converter a lista de atividades");
+				e.printStackTrace();
+			}
+		}
+		return listaAtividades;		
 	}
 	
 	public int getId() 
@@ -76,17 +158,7 @@ public class Membro extends Agent
 	{
 		this.id = id;
 	}
-	
-	public ArrayList<String> getTiposAtividades() 
-	{
-		return tiposAtividades;
-	}
-	
-	public void setTiposAtividades(ArrayList<String> tiposAtividades) 
-	{
-		this.tiposAtividades = tiposAtividades;
-	}
-	
+		
 	public ArrayList<Habilidade> getHabilidades() 
 	{
 		return habilidades;
@@ -96,23 +168,13 @@ public class Membro extends Agent
 	{
 		this.habilidades = habilidades;
 	}
-	
-	public Calendar getAgenda() 
-	{
-		return agenda;
-	}
-	
-	public void setAgenda(Calendar agenda) 
-	{
-		this.agenda = agenda;
-	}
-	
-	public float getSalario() 
+		
+	public double getSalario() 
 	{
 		return salario;
 	}
 	
-	public void setSalario(float salario) 
+	public void setSalario(double salario) 
 	{
 		this.salario = salario;
 	}
@@ -126,4 +188,5 @@ public class Membro extends Agent
 	{
 		this.nome = nome;
 	}
+	
 }
