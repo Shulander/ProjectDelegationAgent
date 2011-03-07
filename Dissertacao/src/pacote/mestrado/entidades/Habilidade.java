@@ -51,13 +51,15 @@ public class Habilidade implements Serializable {
 		this.nivel = nivel;
 	}
 
-	public void imprime() {
-		System.out.println("--Habilidade--");
-		System.out.println("ID: " + this.id);
-		System.out.println("Nome: " + this.nome);
-		System.out.println("Tipo: " + this.tipo);
-		System.out.println("Nível: " + this.nivel);
-		System.out.println("--------------");
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		str.append("--Habilidade--"+"\n");
+		str.append("ID: " + this.id+"\n");
+		str.append("Nome: " + this.nome+"\n");
+		str.append("Tipo: " + this.tipo+"\n");
+		str.append("Nível: " + this.nivel+"\n");
+		str.append("--------------");
+		return str.toString();
 	}
 
 }

@@ -85,7 +85,7 @@ public class Gestor extends Agent {
 			e.printStackTrace();
 		}
 		at2.setDataEntrega(dataEntregaAt2);
-		at2.setOrcamento(150);
+		at2.setOrcamento(150.0);
 		Habilidade hab11 = new Habilidade(1, "Modelagem", "UML", TipoNivel.PLENO);
 		Habilidade hab22 = new Habilidade(2, "Social",
 				"Relacionamento com cliente", TipoNivel.PLENO);

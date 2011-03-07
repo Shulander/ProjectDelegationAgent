@@ -15,9 +15,9 @@ public class Atividade implements Serializable {
 														// atividade
 	private Date dataInicial;
 	private Date dataEntrega;
-	private double orcamento;
+	private Double orcamento;
 	private ArrayList<Habilidade> requisitosHabilidades;
-	private double duracao;
+	private Double duracao;
 	private int estado; // -1: bloqueada, 0 - disponivel, outro numero: alocada
 						// (numero corresponde ao id do membro)
 
@@ -30,7 +30,7 @@ public class Atividade implements Serializable {
 	}
 
 	void calculaDuracao() {
-		this.setDuracao(0); // calcular duracao
+		this.setDuracao(0.0); // calcular duracao
 	}
 
 	public int getId() {
@@ -82,11 +82,11 @@ public class Atividade implements Serializable {
 		this.dataEntrega = dataEntrega;
 	}
 
-	public double getOrcamento() {
+	public Double getOrcamento() {
 		return orcamento;
 	}
 
-	public void setOrcamento(double orcamento) {
+	public void setOrcamento(Double orcamento) {
 		this.orcamento = orcamento;
 	}
 
@@ -107,39 +107,42 @@ public class Atividade implements Serializable {
 		this.estado = estado;
 	}
 
-	public void imprime() {
-		System.out.println("--------------Atividade------------");
-		System.out.println("ID: " + this.id);
-		System.out.println("Nome: " + this.nome);
-		System.out.println("Tipo: " + this.tipo);
-		System.out.println("Data de início: " + this.dataInicial);
-		System.out.println("Data de entrega: " + this.dataEntrega);
-		System.out.println("Orçamento: " + this.orcamento);
-		System.out.println("Estado: " + this.estado);
+	public String toString() {
+		
+		StringBuilder str = new StringBuilder();
+		
+		str.append("--------------Atividade------------"+"\n");
+		str.append("ID: " + this.id+"\n");
+		str.append("Nome: " + this.nome+"\n");
+		str.append("Tipo: " + this.tipo+"\n");
+		str.append("Data de início: " + this.dataInicial+"\n");
+		str.append("Data de entrega: " + this.dataEntrega+"\n");
+		str.append("Orçamento: " + this.orcamento+"\n");
+		str.append("Estado: " + this.estado+"\n");
 		// imprime atividades predecessoras
 		if (!atividadesPredecessoras.isEmpty()) {
-			System.out.println("-Atividades Predecessoras-");
+			str.append("-Atividades Predecessoras-"+"\n");
 			for (int idAtiv : atividadesPredecessoras) {
-				System.out.println(idAtiv);
+				str.append(idAtiv+"\n");
 			}
-			System.out.println("--------------------------");
+			str.append("--------------------------"+"\n");
 		} else {
-			System.out.println("Nao há atividades predecessoras.");
+			str.append("Nao há atividades predecessoras."+"\n");
 		}
 		// imprime habilidades
 		if (!requisitosHabilidades.isEmpty()) {
-			System.out.println("-Requisitos da Atividade-");
+			str.append("-Requisitos da Atividade-"+"\n");
 			for (Habilidade req : requisitosHabilidades) {
-				req.imprime();
+				str.append(req.toString());
 			}
-			System.out.println("-------------------------");
+			str.append("-------------------------");
 		} else {
-			System.out.println("Esta atividade nao possui requisitos.");
+			str.append("Esta atividade nao possui requisitos."+"\n");
 		}
-
+		return str.toString();
 	}
 
-	public void setDuracao(double duracao) {
+	public void setDuracao(Double duracao) {
 		this.duracao = duracao;
 	}
 
