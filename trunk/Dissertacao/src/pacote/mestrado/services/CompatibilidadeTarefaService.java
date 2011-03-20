@@ -179,6 +179,7 @@ public class CompatibilidadeTarefaService {
 		habilidades.add(new Habilidade(3, TipoHabilidade.GESTAO_TIME,TipoNivel.MASTER));
 		
 		Atividade atividade = selecionaAtividadeHabilidade(listaAtividades, habilidades, null);
+		System.out.println(atividade.toString());
 	}
 
 }
