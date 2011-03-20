@@ -11,6 +11,7 @@ public class Habilidade implements Serializable {
 	private int id;
 	private TipoHabilidade tipo;
 	private TipoNivel nivel;
+	private Integer xp;
 
 	public Habilidade(int id, TipoHabilidade tipo, TipoNivel nivel) {
 		this.id = id;
@@ -40,6 +41,14 @@ public class Habilidade implements Serializable {
 
 	public void setNivel(TipoNivel nivel) {
 		this.nivel = nivel;
+	}
+
+	public void setXp(Integer xp) {
+		this.xp = xp;
+	}
+
+	public Integer getXp() {
+		return xp;
 	}
 
 	public String toString() {

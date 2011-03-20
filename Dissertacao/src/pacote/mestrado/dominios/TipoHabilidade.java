@@ -36,7 +36,11 @@ public enum TipoHabilidade {
 			return descricao;
 		}
 	}
-
+	
+	public TipoArea getArea() {
+		return area;
+	}
+	
 	public TipoHabilidade obterPorCodigo(Integer codigo) {
 		for (TipoHabilidade tipo : values()) {
 			if (tipo.codigo.equals(codigo)) {

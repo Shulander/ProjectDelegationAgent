@@ -9,6 +9,7 @@ import jade.lang.acl.UnreadableException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -24,7 +25,7 @@ public class Membro extends Agent {
 	private int passo = 0;
 	private int id;
 	private String nome;
-	private ArrayList<Habilidade> habilidades; // habilidades que a pessoa
+	private Collection<Habilidade> habilidades; // habilidades que a pessoa
 												// possui
 	private Hashtable<Date, Atividade> agenda; // tempo disponivel da pessoa
 	private double salario; // homem/hora
@@ -165,11 +166,11 @@ public class Membro extends Agent {
 		this.id = id;
 	}
 
-	public ArrayList<Habilidade> getHabilidades() {
+	public Collection<Habilidade> getHabilidades() {
 		return habilidades;
 	}
 
-	public void setHabilidades(ArrayList<Habilidade> habilidades) {
+	public void setHabilidades(Collection<Habilidade> habilidades) {
 		this.habilidades = habilidades;
 	}
 
