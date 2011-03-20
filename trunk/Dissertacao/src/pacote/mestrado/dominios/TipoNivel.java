@@ -25,4 +25,20 @@ public enum TipoNivel {
 	public String toString() {
 		return descricao;
 	}
+	
+	public Integer getCodigo() {
+		return codigo;
+	}
+	
+	public boolean before(TipoNivel tipo) {
+		return getCodigo() < tipo.getCodigo();
+	}
+	
+	public boolean after(TipoNivel tipo) {
+		return getCodigo() > tipo.getCodigo();
+	}
+	
+	public Integer diferencaNiveis(TipoNivel tipo) {
+		return getCodigo() - tipo.getCodigo();
+	}
 }

@@ -39,12 +39,9 @@ public class Membro extends Agent {
 		this.id = 1;
 		this.nome = "Joaninha";
 		habilidades = new ArrayList<Habilidade>();
-		habilidades
-				.add(new Habilidade(1, TipoHabilidade.UML, TipoNivel.SENIOR));
-		habilidades.add(new Habilidade(2,
-				TipoHabilidade.RELACIONAMENTO_CLIENTE, TipoNivel.SENIOR));
-		habilidades.add(new Habilidade(3, TipoHabilidade.GESTAO_TIME,
-				TipoNivel.MASTER));
+		habilidades.add(new Habilidade(1, TipoHabilidade.UML, TipoNivel.SENIOR));
+		habilidades.add(new Habilidade(2,TipoHabilidade.RELACIONAMENTO_CLIENTE, TipoNivel.SENIOR));
+		habilidades.add(new Habilidade(3, TipoHabilidade.GESTAO_TIME,TipoNivel.MASTER));
 		SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 		Date horario1 = new Date();
 		Date horario2 = new Date();
