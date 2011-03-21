@@ -116,20 +116,21 @@ public class Gestor extends Agent {
 		    mensagem = (MensagemTO) msg.getContentObject();
 		    if (mensagem.getAssunto().equals("ListaAtividades")) {
 			ACLMessage resposta = msg.createReply();
-			try {
-			    resposta.setContentObject(listaAtividades);
-			    System.out.println("Gestor: enviei a resposta ao " + msg.getSender().getLocalName() + ".");
-			} catch (IOException e) {
-			    System.out.println("Gestor: Erro ao enviar listaAtividades ao "
-				    + msg.getSender().getLocalName() + "!");
-			    e.printStackTrace();
-			}
+			MensagemTO msgResposta = new MensagemTO();
+			msgResposta.setAssunto("resListaAtividades");
+			msgResposta.setMensagem(listaAtividades);
+			resposta.setContentObject(msgResposta);
+			System.out.println("Gestor: enviei a resposta ao " + msg.getSender().getLocalName() + ".");
 			send(resposta);
 		    } else if (mensagem.getAssunto().equals("notificaGestor")) {
 			Atividade atividade = (Atividade) mensagem.getMensagem();
-			if (alocaAtividadeMembro(msg.getSender().getName(), atividade)) {
-
-			}
+			alocaAtividadeMembro(msg.getSender().getName(), atividade);
+			ACLMessage resposta = msg.createReply();
+			MensagemTO msgResposta = new MensagemTO();
+			msgResposta.setAssunto("resNotificaGestor");
+			msgResposta.setMensagem(findAtividadeById(atividade.getId()));
+			resposta.setContentObject(msgResposta);
+			send(resposta);
 		    }
 		} else {
 		    // System.out.println("Gestor: Entao mensagem eh null");
@@ -137,6 +138,9 @@ public class Gestor extends Agent {
 	    } catch (UnreadableException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
+	    } catch (IOException e) {
+		System.out.println("Gestor: Erro ao enviar listaAtividades ao " + msg.getSender().getLocalName() + "!");
+		e.printStackTrace();
 	    }
 	}
 
