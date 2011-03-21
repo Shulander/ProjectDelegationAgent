@@ -135,7 +135,29 @@ public class Membro extends Agent {
 	}
 
 	private void recebeConfirmacaoAtividadeEscolhida() {
-	    // TODO Auto-generated method stub
+	    System.out.println(getAID().getLocalName() + ": Esperando receber lista de atividades do gestor.");
+	    ACLMessage resposta = blockingReceive();
+	    if (resposta != null) {
+		try {
+		    MensagemTO mensagem = (MensagemTO) resposta.getContentObject();
+		    Atividade atividade = (Atividade) mensagem.getMensagem();
+		    // caso a atividade enviada pelo gestor seja designada para o agente,
+		    // caso contrario reinicia do passo 1;
+		    if(atividade.getMembroNome().equals(getAID().getName())) {
+			atividadeEscolhida = atividade;
+		    } else {
+			//invalida a atividade para uma proxima selecao
+			atividadesInvalidas.add(atividade);
+			atividadeEscolhida = null;
+			passo = -1;
+		    }
+		} catch (UnreadableException e) {
+		    System.out.println("Problema ao converter a lista de atividades");
+		    e.printStackTrace();
+		}
+	    } else {
+		System.out.println(getAID().getLocalName() + ": Erro ao receber a lista de atividades do gestor!");
+	    }
 
 	}
 
@@ -178,7 +200,8 @@ public class Membro extends Agent {
 	    System.out.println(getAID().getLocalName() + ": Erro ao receber a lista de atividades do gestor!");
 	} else {
 	    try {
-		listaAtividades = (List<Atividade>) resposta.getContentObject();
+		MensagemTO mensagem = (MensagemTO) resposta.getContentObject();
+		listaAtividades = (List<Atividade>) mensagem.getMensagem();
 	    } catch (UnreadableException e) {
 		System.out.println("Problema ao converter a lista de atividades");
 		e.printStackTrace();
