@@ -135,7 +135,7 @@ public class Membro extends Agent {
 	}
 
 	private void recebeConfirmacaoAtividadeEscolhida() {
-	    System.out.println(getAID().getLocalName() + ": Esperando receber lista de atividades do gestor.");
+	    System.out.println(getAID().getLocalName() + ": Recebeu a confirmacao da solicitacao da tarefa do gestor.");
 	    ACLMessage resposta = blockingReceive();
 	    if (resposta != null) {
 		try {
@@ -143,7 +143,7 @@ public class Membro extends Agent {
 		    Atividade atividade = (Atividade) mensagem.getMensagem();
 		    // caso a atividade enviada pelo gestor seja designada para o agente,
 		    // caso contrario reinicia do passo 1;
-		    if(atividade.getMembroNome().equals(getAID().getName())) {
+		    if(atividade.getMembroNome().equals(getAID().getLocalName())) {
 			atividadeEscolhida = atividade;
 		    } else {
 			//invalida a atividade para uma proxima selecao

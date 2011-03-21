@@ -124,7 +124,7 @@ public class Gestor extends Agent {
 			send(resposta);
 		    } else if (mensagem.getAssunto().equals("notificaGestor")) {
 			Atividade atividade = (Atividade) mensagem.getMensagem();
-			alocaAtividadeMembro(msg.getSender().getName(), atividade);
+			alocaAtividadeMembro(msg.getSender().getLocalName(), atividade);
 			ACLMessage resposta = msg.createReply();
 			MensagemTO msgResposta = new MensagemTO();
 			msgResposta.setAssunto("resNotificaGestor");
