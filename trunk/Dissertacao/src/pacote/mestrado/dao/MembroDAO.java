@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import pacote.mestrado.dao.ConnectionFactory;
-import pacote.mestrado.entidades.Habilidade;
 import pacote.mestrado.Membro;
+import pacote.mestrado.dominios.TipoNivel;
+import pacote.mestrado.entidades.Habilidade;
 
 public class MembroDAO 
 {
@@ -57,7 +57,7 @@ public class MembroDAO
 		habilidade.setId(rs.getInt("id"));
 		habilidade.setArea(rs.getString("area"));
 		habilidade.setNome(rs.getString("nome"));
-		habilidade.setNivel(rs.getString("nivel"));
+		habilidade.setNivel(TipoNivel.obterPorCodigo(rs.getInt("nivel")));
 		habilidade.setXp(rs.getInt("xp"));
 		habilidades.add(habilidade);
 	    }	    	    

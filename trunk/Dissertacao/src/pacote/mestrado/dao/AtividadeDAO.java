@@ -1,8 +1,13 @@
 package pacote.mestrado.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import pacote.mestrado.dominios.TipoNivel;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
 
@@ -59,7 +64,7 @@ public class AtividadeDAO
 		habilidade.setId(rs.getInt("id"));
 		habilidade.setArea(rs.getString("area"));
 		habilidade.setNome(rs.getString("nome"));
-		habilidade.setNivel(rs.getString("nivel"));
+		habilidade.setNivel(TipoNivel.obterPorCodigo(rs.getInt("nivel")));
 		habilidades.add(habilidade);
 		System.out.println(habilidade.toString());
 	    }	    	    

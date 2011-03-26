@@ -1,10 +1,12 @@
 package pacote.mestrado.dominios;
 
 public enum TipoHabilidade {
-    JAVA(1, TipoArea.LINGUAGEM_PROGRAMACAO, "Java"), HTML(2, TipoArea.LINGUAGEM_PROGRAMACAO, "HTML"), TRABALHO_EQUIPE(
-	    3, TipoArea.SOCIAL, "Trabalho em Equipe"), RELACIONAMENTO_CLIENTE(4, TipoArea.SOCIAL,
-	    "Relacionamento com cliente"), GESTAO_TIME(5, TipoArea.SOCIAL, "Gestao de time"), UML(6,
-	    TipoArea.MODELAGEM, "UML");
+    JAVA(1, TipoArea.LINGUAGEM_PROGRAMACAO, "Java"), 
+    HTML(2, TipoArea.LINGUAGEM_PROGRAMACAO, "HTML"), 
+    TRABALHO_EQUIPE(3, TipoArea.SOCIAL, "Trabalho em Equipe"), 
+    RELACIONAMENTO_CLIENTE(4, TipoArea.SOCIAL, "Relacionamento com cliente"), 
+    GESTAO_TIME(5, TipoArea.SOCIAL, "Gestao de time"), 
+    UML(6,TipoArea.MODELAGEM, "UML");
 
     private Integer codigo;
     private String descricao;

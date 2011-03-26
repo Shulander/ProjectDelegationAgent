@@ -2,13 +2,15 @@ package pacote.mestrado.entidades;
 
 import java.io.Serializable;
 
+import pacote.mestrado.dominios.TipoNivel;
+
 public class Habilidade implements Serializable {
     private static final long serialVersionUID = 8586683260521276748L;
 
     private int id;
     private String area;
     private String nome;
-    private String nivel;
+    private TipoNivel nivel;
     private Integer xp;
   
     public String toString() {
@@ -51,13 +53,13 @@ public class Habilidade implements Serializable {
     }
 
 
-    public String getNivel() {
+    public TipoNivel getNivel() {
         return nivel;
     }
 
 
-    public void setNivel(String nivel) {
-        this.nivel = nivel;
+    public void setNivel(TipoNivel tipoNivel) {
+        this.nivel = tipoNivel;
     }
 
 

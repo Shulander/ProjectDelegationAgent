@@ -11,7 +11,7 @@ public enum TipoNivel {
 	this.descricao = descricao;
     }
 
-    public TipoNivel obterPorCodigo(Integer codigo) {
+    public static TipoNivel obterPorCodigo(Integer codigo) {
 	for (TipoNivel tipo : values()) {
 	    if (tipo.codigo.equals(codigo)) {
 		return tipo;
