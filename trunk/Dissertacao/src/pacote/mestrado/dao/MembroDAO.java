@@ -4,11 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import pacote.mestrado.dao.ConnectionFactory;
 import pacote.mestrado.Membro;
-import pacote.mestrado.entidades.Habilidade;
 
 public class MembroDAO 
 {
@@ -19,38 +16,22 @@ public class MembroDAO
 	this.connection = new ConnectionFactory().getConnection();
     }
     
-    public List<Membro> getLista() 
+    public Membro get (String nome)
     {
 	try {
-	    List<Membro> membros = new ArrayList<Membro>();
-	    List<Habilidade> habilidades = new ArrayList<Habilidade>();
-	    PreparedStatement stmt = this.connection.prepareStatement(
-		    "SELECT membro.id AS idMembro, " +
-		    "membro.nome AS nomeMembro, " +
-		    "membro.salario, " +
-		    "habilidade.id AS idHabilidade, " +
-		    "habilidade.area AS areaHabilidade, " +
-		    "habilidade.nome AS nomeHabilidade " +
-		    "FROM membro INNER JOIN " +
-		    "(membro_habilidade INNER JOIN habilidade ON " +
-		    "membro_habilidade.fk_idHabilidade=habilidade.id)" +
-		    "ON membro.id=membro_habilidade.fk_idMembro;"
-	    );
+	    String sql = "SELECT * FROM membro WHERE nome=?";
+	    PreparedStatement stmt = this.connection.prepareStatement(sql);
+	    stmt.setString(1, nome);
 	    ResultSet rs = stmt.executeQuery();
-	    while (rs.next()) {
-		// criando o objeto Membro
-		Membro membro = new Membro();
-		membro.setId(rs.getInt("idMembro"));
-		membro.setNome(rs.getString("nomeMembro"));
-		membro.setSalario(rs.getDouble("salario"));
-		habilidades.
-		membro.setHabilidades(habilidades);
-		// adicionando o objeto à lista
-		membros.add(membro);
+	    Membro membro = new Membro();
+	    while (rs.next()) {		
+		membro.setId(rs.getInt("id"));
+		membro.setNome(rs.getString("nome"));
+		membro.setSalario(rs.getDouble("salario"));		
 	    }	    	    
 	    rs.close();
 	    stmt.close();
-	    return membros;
+	    return membro;
 	} catch (SQLException e) {
 	    throw new RuntimeException(e);
 	}
