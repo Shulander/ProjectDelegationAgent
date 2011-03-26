@@ -2,6 +2,7 @@ package pacote.mestrado.entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 public class Atividade implements Serializable {
@@ -10,16 +11,15 @@ public class Atividade implements Serializable {
     private Integer id;
     private String nome;
     private String tipo;
-    private ArrayList<Integer> atividadesPredecessoras; // ids das atividades
+    private Collection<Integer> atividadesPredecessoras; // ids das atividades
 							// que precedem a
 							// atividade
     private Date dataInicial;
     private Date dataEntrega;
     private Double orcamento;
-    private ArrayList<Habilidade> requisitosHabilidades;
+    private Collection<Habilidade> requisitosHabilidades;
     private Double duracao;
-    private int estado; // -1: bloqueada, 0 - disponivel, outro numero: alocada
-			// (numero corresponde ao id do membro)
+    private String estado; //bloqueada - disponivel - alocada
 
     private String membroNome;
 
@@ -59,7 +59,7 @@ public class Atividade implements Serializable {
 	this.tipo = tipo;
     }
 
-    public ArrayList<Integer> getAtividadesPredecessoras() {
+    public Collection<Integer> getAtividadesPredecessoras() {
 	return atividadesPredecessoras;
     }
 
@@ -91,19 +91,19 @@ public class Atividade implements Serializable {
 	this.orcamento = orcamento;
     }
 
-    public ArrayList<Habilidade> getRequisitosHabilidades() {
+    public Collection<Habilidade> getRequisitosHabilidades() {
 	return requisitosHabilidades;
     }
 
-    public void setRequisitosHabilidades(ArrayList<Habilidade> requisitosHabilidades) {
+    public void setRequisitosHabilidades(Collection<Habilidade> requisitosHabilidades) {
 	this.requisitosHabilidades = requisitosHabilidades;
     }
 
-    public int getEstado() {
+    public String getEstado() {
 	return estado;
     }
 
-    public void setEstado(int estado) {
+    public void setEstado(String estado) {
 	this.estado = estado;
     }
 
@@ -135,7 +135,6 @@ public class Atividade implements Serializable {
 	    for (Habilidade req : requisitosHabilidades) {
 		str.append(req.toString());
 	    }
-	    str.append("-------------------------");
 	} else {
 	    str.append("Esta atividade nao possui requisitos." + "\n");
 	}

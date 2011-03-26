@@ -5,19 +5,13 @@ import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
-
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 
-import pacote.mestrado.dominios.TipoHabilidade;
-import pacote.mestrado.dominios.TipoNivel;
+import pacote.mestrado.dao.MembroDAO;
+import pacote.mestrado.entidades.Agenda;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
 import pacote.mestrado.entidades.MensagemTO;
@@ -29,65 +23,34 @@ public class Membro extends Agent {
     private int passo = 0;
     private int id;
     private String nome;
-
+    private double salario; // homem/hora 
+    private Collection<Habilidade> habilidades; // habilidades que a pessoa possui
+    private Agenda agenda; // tempo disponivel da pessoa    
     private Atividade atividadeEscolhida;
-    private Collection<Atividade> atividadesInvalidas;
-    private Collection<Habilidade> habilidades; // habilidades que a pessoa
-						// possui
-    private Hashtable<Date, Atividade> agenda; // tempo disponivel da pessoa
-    private double salario; // homem/hora
+    private Collection<Atividade> atividadesInvalidas; //atividades que o agente quis, mas por algum motivo nao pode ter e devem ser descartadas
 
     protected void setup() {
 	System.out.println("Agente " + getAID().getLocalName() + " vivo! :)");
-	inicializaMembro();
+	inicializaMembro ();
 	addBehaviour(new Plano());
     }
 
-    public void inicializaMembro() {
-	atividadesInvalidas = new LinkedList<Atividade>();
-	this.id = 1;
-	this.nome = "Joaninha";
-	habilidades = new ArrayList<Habilidade>();
-	habilidades.add(new Habilidade(1, TipoHabilidade.UML, TipoNivel.SENIOR));
-	habilidades.add(new Habilidade(2, TipoHabilidade.RELACIONAMENTO_CLIENTE, TipoNivel.SENIOR));
-	habilidades.add(new Habilidade(3, TipoHabilidade.GESTAO_TIME, TipoNivel.MASTER));
-	SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-	Date horario1 = new Date();
-	Date horario2 = new Date();
-	Date horario3 = new Date();
-	Date horario4 = new Date();
-	Date horario5 = new Date();
-	Date horario6 = new Date();
-	Date horario7 = new Date();
-	Date horario8 = new Date();
-
-	try {
-	    horario1 = formatador.parse("05/03/2011 09:00");
-	    horario2 = formatador.parse("05/03/2011 10:00");
-	    horario3 = formatador.parse("05/03/2011 11:00");
-	    horario4 = formatador.parse("05/03/2011 13:00");
-	    horario5 = formatador.parse("05/03/2011 14:00");
-	    horario6 = formatador.parse("05/03/2011 15:00");
-	    horario7 = formatador.parse("05/03/2011 16:00");
-	    horario8 = formatador.parse("05/03/2011 17:00");
-	} catch (ParseException e) {
-	    System.out.println("Problema ao converter horario!");
-	    e.printStackTrace();
+    private void inicializaMembro ()
+    {
+	MembroDAO dao = new MembroDAO ();
+	Membro temp = dao.get(getLocalName());
+	//Inicializa dados do agente
+	this.id = temp.getId();
+	this.nome = temp.getNome();
+	this.salario = temp.getSalario();
+	//Inicializa habilidades
+	habilidades = dao.getHabilidades(this.id);
+	System.out.println(toString());
+	for (Habilidade habilidade : habilidades) {
+	    System.out.println(habilidade.toString());
 	}
-	agenda = new Hashtable<Date, Atividade>();
-	agenda.put(horario1, new Atividade());
-	agenda.put(horario2, new Atividade());
-	agenda.put(horario3, new Atividade());
-	agenda.put(horario4, new Atividade());
-	agenda.put(horario5, new Atividade());
-	agenda.put(horario6, new Atividade());
-	agenda.put(horario7, new Atividade());
-	agenda.put(horario8, new Atividade());
-	System.out.println(agenda);
-
-	this.salario = 20;
     }
-
+    
     private class Plano extends CyclicBehaviour {
 	private static final long serialVersionUID = -8069717410691786862L;
 
@@ -244,7 +207,12 @@ public class Membro extends Agent {
     
     public String toString ()
     {
-	return "Id: " +this.id+ "\nNome: " + this.nome + "\nSalario: " + this.salario;  
+	StringBuilder str = new StringBuilder();
+	str.append("--Agente--" + "\n");
+	str.append("ID: " + this.id + "\n");
+	str.append("Nome: " + this.nome + "\n");
+	str.append("Salario: " + this.salario + "\n");	
+	return str.toString();
     }
 
 }

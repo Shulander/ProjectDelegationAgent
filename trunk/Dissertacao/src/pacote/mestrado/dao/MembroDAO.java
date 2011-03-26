@@ -4,7 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import pacote.mestrado.dao.ConnectionFactory;
+import pacote.mestrado.entidades.Habilidade;
 import pacote.mestrado.Membro;
 
 public class MembroDAO 
@@ -36,4 +40,33 @@ public class MembroDAO
 	    throw new RuntimeException(e);
 	}
     }
+    
+    public List<Habilidade> getHabilidades (int id)
+    {
+	try {
+	    String sql = "SELECT * FROM habilidade " +
+	    		"JOIN habilidades WHERE " +
+	    		"habilidades.id=habilidade.fk_idHabilidades " +
+	    		"AND fk_idMembro=?";	   
+	    PreparedStatement stmt = this.connection.prepareStatement(sql);
+	    stmt.setInt(1, id);
+	    ResultSet rs = stmt.executeQuery();	    
+	    List<Habilidade> habilidades = new ArrayList<Habilidade>();
+	    while (rs.next()) {
+		Habilidade habilidade = new Habilidade();
+		habilidade.setId(rs.getInt("id"));
+		habilidade.setArea(rs.getString("area"));
+		habilidade.setNome(rs.getString("nome"));
+		habilidade.setNivel(rs.getString("nivel"));
+		habilidade.setXp(rs.getInt("xp"));
+		habilidades.add(habilidade);
+	    }	    	    
+	    rs.close();
+	    stmt.close();
+	    return habilidades;
+	} catch (SQLException e) {
+	    throw new RuntimeException(e);
+	}	 
+    }
+    
 }
