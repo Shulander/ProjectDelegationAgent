@@ -241,5 +241,10 @@ public class Membro extends Agent {
     public void setNome(String nome) {
 	this.nome = nome;
     }
+    
+    public String toString ()
+    {
+	return "Id: " +this.id+ "\nNome: " + this.nome + "\nSalario: " + this.salario;  
+    }
 
 }
