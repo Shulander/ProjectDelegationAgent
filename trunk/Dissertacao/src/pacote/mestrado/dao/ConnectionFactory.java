@@ -1,11 +1,10 @@
 package pacote.mestrado.dao;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ConnectionFactory 
 {
-    public java.sql.Connection getConnection() 
+    public Connection getConnection() 
     {
 	System.out.println("Conectando ao banco");
 	try {
