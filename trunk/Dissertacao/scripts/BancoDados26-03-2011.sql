@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 26, 2011 at 11:05 PM
+-- Generation Time: Mar 27, 2011 at 12:49 AM
 -- Server version: 5.5.8
 -- PHP Version: 5.3.5
 
@@ -22,10 +22,10 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `agenda`
+-- Table structure for table `agendas`
 --
 
-CREATE TABLE IF NOT EXISTS `agenda` (
+CREATE TABLE IF NOT EXISTS `agendas` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `data` date NOT NULL,
   `hora` time NOT NULL,
@@ -35,17 +35,17 @@ CREATE TABLE IF NOT EXISTS `agenda` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
--- Dumping data for table `agenda`
+-- Dumping data for table `agendas`
 --
 
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `atividade`
+-- Table structure for table `atividades`
 --
 
-CREATE TABLE IF NOT EXISTS `atividade` (
+CREATE TABLE IF NOT EXISTS `atividades` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(200) NOT NULL,
   `tipo` varchar(200) NOT NULL,
@@ -60,38 +60,12 @@ CREATE TABLE IF NOT EXISTS `atividade` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `atividade`
+-- Dumping data for table `atividades`
 --
 
-INSERT INTO `atividade` (`id`, `nome`, `tipo`, `dataInicial`, `dataEntrega`, `duracao`, `estado`, `orcamento`, `fk_idMembro`) VALUES
+INSERT INTO `atividades` (`id`, `nome`, `tipo`, `dataInicial`, `dataEntrega`, `duracao`, `estado`, `orcamento`, `fk_idMembro`) VALUES
 (1, 'Levantar requisitos', 'Análise de requisitos', '2011-03-28', '2011-03-31', NULL, 'disponivel', NULL, NULL),
 (2, 'Programar', 'Implementação', '2011-04-04', '2011-03-11', NULL, 'disponivel', NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `habilidade`
---
-
-CREATE TABLE IF NOT EXISTS `habilidade` (
-  `fk_idMembro` int(11) NOT NULL,
-  `fk_idHabilidades` int(11) NOT NULL,
-  `nivel` enum('Junior','Pleno','Senior','Master') NOT NULL,
-  `xp` int(11) NOT NULL,
-  PRIMARY KEY (`fk_idMembro`,`fk_idHabilidades`),
-  KEY `fk_idHabilidades` (`fk_idHabilidades`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `habilidade`
---
-
-INSERT INTO `habilidade` (`fk_idMembro`, `fk_idHabilidades`, `nivel`, `xp`) VALUES
-(1, 6, 'Senior', 0),
-(1, 7, 'Senior', 0),
-(1, 8, 'Master', 0),
-(2, 1, 'Senior', 0),
-(2, 4, 'Master', 0);
 
 -- --------------------------------------------------------
 
@@ -101,54 +75,34 @@ INSERT INTO `habilidade` (`fk_idMembro`, `fk_idHabilidades`, `nivel`, `xp`) VALU
 
 CREATE TABLE IF NOT EXISTS `habilidades` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `area` varchar(100) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+  `fk_idMembro` int(11) NOT NULL,
+  `fk_idHabilidade` int(11) NOT NULL,
+  `fk_idAtividade` int(11) NOT NULL,
+  `nivel` int(11) NOT NULL,
+  `xp` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_idMembro` (`fk_idMembro`,`fk_idHabilidade`,`fk_idAtividade`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `habilidades`
 --
 
-INSERT INTO `habilidades` (`id`, `area`, `nome`) VALUES
-(1, 'Linguagem de Programação', 'Java'),
-(2, 'Linguagem de Programação', 'C++'),
-(3, 'Linguagem de Programação', 'C'),
-(4, 'Linguagem de Programação', 'PHP'),
-(5, 'Linguagem de Programação', '.NET'),
-(6, 'Modelagem', 'UML'),
-(7, 'Social', 'Relacionamento com clientes'),
-(8, 'Social', 'Gestão de time');
+INSERT INTO `habilidades` (`id`, `fk_idMembro`, `fk_idHabilidade`, `fk_idAtividade`, `nivel`, `xp`) VALUES
+(1, 1, 6, 0, 3, 0),
+(2, 1, 7, 0, 4, 0),
+(3, 2, 4, 0, 4, 0),
+(4, 0, 6, 1, 3, 0),
+(5, 0, 7, 1, 3, 0),
+(6, 0, 4, 2, 3, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `habilidades_atividade`
+-- Table structure for table `membros`
 --
 
-CREATE TABLE IF NOT EXISTS `habilidades_atividade` (
-  `fk_idAtividade` int(11) NOT NULL,
-  `fk_idHabilidades` int(11) NOT NULL,
-  `nivel` enum('Junior','Pleno','Senior','Master') NOT NULL,
-  PRIMARY KEY (`fk_idAtividade`,`fk_idHabilidades`),
-  KEY `fk_idHabilidades` (`fk_idHabilidades`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `habilidades_atividade`
---
-
-INSERT INTO `habilidades_atividade` (`fk_idAtividade`, `fk_idHabilidades`, `nivel`) VALUES
-(1, 6, 'Senior'),
-(1, 7, 'Pleno');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `membro`
---
-
-CREATE TABLE IF NOT EXISTS `membro` (
+CREATE TABLE IF NOT EXISTS `membros` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(50) NOT NULL,
   `salario` double NOT NULL,
@@ -158,25 +112,52 @@ CREATE TABLE IF NOT EXISTS `membro` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `membro`
+-- Dumping data for table `membros`
 --
 
-INSERT INTO `membro` (`id`, `nome`, `salario`) VALUES
+INSERT INTO `membros` (`id`, `nome`, `salario`) VALUES
 (1, 'liane', 2000),
 (2, 'henrique', 4000);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tipos_habilidade`
+--
+
+CREATE TABLE IF NOT EXISTS `tipos_habilidade` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `area` varchar(100) NOT NULL,
+  `nome` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+
+--
+-- Dumping data for table `tipos_habilidade`
+--
+
+INSERT INTO `tipos_habilidade` (`id`, `area`, `nome`) VALUES
+(1, 'Linguagem de Programação', 'Java'),
+(2, 'Linguagem de Programação', 'C++'),
+(3, 'Linguagem de Programação', 'C'),
+(4, 'Linguagem de Programação', 'PHP'),
+(5, 'Linguagem de Programação', '.NET'),
+(6, 'Modelagem', 'UML'),
+(7, 'Social', 'Relacionamento com clientes'),
+(8, 'Social', 'Gestão de time');
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `agenda`
+-- Constraints for table `agendas`
 --
-ALTER TABLE `agenda`
-  ADD CONSTRAINT `agenda_ibfk_1` FOREIGN KEY (`fk_idAtividade`) REFERENCES `atividade` (`id`) ON UPDATE CASCADE;
+ALTER TABLE `agendas`
+  ADD CONSTRAINT `agendas_ibfk_1` FOREIGN KEY (`fk_idAtividade`) REFERENCES `atividades` (`id`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `atividade`
+-- Constraints for table `atividades`
 --
-ALTER TABLE `atividade`
-  ADD CONSTRAINT `atividade_ibfk_1` FOREIGN KEY (`fk_idMembro`) REFERENCES `membro` (`id`) ON UPDATE CASCADE;
+ALTER TABLE `atividades`
+  ADD CONSTRAINT `atividades_ibfk_1` FOREIGN KEY (`fk_idMembro`) REFERENCES `membros` (`id`) ON UPDATE CASCADE;
