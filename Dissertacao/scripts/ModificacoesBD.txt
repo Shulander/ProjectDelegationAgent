@@ -1,3 +1,77 @@
-26-03-11
+26-03-11 20:00
 ALTER TABLE  `habilidade` CHANGE  `nivel`  `nivel` INT NOT NULL;
 ALTER TABLE  `habilidades_atividade` CHANGE  `nivel`  `nivel` INT NOT NULL;
+
+26-03-11 20:30
+RENAME TABLE  `mestrado`.`habilidades` TO  `mestrado`.`tipos_habilidade` ;
+RENAME TABLE  `mestrado`.`agenda` TO  `mestrado`.`agendas` ;
+RENAME TABLE  `mestrado`.`atividade` TO  `mestrado`.`atividades` ;
+RENAME TABLE  `mestrado`.`habilidade` TO  `mestrado`.`habilidades` ;
+ALTER TABLE  `habilidades` ADD  `fk_idTiposHabilidade` INT NOT NULL AFTER  `fk_idHabilidades` ,
+ADD INDEX (  `fk_idTiposHabilidade` );
+RENAME TABLE  `mestrado`.`membro` TO  `mestrado`.`membros` ;
+
+CREATE TABLE  `mestrado`.`habilidades` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`fk_idMembro` INT NOT NULL ,
+`fk_idHabilidade` INT NOT NULL ,
+`fk_idAtividade` INT NOT NULL ,
+`nivel` INT NOT NULL ,
+`xp` INT NOT NULL ,
+INDEX (  `fk_idMembro` ,  `fk_idHabilidade` ,  `fk_idAtividade` )
+) ENGINE = INNODB;
+
+
+INSERT INTO  `mestrado`.`habilidades` (
+`id` ,
+`fk_idMembro` ,
+`fk_idHabilidade` ,
+`fk_idAtividade` ,
+`nivel` ,
+`xp`
+)
+VALUES (
+NULL ,  '1',  '6',  '0',  '3',  '0'
+), (
+NULL ,  '1',  '7',  '0',  '4',  '0'
+);
+
+INSERT INTO  `mestrado`.`habilidades` (
+`id` ,
+`fk_idMembro` ,
+`fk_idHabilidade` ,
+`fk_idAtividade` ,
+`nivel` ,
+`xp`
+)
+VALUES (
+NULL ,  '2',  '4',  '0',  '4',  '0'
+);
+
+INSERT INTO  `mestrado`.`habilidades` (
+`id` ,
+`fk_idMembro` ,
+`fk_idHabilidade` ,
+`fk_idAtividade` ,
+`nivel` ,
+`xp`
+)
+VALUES (
+NULL ,  '0',  '6',  '1',  '3',  '0'
+), (
+NULL ,  '0',  '7',  '1',  '3',  '0'
+);
+
+INSERT INTO  `mestrado`.`habilidades` (
+`id` ,
+`fk_idMembro` ,
+`fk_idHabilidade` ,
+`fk_idAtividade` ,
+`nivel` ,
+`xp`
+)
+VALUES (
+NULL ,  '0',  '4',  '2',  '3',  '0'
+);
+
+
