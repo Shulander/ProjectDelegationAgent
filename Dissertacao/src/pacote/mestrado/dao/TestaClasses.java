@@ -1,11 +1,13 @@
 package pacote.mestrado.dao;
 
-import pacote.mestrado.Membro;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import pacote.mestrado.entidades.*;
+
+import pacote.mestrado.Membro;
+import pacote.mestrado.entidades.Atividade;
+import pacote.mestrado.entidades.Habilidade;
 
 public class TestaClasses 
 {
