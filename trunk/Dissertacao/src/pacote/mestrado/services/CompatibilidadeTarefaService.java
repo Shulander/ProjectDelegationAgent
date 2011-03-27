@@ -5,21 +5,23 @@ import java.util.Collection;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
 
-public class CompatibilidadeTarefaService {
+public class CompatibilidadeTarefaService 
+{
 
-    static final double MESMA_HABILIDADE = 1;
-    static final double MESMA_AREA = 0.6;
-    static final double COEFICIENTE_NIVEL_CONHECIMENTO = 0.2;
+    private static final double MESMA_HABILIDADE = 1;
+    private static final double MESMA_AREA = 0.6;
+    private static final double COEFICIENTE_NIVEL_CONHECIMENTO = 0.2;
 
     /**
      * Calcula o grau de compatibilidade entre uma atividade e um conjunto de
      * habilidades
      * 
      * @param atividade
-     * @param habiliades
+     * @param habilidades
      * @return retorna a media dos coeficientes encontrados.
      */
-    public static double calculaGrauCompatibilidade(Atividade atividade, Collection<Habilidade> habiliades) {
+    public static double calculaGrauCompatibilidade(Atividade atividade, Collection<Habilidade> habilidades) 
+    {
 	double retorno = 0.0;
 	int divisorPonderado = 0;
 
@@ -27,7 +29,7 @@ public class CompatibilidadeTarefaService {
 	for (Habilidade hab : atividade.getRequisitosHabilidades()) {
 	    double calc = 0.0;
 	    // procuramos uma habilidade equivalente
-	    for (Habilidade hab2 : habiliades) {
+	    for (Habilidade hab2 : habilidades) {
 		double coefHabilide = calculaGrauCompatibilidade(hab, hab2);
 		// caso o novo seja maior substituimos o antigo
 		if (coefHabilide > calc) {
@@ -51,7 +53,8 @@ public class CompatibilidadeTarefaService {
      * @param hab2
      * @return grau de compatibilidade 0.0 - 1.0
      */
-    public static double calculaGrauCompatibilidade(Habilidade hab, Habilidade hab2) {
+    public static double calculaGrauCompatibilidade(Habilidade hab, Habilidade hab2) 
+    {
 	double coefHabilide;
 	// caso encontremos a mesma habilidade
 	// caso seja a mesma area
@@ -75,8 +78,16 @@ public class CompatibilidadeTarefaService {
 	return coefHabilide;
     }
 
+    /**
+     * Calcula a atividade mais compativel de acordo com uma lista de habilidades
+     * @param atividadesDisponiveis
+     * @param habilidades
+     * @param atividadesInvalidas
+     * @return atividade
+     */
     public static Atividade selecionaAtividadeHabilidade(Collection<Atividade> atividadesDisponiveis,
-	    Collection<Habilidade> habiliades, Collection<Atividade> atividadesInvalidas) {
+	    Collection<Habilidade> habilidades, Collection<Atividade> atividadesInvalidas) 
+    {
 	double compatibilidade = 0.0;
 	Atividade retorno = null;
 
@@ -85,7 +96,7 @@ public class CompatibilidadeTarefaService {
 	    // caso a atividade nao esta na lista de atividades a ignorar
 	    if (atividadesInvalidas == null || !atividadesInvalidas.contains(atividade)) {
 		// calcula a compatibilidade nova
-		double compatNova = calculaGrauCompatibilidade(atividade, habiliades);
+		double compatNova = calculaGrauCompatibilidade(atividade, habilidades);
 		// caso a nova compatibilidade seja maior
 		// substituimos a antiga
 		if (compatNova > compatibilidade) {

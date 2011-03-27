@@ -15,7 +15,12 @@ import pacote.mestrado.dao.HabilidadeDAO;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.MensagemTO;
 
-public class Gestor extends Agent {
+/**
+ * Classe que corresponde ao agente gestor de um projeto
+ * @author Liane Cafarate
+ */
+public class Gestor extends Agent 
+{
     private static final long serialVersionUID = -7779496563622856447L;
 
     private HashMap<String, Atividade> hashMembroAtividadeAlocadas = new HashMap<String, Atividade>();
@@ -26,13 +31,15 @@ public class Gestor extends Agent {
 								// prioridade e
 								// atividade
 
-    protected void setup() {
+    protected void setup() 
+    {
 	System.out.println("Agente " + getAID().getLocalName() + " vivo! :)");
 	inicializaListaAtividades();
 	addBehaviour(new InformaTarefas());
     }
 
-    public void inicializaListaAtividades() {
+    public void inicializaListaAtividades() 
+    {
 	AtividadeDAO daoAtiv = new AtividadeDAO ();
 	HabilidadeDAO daoHab = new HabilidadeDAO ();
 	//inicializa atividades
@@ -44,7 +51,8 @@ public class Gestor extends Agent {
 	}
     }
 
-    private class InformaTarefas extends CyclicBehaviour {
+    private class InformaTarefas extends CyclicBehaviour 
+    {
 	private static final long serialVersionUID = -1703109073768236603L;
 
 	public void action() {
@@ -85,7 +93,8 @@ public class Gestor extends Agent {
 	    }
 	}
 
-	private boolean alocaAtividadeMembro(String nomeMembro, Atividade atividade) {
+	private boolean alocaAtividadeMembro(String nomeMembro, Atividade atividade) 
+	{
 
 	    // ja esta alocada
 	    if (hashAtividadesMembroAlocadas.containsKey(atividade.getId())
@@ -102,7 +111,8 @@ public class Gestor extends Agent {
 	    return true;
 	}
 
-	private Atividade findAtividadeById(int id) {
+	private Atividade findAtividadeById(int id) 
+	{
 	    for (Atividade atividade : listaAtividades) {
 		if (atividade.getId() == id) {
 		    return atividade;
@@ -112,19 +122,23 @@ public class Gestor extends Agent {
 	}
     }
 
-    public ArrayList<Atividade> getListaAtividades() {
+    public ArrayList<Atividade> getListaAtividades() 
+    {
 	return listaAtividades;
     }
 
-    public void setListaAtividades(ArrayList<Atividade> listaAtividades) {
+    public void setListaAtividades(ArrayList<Atividade> listaAtividades) 
+    {
 	this.listaAtividades = listaAtividades;
     }
 
-    public void setPrioridadeAtividades(Hashtable<Integer, Atividade> prioridadeAtividades) {
+    public void setPrioridadeAtividades(Hashtable<Integer, Atividade> prioridadeAtividades) 
+    {
 	this.prioridadeAtividades = prioridadeAtividades;
     }
 
-    public Hashtable<Integer, Atividade> getPrioridadeAtividades() {
+    public Hashtable<Integer, Atividade> getPrioridadeAtividades() 
+    {
 	return prioridadeAtividades;
     }
 
