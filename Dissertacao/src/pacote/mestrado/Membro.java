@@ -1,25 +1,15 @@
 package pacote.mestrado;
 
-import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.SimpleBehaviour;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.UnreadableException;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import pacote.mestrado.behaviors.BuscaTarefaBehaviour;
-import pacote.mestrado.dao.MembroDAO;
 import pacote.mestrado.dao.HabilidadeDAO;
+import pacote.mestrado.dao.MembroDAO;
 import pacote.mestrado.entidades.Agenda;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
-import pacote.mestrado.entidades.MensagemTO;
-import pacote.mestrado.services.CompatibilidadeTarefaService;
 
 /**
  * Classe que corresponde ao agente membro de um projeto
@@ -29,7 +19,6 @@ import pacote.mestrado.services.CompatibilidadeTarefaService;
 public class Membro extends Agent {
     private static final long serialVersionUID = -4300677614968664782L;
 
-    private int passo = 0;
     private int id;
     private String nome;
     private double salario; // homem/hora
@@ -52,16 +41,6 @@ public class Membro extends Agent {
 	addBehaviour(new BuscaTarefaBehaviour(this));
     }
     
-   
-
-    public int getPasso() {
-        return passo;
-    }
-
-    public void setPasso(int passo) {
-        this.passo = passo;
-    }
-
     public Atividade getAtividadeEscolhida() {
         return atividadeEscolhida;
     }
