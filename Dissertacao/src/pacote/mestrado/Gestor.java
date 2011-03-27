@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import pacote.mestrado.dao.AtividadeDAO;
+import pacote.mestrado.dao.HabilidadeDAO;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.MensagemTO;
 
@@ -32,12 +33,13 @@ public class Gestor extends Agent {
     }
 
     public void inicializaListaAtividades() {
-	AtividadeDAO dao = new AtividadeDAO ();
+	AtividadeDAO daoAtiv = new AtividadeDAO ();
+	HabilidadeDAO daoHab = new HabilidadeDAO ();
 	//inicializa atividades
-	listaAtividades = (ArrayList<Atividade>) dao.getAtividades ();
+	listaAtividades = (ArrayList<Atividade>) daoAtiv.getAtividades ();
 	for (Atividade atividade : listaAtividades) {
 	    //inicializa requisitos de habilidade das atividades
-	    atividade.setRequisitosHabilidades(dao.getHabilidades(atividade.getId()));
+	    atividade.setRequisitosHabilidades(daoHab.getHabilidades(atividade.getId(), "Atividade"));
 	    System.out.println(atividade.toString());
 	}
     }

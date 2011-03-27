@@ -6,10 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import pacote.mestrado.dominios.TipoNivel;
 import pacote.mestrado.entidades.Atividade;
-import pacote.mestrado.entidades.Habilidade;
 
 public class AtividadeDAO 
 {
@@ -23,7 +20,7 @@ public class AtividadeDAO
     public List<Atividade> getAtividades ()
     {
 	try {
-	    String sql = "SELECT * FROM atividade";	   
+	    String sql = "SELECT * FROM atividades";	   
 	    PreparedStatement stmt = this.connection.prepareStatement(sql);	 
 	    ResultSet rs = stmt.executeQuery();	    
 	    List<Atividade> atividades = new ArrayList<Atividade>();
@@ -46,35 +43,6 @@ public class AtividadeDAO
 	    throw new RuntimeException(e);
 	}	 
     }
-    
-    public List<Habilidade> getHabilidades (int id)
-    {
-	try {
-	    String sql = "SELECT * FROM habilidades_atividade " +
-	    		"JOIN habilidades WHERE " +
-	    		"habilidades.id=habilidades_atividade.fk_idHabilidades " +
-	    		"AND fk_idAtividade=?";
-	    PreparedStatement stmt = this.connection.prepareStatement(sql);
-	    stmt.setInt(1, id);
-	    ResultSet rs = stmt.executeQuery();	    
-	    List<Habilidade> habilidades = new ArrayList<Habilidade>();
-	    while (rs.next()) {
-		System.out.println("entrei aqui");
-		Habilidade habilidade = new Habilidade();
-		habilidade.setId(rs.getInt("id"));
-		habilidade.setArea(rs.getString("area"));
-		habilidade.setNome(rs.getString("nome"));
-		habilidade.setNivel(TipoNivel.obterPorCodigo(rs.getInt("nivel")));
-		habilidades.add(habilidade);
-		System.out.println(habilidade.toString());
-	    }	    	    
-	    rs.close();
-	    stmt.close();
-	    return habilidades;
-	} catch (SQLException e) {
-	    throw new RuntimeException(e);
-	}	 
-    }
-    
+  
 
 }

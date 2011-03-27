@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import pacote.mestrado.dao.HabilidadeDAO;
 import pacote.mestrado.dao.MembroDAO;
 import pacote.mestrado.entidades.Agenda;
 import pacote.mestrado.entidades.Atividade;
@@ -38,14 +39,15 @@ public class Membro extends Agent {
 
     private void inicializaMembro ()
     {
-	MembroDAO dao = new MembroDAO ();
-	Membro temp = dao.get(getLocalName());
+	MembroDAO daoMemb = new MembroDAO ();
+	Membro temp = daoMemb.get(getLocalName());
 	//Inicializa dados do agente
 	this.id = temp.getId();
 	this.nome = temp.getNome();
 	this.salario = temp.getSalario();
 	//Inicializa habilidades
-	habilidades = dao.getHabilidades(this.id);
+	HabilidadeDAO daoHab = new HabilidadeDAO ();
+	habilidades = daoHab.getHabilidades(this.id, "Membro");
 	System.out.println(toString());
 	for (Habilidade habilidade : habilidades) {
 	    System.out.println(habilidade.toString());
