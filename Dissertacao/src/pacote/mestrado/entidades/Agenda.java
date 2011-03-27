@@ -6,24 +6,33 @@ public class Agenda
     private String data;
     private String hora;
     
-    public int getId() {
+    public int getId() 
+    {
         return id;
     }
-    public void setId(int id) {
+    
+    public void setId(int id) 
+    {
         this.id = id;
     }
-    public String getData() {
+    
+    public String getData() 
+    {
         return data;
     }
-    public void setData(String data) {
+    
+    public void setData(String data) 
+    {
         this.data = data;
     }
-    public String getHora() {
+    
+    public String getHora() 
+    {
         return hora;
     }
-    public void setHora(String hora) {
+    
+    public void setHora(String hora) 
+    {
         this.hora = hora;
-    }
-    
-    
+    }    
 }

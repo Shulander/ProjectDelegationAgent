@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-public class Atividade implements Serializable {
+public class Atividade implements Serializable 
+{
     private static final long serialVersionUID = 8586977373449624267L;
 
     private Integer id;
@@ -23,7 +24,8 @@ public class Atividade implements Serializable {
 
     private String membroNome;
 
-    public Atividade() {
+    public Atividade() 
+    {
 	atividadesPredecessoras = new ArrayList<Integer>();
 	requisitosHabilidades = new ArrayList<Habilidade>();
 	if (dataInicial != null && dataEntrega != null) {
@@ -31,23 +33,28 @@ public class Atividade implements Serializable {
 	}
     }
 
-    void calculaDuracao() {
+    void calculaDuracao() 
+    {
 	this.setDuracao(0.0); // calcular duracao
     }
 
-    public int getId() {
+    public int getId() 
+    {
 	return id;
     }
 
-    public void setId(int id) {
+    public void setId(int id) 
+    {
 	this.id = id;
     }
 
-    public String getNome() {
+    public String getNome() 
+    {
 	return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(String nome) 
+    {
 	this.nome = nome;
     }
 
@@ -55,59 +62,73 @@ public class Atividade implements Serializable {
 	return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(String tipo) 
+    {
 	this.tipo = tipo;
     }
 
-    public Collection<Integer> getAtividadesPredecessoras() {
+    public Collection<Integer> getAtividadesPredecessoras() 
+    {
 	return atividadesPredecessoras;
     }
 
-    public void setAtividadesPredecessoras(ArrayList<Integer> atividadesPredecessoras) {
+    public void setAtividadesPredecessoras(ArrayList<Integer> atividadesPredecessoras) 
+    {
 	this.atividadesPredecessoras = atividadesPredecessoras;
     }
 
-    public Date getDataInicial() {
+    public Date getDataInicial() 
+    {
 	return dataInicial;
     }
 
-    public void setDataInicial(Date dataInicial) {
+    public void setDataInicial(Date dataInicial) 
+    {
 	this.dataInicial = dataInicial;
     }
 
-    public Date getDataEntrega() {
+    public Date getDataEntrega() 
+    {
 	return dataEntrega;
     }
 
-    public void setDataEntrega(Date dataEntrega) {
+    public void setDataEntrega(Date dataEntrega) 
+    {
 	this.dataEntrega = dataEntrega;
     }
 
-    public Double getOrcamento() {
+    public Double getOrcamento() 
+    {
 	return orcamento;
     }
 
-    public void setOrcamento(Double orcamento) {
+    public void setOrcamento(Double orcamento) 
+    {
 	this.orcamento = orcamento;
     }
 
-    public Collection<Habilidade> getRequisitosHabilidades() {
+    public Collection<Habilidade> getRequisitosHabilidades() 
+    {
 	return requisitosHabilidades;
     }
 
-    public void setRequisitosHabilidades(Collection<Habilidade> requisitosHabilidades) {
+    public void setRequisitosHabilidades(Collection<Habilidade> requisitosHabilidades) 
+    {
 	this.requisitosHabilidades = requisitosHabilidades;
     }
 
-    public String getEstado() {
+    public String getEstado() 
+    {
 	return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(String estado) 
+    {
 	this.estado = estado;
     }
 
-    public String toString() {
+    public String toString() 
+    {
 
 	StringBuilder str = new StringBuilder();
 
@@ -141,16 +162,19 @@ public class Atividade implements Serializable {
 	return str.toString();
     }
 
-    public void setDuracao(Double duracao) {
+    public void setDuracao(Double duracao) 
+    {
 	this.duracao = duracao;
     }
 
-    public double getDuracao() {
+    public double getDuracao() 
+    {
 	return duracao;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode() 
+    {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -158,7 +182,8 @@ public class Atividade implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj) 
+    {
 	if (this == obj)
 	    return true;
 	if (obj == null)
@@ -174,11 +199,13 @@ public class Atividade implements Serializable {
 	return true;
     }
 
-    public String getMembroNome() {
+    public String getMembroNome() 
+    {
 	return membroNome;
     }
 
-    public void setMembroNome(String membroNome) {
+    public void setMembroNome(String membroNome) 
+    {
 	this.membroNome = membroNome;
     }
 

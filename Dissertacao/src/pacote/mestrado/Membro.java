@@ -19,7 +19,12 @@ import pacote.mestrado.entidades.Habilidade;
 import pacote.mestrado.entidades.MensagemTO;
 import pacote.mestrado.services.CompatibilidadeTarefaService;
 
-public class Membro extends Agent {
+/**
+ * Classe que corresponde ao agente membro de um projeto
+ * @author Liane Cafarate
+ */
+public class Membro extends Agent 
+{
     private static final long serialVersionUID = -4300677614968664782L;
 
     private int passo = 0;
@@ -31,12 +36,27 @@ public class Membro extends Agent {
     private Atividade atividadeEscolhida;
     private Collection<Atividade> atividadesInvalidas; //atividades que o agente quis, mas por algum motivo nao pode ter e devem ser descartadas
 
-    protected void setup() {
+    /**
+     * Metodo de inicializacao de agentes
+     */
+    protected void setup() 
+    {
 	System.out.println("Agente " + getAID().getLocalName() + " vivo! :)");
 	inicializaMembro ();
 	addBehaviour(new Plano());
     }
+    
+    /**
+     * Metodo de finalizacao de agentes
+     */
+    protected void takeDown() 
+    {
+	System.out.println("Agente " + getAID().getLocalName() + " está morto.");
+    }
 
+    /**
+     * Inicializa o agente com os dados cadastrados no banco de dados.
+     */
     private void inicializaMembro ()
     {
 	MembroDAO daoMemb = new MembroDAO ();
@@ -48,13 +68,14 @@ public class Membro extends Agent {
 	//Inicializa habilidades
 	HabilidadeDAO daoHab = new HabilidadeDAO ();
 	habilidades = daoHab.getHabilidades(this.id, "Membro");
-	System.out.println(toString());
+	/*System.out.println(toString());
 	for (Habilidade habilidade : habilidades) {
 	    System.out.println(habilidade.toString());
-	}
+	}*/
     }
     
-    private class Plano extends CyclicBehaviour {
+    private class Plano extends CyclicBehaviour 
+    {
 	private static final long serialVersionUID = -8069717410691786862L;
 
 	public void action() {
@@ -74,14 +95,6 @@ public class Membro extends Agent {
 				getHabilidades(), atividadesInvalidas);
 
 			notificaGestor(atividadeEscolhida);
-
-			/*
-			 * System.out.println(getAID().getLocalName()+
-			 * " - Lista de Atividades"); //percorre lista de
-			 * atividades for (Atividade at : lista) { at.imprime
-			 * (); } System.out.println
-			 * ("-------------------------------------------");
-			 */
 		    } else {
 			System.out.println(getAID().getLocalName() + "Lista de atividades está vazia! WTF :(");
 		    }
@@ -100,7 +113,8 @@ public class Membro extends Agent {
 	    ++passo;
 	}
 
-	private void recebeConfirmacaoAtividadeEscolhida() {
+	private void recebeConfirmacaoAtividadeEscolhida() 
+	{
 	    System.out.println(getAID().getLocalName() + ": Recebeu a confirmacao da solicitacao da tarefa do gestor.");
 	    ACLMessage resposta = blockingReceive();
 	    if (resposta != null) {
@@ -127,7 +141,8 @@ public class Membro extends Agent {
 
 	}
 
-	private void notificaGestor(Atividade atividadeEscolhida) throws IOException {
+	private void notificaGestor(Atividade atividadeEscolhida) throws IOException 
+	{
 	    MensagemTO mensagem = new MensagemTO();
 	    ACLMessage consulta = new ACLMessage(ACLMessage.REQUEST);
 	    mensagem.setAssunto("notificaGestor");
@@ -139,15 +154,15 @@ public class Membro extends Agent {
 	}
     }
 
-    public void buscarAtividade() {
+    public void buscarAtividade() 
+    {
 
     }
 
-    protected void takeDown() {
-	System.out.println("Agente " + getAID().getLocalName() + " está morto.");
-    }
 
-    public void solicitaListaAtividades() throws IOException {
+
+    public void solicitaListaAtividades() throws IOException 
+    {
 	MensagemTO mensagem = new MensagemTO();
 	ACLMessage consulta = new ACLMessage(ACLMessage.REQUEST);
 	mensagem.setAssunto("ListaAtividades");
@@ -158,7 +173,8 @@ public class Membro extends Agent {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Atividade> recebeListaAtividades() {
+    public List<Atividade> recebeListaAtividades() 
+    {
 	System.out.println(getAID().getLocalName() + ": Esperando receber lista de atividades do gestor.");
 	ACLMessage resposta = blockingReceive();
 	List<Atividade> listaAtividades = new ArrayList<Atividade>();
@@ -176,35 +192,43 @@ public class Membro extends Agent {
 	return listaAtividades;
     }
 
-    public int getId() {
+    public int getId() 
+    {
 	return id;
     }
 
-    public void setId(int id) {
+    public void setId(int id) 
+    {
 	this.id = id;
     }
 
-    public Collection<Habilidade> getHabilidades() {
+    public Collection<Habilidade> getHabilidades() 
+    {
 	return habilidades;
     }
 
-    public void setHabilidades(Collection<Habilidade> habilidades) {
+    public void setHabilidades(Collection<Habilidade> habilidades) 
+    {
 	this.habilidades = habilidades;
     }
 
-    public double getSalario() {
+    public double getSalario() 
+    {
 	return salario;
     }
 
-    public void setSalario(double salario) {
+    public void setSalario(double salario) 
+    {
 	this.salario = salario;
     }
 
-    public String getNome() {
+    public String getNome() 
+    {
 	return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(String nome) 
+    {
 	this.nome = nome;
     }
     
