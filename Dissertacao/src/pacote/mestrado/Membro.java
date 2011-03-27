@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import pacote.mestrado.dao.HabilidadeDAO;
 import pacote.mestrado.dao.MembroDAO;
+import pacote.mestrado.dao.HabilidadeDAO;
 import pacote.mestrado.entidades.Agenda;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
