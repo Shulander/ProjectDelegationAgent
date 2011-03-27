@@ -34,4 +34,14 @@ public class MensagemTO implements Serializable
     {
 	this.mensagem = mensagem;
     }
+    
+    public String toString() {
+	StringBuilder str = new StringBuilder();
+	str.append(getAssunto());
+	if(getMensagem() != null) {
+	    str.append(" - ");
+	    str.append(getMensagem().getClass());
+	}
+	return str.toString();
+    }
 }
