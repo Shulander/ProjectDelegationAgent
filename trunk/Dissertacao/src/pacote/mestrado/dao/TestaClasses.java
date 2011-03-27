@@ -15,13 +15,14 @@ public class TestaClasses
     {
 	Connection connection = new ConnectionFactory().getConnection();
 	System.out.println("Conexão aberta!");
-	MembroDAO dao = new MembroDAO();
+	MembroDAO daoMemb = new MembroDAO();
+	HabilidadeDAO daoHab = new HabilidadeDAO ();
 	Membro membro = new Membro ();
-	membro = dao.get("liane");
+	membro = daoMemb.get("liane");
 	System.out.println(membro.toString());
 	//Habilidades
 	List<Habilidade> habilidades = new ArrayList<Habilidade>();
-	habilidades = dao.getHabilidades(membro.getId());
+	habilidades = daoHab.getHabilidades(membro.getId(), "Membro");
 	for (Habilidade habilidade : habilidades) {
 	    System.out.println(habilidade.toString());
 	}
@@ -30,7 +31,7 @@ public class TestaClasses
 	List<Atividade> atividades = new ArrayList<Atividade>();
 	atividades = dao2.getAtividades ();
 	for (Atividade atividade : atividades) {
-	    atividade.setRequisitosHabilidades(dao2.getHabilidades(atividade.getId()));
+	    atividade.setRequisitosHabilidades(daoHab.getHabilidades(atividade.getId(), "Atividade"));
 	    System.out.println(atividade.toString());
 	}
 	try {
