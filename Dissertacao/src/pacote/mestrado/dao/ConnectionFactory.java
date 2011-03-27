@@ -6,11 +6,21 @@ import java.sql.SQLException;
 
 public class ConnectionFactory 
 {
+    
+    private static Connection conexao; 
+    
+    public ConnectionFactory() {
+	conexao = null;
+    }
+    
     public Connection getConnection() 
     {
 	System.out.println("Conectando ao banco");
 	try {
-	    return DriverManager.getConnection("jdbc:mysql://localhost/mestrado", "root", "");
+	    if(conexao == null) {
+		conexao = DriverManager.getConnection("jdbc:mysql://localhost/mestrado", "root", "");
+	    }
+	    return conexao;
 	} catch(SQLException e) {
 	    throw new RuntimeException(e);
 	}
