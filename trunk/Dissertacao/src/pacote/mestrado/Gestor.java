@@ -1,19 +1,16 @@
 package pacote.mestrado;
 
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.UnreadableException;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import pacote.mestrado.behaviors.InformaTarefasBehaviour;
 import pacote.mestrado.dao.AtividadeDAO;
 import pacote.mestrado.dao.HabilidadeDAO;
 import pacote.mestrado.entidades.Atividade;
-import pacote.mestrado.entidades.MensagemTO;
 
 public class Gestor extends Agent {
     private static final long serialVersionUID = -7779496563622856447L;
@@ -29,90 +26,38 @@ public class Gestor extends Agent {
     protected void setup() {
 	System.out.println("Agente " + getAID().getLocalName() + " vivo! :)");
 	inicializaListaAtividades();
-	addBehaviour(new InformaTarefas());
+	addBehaviour(new InformaTarefasBehaviour(this));
+    }
+
+    public HashMap<String, Atividade> getHashMembroAtividadeAlocadas() {
+	return hashMembroAtividadeAlocadas;
+    }
+
+    public void setHashMembroAtividadeAlocadas(HashMap<String, Atividade> hashMembroAtividadeAlocadas) {
+	this.hashMembroAtividadeAlocadas = hashMembroAtividadeAlocadas;
+    }
+
+    public HashMap<Integer, String> getHashAtividadesMembroAlocadas() {
+	return hashAtividadesMembroAlocadas;
+    }
+
+    public void setHashAtividadesMembroAlocadas(HashMap<Integer, String> hashAtividadesMembroAlocadas) {
+	this.hashAtividadesMembroAlocadas = hashAtividadesMembroAlocadas;
     }
 
     public void inicializaListaAtividades() {
-	AtividadeDAO daoAtiv = new AtividadeDAO ();
-	HabilidadeDAO daoHab = new HabilidadeDAO ();
-	//inicializa atividades
-	listaAtividades = (ArrayList<Atividade>) daoAtiv.getAtividades ();
+	AtividadeDAO daoAtiv = new AtividadeDAO();
+	HabilidadeDAO daoHab = new HabilidadeDAO();
+	// inicializa atividades
+	listaAtividades = (ArrayList<Atividade>) daoAtiv.getAtividades();
 	for (Atividade atividade : listaAtividades) {
-	    //inicializa requisitos de habilidade das atividades
+	    // inicializa requisitos de habilidade das atividades
 	    atividade.setRequisitosHabilidades(daoHab.getHabilidades(atividade.getId(), "Atividade"));
 	    System.out.println(atividade.toString());
 	}
     }
 
-    private class InformaTarefas extends CyclicBehaviour {
-	private static final long serialVersionUID = -1703109073768236603L;
-
-	public void action() {
-	    ACLMessage msg = blockingReceive();
-	    try {
-		if (msg != null) {
-		    MensagemTO mensagem;
-		    mensagem = (MensagemTO) msg.getContentObject();
-		    System.out.println("Gestor recebeu msg= " + mensagem + " de "
-		    + msg.getSender().getLocalName() + ".");
-		    if (mensagem.getAssunto().equals("ListaAtividades")) {
-			ACLMessage resposta = msg.createReply();
-			MensagemTO msgResposta = new MensagemTO();
-			msgResposta.setAssunto("resListaAtividades");
-			msgResposta.setMensagem(listaAtividades);
-			resposta.setContentObject(msgResposta);
-			System.out.println("Gestor: enviei a resposta ao " + msg.getSender().getLocalName() + ".");
-			send(resposta);
-		    } else if (mensagem.getAssunto().equals("notificaGestor")) {
-			Atividade atividade = (Atividade) mensagem.getMensagem();
-			alocaAtividadeMembro(msg.getSender().getLocalName(), atividade);
-			ACLMessage resposta = msg.createReply();
-			MensagemTO msgResposta = new MensagemTO();
-			msgResposta.setAssunto("resNotificaGestor");
-			msgResposta.setMensagem(findAtividadeById(atividade.getId()));
-			resposta.setContentObject(msgResposta);
-			send(resposta);
-		    }
-		} else {
-		    // System.out.println("Gestor: Entao mensagem eh null");
-		}
-	    } catch (UnreadableException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	    } catch (IOException e) {
-		System.out.println("Gestor: Erro ao enviar listaAtividades ao " + msg.getSender().getLocalName() + "!");
-		e.printStackTrace();
-	    }
-	}
-
-	private boolean alocaAtividadeMembro(String nomeMembro, Atividade atividade) {
-
-	    // ja esta alocada
-	    if (hashAtividadesMembroAlocadas.containsKey(atividade.getId())
-		    && !hashAtividadesMembroAlocadas.get(atividade.getId()).equals(nomeMembro)) {
-		return false;
-	    }
-	    // nao esta alocada
-
-	    atividade = findAtividadeById(atividade.getId());
-	    atividade.setMembroNome(nomeMembro);
-	    hashAtividadesMembroAlocadas.put(atividade.getId(), nomeMembro);
-	    hashMembroAtividadeAlocadas.put(nomeMembro, atividade);
-
-	    return true;
-	}
-
-	private Atividade findAtividadeById(int id) {
-	    for (Atividade atividade : listaAtividades) {
-		if (atividade.getId() == id) {
-		    return atividade;
-		}
-	    }
-	    return null;
-	}
-    }
-
-    public ArrayList<Atividade> getListaAtividades() {
+    public Collection<Atividade> getListaAtividades() {
 	return listaAtividades;
     }
 
@@ -126,6 +71,21 @@ public class Gestor extends Agent {
 
     public Hashtable<Integer, Atividade> getPrioridadeAtividades() {
 	return prioridadeAtividades;
+    }
+
+    public Collection<Atividade> getListaAtividadesDisponiveis() {
+	// TODO: retornar somente as atividades que nao estao sendo
+	// implementadas
+	return getListaAtividades();
+    }
+
+    public Atividade findAtividadeById(int id) {
+	for (Atividade atividade : listaAtividades) {
+	    if (atividade.getId() == id) {
+		return atividade;
+	    }
+	}
+	return null;
     }
 
 }
