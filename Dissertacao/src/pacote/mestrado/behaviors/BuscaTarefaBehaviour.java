@@ -14,9 +14,19 @@ import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.MensagemTO;
 import pacote.mestrado.services.CompatibilidadeTarefaService;
 
+/**
+ * Esse agente irá iniciar a execução da primeira etapa de negociação com o
+ * Gestor. Caso encontre uma tarefa que esteja disponivel, selecionará a tarefa
+ * e passará para o comportamento de NegociantePassivoBehaviour caso a tarefa
+ * nao esteja disponivel iniciara o comporamento de NegocianteAtivoBehaviour
+ * 
+ * @author Shulander
+ * 
+ */
 public class BuscaTarefaBehaviour extends SimpleBehaviour {
 	private static final long serialVersionUID = -8069717410691786862L;
 
+	// Membro ao qual o Behaviour esta associado
 	private Membro membro = null;
 	private int passo;
 
@@ -81,11 +91,16 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 		    // o agente, caso contrario reinicia do passo 1;
 		    if (atividade.getMembroNome().equals(membro.getAID().getLocalName())) {
 			membro.setAtividadeEscolhida(atividade);
+			terminou = true;
+			membro.addBehaviour(new NegociantePassivoBehaviour(membro));
 		    } else {
-			// invalida a atividade para uma proxima selecao
-			membro.getAtividadesInvalidas().add(atividade);
-			membro.setAtividadeEscolhida(null);
-			passo = -1;
+			//TODO esse trexo de codigo se aplica quando 
+//			 invalida a atividade para uma proxima selecao
+//			membro.getAtividadesInvalidas().add(atividade);
+//			membro.setAtividadeEscolhida(null);
+//			passo = -1;
+			membro.addBehaviour(new NegocianteAtivoBehaviour(membro));
+			terminou = true;
 		    }
 		} catch (UnreadableException e) {
 		    System.out.println("Problema ao converter a lista de atividades");
