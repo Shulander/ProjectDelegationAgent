@@ -13,11 +13,16 @@ public class ConnectionFactory
 	conexao = null;
     }
     
-    public Connection getConnection() 
+    public Connection getConnection()
     {
 	System.out.println("Conectando ao banco");
 	try {
 	    if(conexao == null) {
+		try {
+		    Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+		    e.printStackTrace();
+		}  
 		conexao = DriverManager.getConnection("jdbc:mysql://localhost/mestrado", "root", "");
 	    }
 	    return conexao;
