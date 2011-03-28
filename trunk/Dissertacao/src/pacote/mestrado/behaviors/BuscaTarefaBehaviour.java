@@ -99,8 +99,9 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 //			membro.getAtividadesInvalidas().add(atividade);
 //			membro.setAtividadeEscolhida(null);
 //			passo = -1;
-			membro.addBehaviour(new NegocianteAtivoBehaviour(membro));
+			membro.setAtividadeEscolhida(atividade);
 			terminou = true;
+			membro.addBehaviour(new NegocianteAtivoBehaviour(membro));
 		    }
 		} catch (UnreadableException e) {
 		    System.out.println("Problema ao converter a lista de atividades");
