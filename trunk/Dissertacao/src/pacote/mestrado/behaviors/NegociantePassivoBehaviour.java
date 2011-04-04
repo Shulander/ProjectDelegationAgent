@@ -1,16 +1,19 @@
 package pacote.mestrado.behaviors;
 
-import java.io.IOException;
-import java.util.Collection;
-
-import pacote.mestrado.Membro;
-import pacote.mestrado.entidades.Habilidade;
-import pacote.mestrado.entidades.MensagemTO;
-import pacote.mestrado.services.CompatibilidadeTarefaService;
 import jade.core.AID;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
+
+import java.io.IOException;
+import java.util.Collection;
+
+import pacote.mestrado.Membro;
+import pacote.mestrado.dominios.TipoEtapaNegociacao;
+import pacote.mestrado.entidades.ControleMembro;
+import pacote.mestrado.entidades.Habilidade;
+import pacote.mestrado.entidades.MensagemTO;
+import pacote.mestrado.services.CompatibilidadeTarefaService;
 
 /**
  * Esse Behaviour se inicia quando o Agente Membro ja encontrou uma tarefa. Ele
@@ -27,13 +30,14 @@ public class NegociantePassivoBehaviour extends SimpleBehaviour {
     private boolean terminou;
 
     public NegociantePassivoBehaviour(Membro membro) {
+	ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.NEGOCIACAO_PASSIVO);
 	this.membro = membro;
 	terminou = false;
     }
 
     @Override
     public void action() {
-	System.out.println("Teste de novo behavior: NegociantePassivoBehaviour");
+	System.out.println("trocou para o comportamento: NegociantePassivoBehaviour");
 	try {
 	    recebeTrocaAtividade();
 	} catch (IOException e) {
@@ -42,7 +46,6 @@ public class NegociantePassivoBehaviour extends SimpleBehaviour {
 	    System.out.println("Falha ao receber resposta do Membro");
 	}
 
-	terminou = true;
     }
 
     private void recebeTrocaAtividade() throws IOException, UnreadableException {
@@ -71,8 +74,15 @@ public class NegociantePassivoBehaviour extends SimpleBehaviour {
 	    }
 	    // envia resposta
 	    enviaConfirmacao(msg, trocaAceita);
+	} else {
+	    if (ControleMembro.getInstance().contaAgentesEtapa(TipoEtapaNegociacao.BUSCA_GESTOR) == 0
+		    && ControleMembro.getInstance().contaAgentesEtapa(TipoEtapaNegociacao.NEGOCIACAO_ATIVO) == 0) {
+		System.out.println("TERMINOU: troca para o estado ExecucaoAtividade.");
+		//TODO: notificar o gestor do inicio da atividade.
+		terminou = true;
+		membro.addBehaviour(new ExecucaoAtividadeBehavior(membro));
+	    }
 	}
-
     }
 
     private void notificaGestor() throws IOException {
