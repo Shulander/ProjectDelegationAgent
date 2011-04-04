@@ -7,7 +7,9 @@ import jade.lang.acl.UnreadableException;
 import java.io.IOException;
 
 import pacote.mestrado.Gestor;
+import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
+import pacote.mestrado.entidades.ControleMembro;
 import pacote.mestrado.entidades.MensagemTO;
 
 public class InformaTarefasBehaviour extends CyclicBehaviour {
@@ -37,13 +39,23 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 		    gestor.send(resposta);
 		} else if (mensagem.getAssunto().equals("notificaGestor")) {
 		    Atividade atividade = (Atividade) mensagem.getMensagem();
-		    alocaAtividadeMembro(msg.getSender().getLocalName(), atividade);
+		    boolean alocado = alocaAtividadeMembro(msg.getSender().getLocalName(), atividade);
+		    if(alocado) {
+			broadcastEscolha(msg.getSender().getLocalName(), atividade);
+		    }
 		    ACLMessage resposta = msg.createReply();
 		    MensagemTO msgResposta = new MensagemTO();
 		    msgResposta.setAssunto("resNotificaGestor");
 		    msgResposta.setMensagem(gestor.findAtividadeById(atividade.getId()));
 		    resposta.setContentObject(msgResposta);
 		    gestor.send(resposta);
+		} else if(mensagem.getAssunto().equals("trocaAtividade")) {
+		    Atividade atividade = (Atividade) mensagem.getMensagem();
+		    String alocarPara = atividade.getMembroNome();
+		    // desaloca a atividade de quem enviou a requisicao
+		    desalocaAtividadeMembro(msg.getSender().getLocalName(), atividade);
+		    // aloca para o novo membro
+		    alocaAtividadeMembro(alocarPara, atividade);
 		}
 	    } else {
 		// System.out.println("Gestor: Entao mensagem eh null");
@@ -57,6 +69,21 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 	}
     }
 
+    private void broadcastEscolha(String localName, Atividade atividade) {
+	// TODO Auto-generated method stub
+	
+    }
+
+    private void desalocaAtividadeMembro(String nomeMembro, Atividade atividade) {
+	// verifica se a tarefa esta alocada para o membro
+	if (gestor.getHashAtividadesMembroAlocadas().containsKey(atividade.getId())
+		&& !gestor.getHashAtividadesMembroAlocadas().get(atividade.getId()).equals(nomeMembro)) {
+	    // remove das hashs
+	    gestor.getHashAtividadesMembroAlocadas().remove(atividade.getId());
+	    gestor.getHashMembroAtividadeAlocadas().remove(nomeMembro);
+	}
+    }
+
     private boolean alocaAtividadeMembro(String nomeMembro, Atividade atividade) {
 
 	// ja esta alocada
@@ -64,6 +91,12 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 		&& !gestor.getHashAtividadesMembroAlocadas().get(atividade.getId()).equals(nomeMembro)) {
 	    return false;
 	}
+	
+	// caso o membro esteja em execucao nao pode alocar uma tarefa para ele
+	if(ControleMembro.getInstance().getEtapa(nomeMembro).equals(TipoEtapaNegociacao.EXECUCAO_ATIVIDADE)) {
+	    return false;
+	}
+	
 	// nao esta alocada
 
 	atividade = gestor.findAtividadeById(atividade.getId());

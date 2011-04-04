@@ -1,15 +1,15 @@
 package pacote.mestrado.behaviors;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import jade.core.AID;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
+
+import java.io.IOException;
+
 import pacote.mestrado.Membro;
-import pacote.mestrado.entidades.Atividade;
+import pacote.mestrado.dominios.TipoEtapaNegociacao;
+import pacote.mestrado.entidades.ControleMembro;
 import pacote.mestrado.entidades.MensagemTO;
 
 /**
@@ -28,6 +28,7 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
     private boolean terminou;
 
     public NegocianteAtivoBehaviour(Membro membro) {
+	ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.NEGOCIACAO_ATIVO);
 	this.membro = membro;
 	terminou = false;
     }

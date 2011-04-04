@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pacote.mestrado.Membro;
+import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
+import pacote.mestrado.entidades.ControleMembro;
 import pacote.mestrado.entidades.MensagemTO;
 import pacote.mestrado.services.CompatibilidadeTarefaService;
 
@@ -33,6 +35,7 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 	private boolean terminou;
 
 	public BuscaTarefaBehaviour(Membro membro) {
+	    ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.BUSCA_GESTOR);
 	    this.membro = membro;
 	    terminou = false;
 	    passo = 0;
