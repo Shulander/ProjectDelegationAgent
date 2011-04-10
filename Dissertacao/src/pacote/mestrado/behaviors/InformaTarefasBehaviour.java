@@ -1,14 +1,18 @@
 package pacote.mestrado.behaviors;
 
+import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 
 import java.io.IOException;
+import java.util.List;
 
 import pacote.mestrado.Gestor;
+import pacote.mestrado.dominios.TipoEstado;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
+import pacote.mestrado.entidades.ControleGestor;
 import pacote.mestrado.entidades.ControleMembro;
 import pacote.mestrado.entidades.MensagemTO;
 
@@ -56,6 +60,14 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 		    desalocaAtividadeMembro(msg.getSender().getLocalName(), atividade);
 		    // aloca para o novo membro
 		    alocaAtividadeMembro(alocarPara, atividade);
+		} else if(mensagem.getAssunto().equals("inicioAtividade")) {
+		    Atividade atividade = (Atividade) mensagem.getMensagem();
+		    atividade = gestor.findAtividadeById(atividade.getId());
+		    atividade.setEstado(TipoEstado.ALOCADA);
+		} else if(mensagem.getAssunto().equals("terminoAtividade")) {
+		    Atividade atividade = (Atividade) mensagem.getMensagem();
+		    atividade = gestor.findAtividadeById(atividade.getId());
+		    atividade.setEstado(TipoEstado.CONCLUIDA);
 		}
 	    } else {
 		// System.out.println("Gestor: Entao mensagem eh null");
@@ -69,9 +81,24 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 	}
     }
 
-    private void broadcastEscolha(String localName, Atividade atividade) {
-	// TODO Auto-generated method stub
-	
+    /**
+     * Notifica todos os membros 
+     * @param localName
+     * @param atividade
+     * @throws IOException
+     */
+    private void broadcastEscolha(String localName, Atividade atividade) throws IOException {
+	List<String> membros = ControleMembro.getInstance().getListaAgentesEtapa(TipoEtapaNegociacao.EXECUCAO_ATIVIDADE);
+	ControleGestor.getInstance().gestorNotificaSimuladores(membros.size());
+	for (String membroDestino : membros) {
+	    MensagemTO mensagem = new MensagemTO();
+	    ACLMessage consulta = new ACLMessage(ACLMessage.REQUEST);
+	    mensagem.setAssunto(localName);
+	    mensagem.setMensagem(gestor.getListaAtividadesDisponiveis());
+	    consulta.setContentObject(mensagem);
+	    consulta.addReceiver(new AID(membroDestino, AID.ISLOCALNAME));
+	    gestor.send(consulta);
+	}
     }
 
     private void desalocaAtividadeMembro(String nomeMembro, Atividade atividade) {

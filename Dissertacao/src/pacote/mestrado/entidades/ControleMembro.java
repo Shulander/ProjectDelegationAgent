@@ -22,7 +22,7 @@ public class ControleMembro {
      * @param agente
      * @param etapa
      */
-    public void notifica(String agente, TipoEtapaNegociacao etapa) {
+    public synchronized void notifica(String agente, TipoEtapaNegociacao etapa) {
 	situacao.put(agente, etapa);
     }
 
@@ -32,7 +32,7 @@ public class ControleMembro {
      * @param agente
      * @return
      */
-    public TipoEtapaNegociacao remove(String agente) {
+    public synchronized TipoEtapaNegociacao remove(String agente) {
 	return situacao.remove(agente);
     }
 
@@ -42,7 +42,7 @@ public class ControleMembro {
      * @param agente
      * @return
      */
-    public TipoEtapaNegociacao getEtapa(String agente) {
+    public synchronized TipoEtapaNegociacao getEtapa(String agente) {
 	return situacao.get(agente);
     }
 
@@ -52,7 +52,7 @@ public class ControleMembro {
      * @param etapa
      * @return int
      */
-    public int contaAgentesEtapa(TipoEtapaNegociacao etapa) {
+    public synchronized int contaAgentesEtapa(TipoEtapaNegociacao etapa) {
 	return getListaAgentesEtapa(etapa).size();
     }
 
@@ -62,7 +62,7 @@ public class ControleMembro {
      * @param etapa
      * @return
      */
-    public List<String> getListaAgentesEtapa(TipoEtapaNegociacao etapa) {
+    public synchronized List<String> getListaAgentesEtapa(TipoEtapaNegociacao etapa) {
 	List<String> retorno = new LinkedList<String>();
 
 	for (String agenteNome : situacao.keySet()) {
@@ -74,10 +74,22 @@ public class ControleMembro {
 	return retorno;
     }
 
-    public static ControleMembro getInstance() {
+    public synchronized static ControleMembro getInstance() {
 	if (instance == null) {
 	    instance = new ControleMembro();
 	}
 	return instance;
+    }
+    
+    public String toString() {
+	StringBuilder str = new StringBuilder();
+	for (String agenteNome : situacao.keySet()) {
+	    str.append(agenteNome);
+	    str.append("-");
+	    str.append(situacao.get(agenteNome));
+	    str.append("\n");
+	}
+	
+	return str.toString();
     }
 }

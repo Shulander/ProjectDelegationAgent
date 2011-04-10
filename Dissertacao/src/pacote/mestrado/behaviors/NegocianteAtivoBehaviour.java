@@ -31,12 +31,11 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
 	ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.NEGOCIACAO_ATIVO);
 	this.membro = membro;
 	terminou = false;
+	System.out.println(membro.getAID().getLocalName() + ":trocou para o comportamento: NegocianteAtivoBehaviour");
     }
 
     @Override
     public void action() {
-	System.out.println("Teste de novo behavior: NegocianteAtivoBehaviour");
-
 	try {
 	    solicitaTrocaAtividade();
 	    recebeConfirmacao();
@@ -45,8 +44,6 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
 	} catch (UnreadableException e) {
 	    System.out.println("Falha ao receber resposta do Membro");
 	}
-
-	terminou = true;
     }
 
     private void recebeConfirmacao() throws UnreadableException {
@@ -61,7 +58,6 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
 		membro.addBehaviour(new NegociantePassivoBehaviour(membro));
 	    } else {
 		membro.getAtividadesInvalidas().add(membro.getAtividadeEscolhida());
-		membro.setAtividadeEscolhida(null);
 		membro.addBehaviour(new BuscaTarefaBehaviour(membro));
 	    }
 	    terminou = true;
@@ -77,7 +73,7 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
 	consulta.setContentObject(mensagem);
 	consulta.addReceiver(new AID(membro.getAtividadeEscolhida().getMembroNome(), AID.ISLOCALNAME));
 	membro.send(consulta);
-	System.out.println(membro.getAID().getLocalName() + ": Enviei mensagem ao gestor.");
+	System.out.println(membro.getAID().getLocalName() + ": troca Atividade com: "+ membro.getAtividadeEscolhida().getMembroNome());
     }
 
     @Override
