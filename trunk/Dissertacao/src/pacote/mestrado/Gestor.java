@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedList;
 
 import pacote.mestrado.behaviors.InformaTarefasBehaviour;
 import pacote.mestrado.dao.AtividadeDAO;
 import pacote.mestrado.dao.HabilidadeDAO;
+import pacote.mestrado.dominios.TipoEstado;
 import pacote.mestrado.entidades.Atividade;
 
 public class Gestor extends Agent {
@@ -74,9 +76,13 @@ public class Gestor extends Agent {
     }
 
     public Collection<Atividade> getListaAtividadesDisponiveis() {
-	// TODO: retornar somente as atividades que nao estao sendo
-	// implementadas
-	return getListaAtividades();
+	Collection<Atividade> retorno = new LinkedList<Atividade>();
+	for (Atividade atividade : getListaAtividades()) {
+	    if(atividade.getEstado().equals(TipoEstado.DISPONIVEL)) {
+		retorno.add(atividade);
+	    }
+	}
+	return retorno;
     }
 
     public Atividade findAtividadeById(int id) {

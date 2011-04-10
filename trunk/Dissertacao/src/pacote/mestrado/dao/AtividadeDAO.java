@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import pacote.mestrado.dominios.TipoEstado;
 import pacote.mestrado.entidades.Atividade;
 
 public class AtividadeDAO 
@@ -32,7 +34,7 @@ public class AtividadeDAO
 		atividade.setDataInicial(rs.getDate("dataInicial"));
 		atividade.setDataEntrega(rs.getDate("dataEntrega"));
 		atividade.setDuracao(rs.getDouble("duracao"));
-		atividade.setEstado(rs.getString("estado"));
+		atividade.setEstado(TipoEstado.obterPorCodigo(rs.getString("estado")));
 		atividade.setOrcamento(rs.getDouble("orcamento"));
 		atividades.add(atividade);
 	    }	    	    
