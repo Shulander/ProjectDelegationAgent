@@ -18,6 +18,8 @@ public class Atividade implements Serializable {
 							 // atividade
     private Date dataInicial;
     private Date dataEntrega;
+    private Date dataInicioExecucao;
+    private Date dataTerminoExecucao;
     private Double orcamento;
     private Collection<Habilidade> requisitosHabilidades;
     private Double duracao;
@@ -182,6 +184,22 @@ public class Atividade implements Serializable {
 
     public void setMembroNome(String membroNome) {
 	this.membroNome = membroNome;
+    }
+
+    public Date getDataInicioExecucao() {
+        return dataInicioExecucao;
+    }
+
+    public void setDataInicioExecucao(Date dataInicioExecucao) {
+        this.dataInicioExecucao = dataInicioExecucao;
+    }
+
+    public Date getDataTerminoExecucao() {
+        return dataTerminoExecucao;
+    }
+
+    public void setDataTerminoExecucao(Date dataTerminoExecucao) {
+        this.dataTerminoExecucao = dataTerminoExecucao;
     }
 
 }

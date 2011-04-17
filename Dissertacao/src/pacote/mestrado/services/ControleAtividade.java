@@ -28,6 +28,15 @@ public class ControleAtividade {
     public Date getDataAtual() {
 	return dataAtual;
     }
+    
+    /**
+     * Chamado pelo gestor no inicio da carga de tarefas, setada para a primeira data de inicio de uma tarefa
+     * 
+     * @param novaDataAtual
+     */
+    public void setDataAtual(Date novaDataAtual) {
+	dataAtual = novaDataAtual;
+    }
 
     /**
      * Remove um agente
