@@ -6,6 +6,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import pacote.mestrado.Gestor;
@@ -36,15 +37,21 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 		if (mensagem.getAssunto().equals("ListaAtividades")) {
 		    ACLMessage resposta = msg.createReply();
 		    MensagemTO msgResposta = new MensagemTO();
-		    msgResposta.setAssunto("resListaAtividades");
-		    msgResposta.setMensagem(gestor.getListaAtividadesDisponiveis());
+		    Collection<Atividade> atividades = gestor.getListaAtividadesDisponiveis();
+		    if(atividades.size() > 0 || !gestor.terminouTarefas()) {
+			msgResposta.setAssunto("resListaAtividades");
+			msgResposta.setMensagem(gestor.getListaAtividadesDisponiveis());
+		    } else {
+			msgResposta.setAssunto("resListaAtividadesNOT");
+			msgResposta.setMensagem("mensagensTerminaram");
+		    }
 		    resposta.setContentObject(msgResposta);
 		    System.out.println("Gestor: enviei a resposta ao " + msg.getSender().getLocalName() + ".");
 		    gestor.send(resposta);
 		} else if (mensagem.getAssunto().equals("notificaGestor")) {
 		    Atividade atividade = (Atividade) mensagem.getMensagem();
 		    boolean alocado = alocaAtividadeMembro(msg.getSender().getLocalName(), atividade);
-		    if(alocado) {
+		    if (alocado) {
 			broadcastEscolha(msg.getSender().getLocalName(), atividade);
 		    }
 		    ACLMessage resposta = msg.createReply();
@@ -53,20 +60,21 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 		    msgResposta.setMensagem(gestor.findAtividadeById(atividade.getId()));
 		    resposta.setContentObject(msgResposta);
 		    gestor.send(resposta);
-		} else if(mensagem.getAssunto().equals("trocaAtividade")) {
+		} else if (mensagem.getAssunto().equals("trocaAtividade")) {
 		    Atividade atividade = (Atividade) mensagem.getMensagem();
 		    String alocarPara = atividade.getMembroNome();
 		    // desaloca a atividade de quem enviou a requisicao
 		    desalocaAtividadeMembro(msg.getSender().getLocalName(), atividade);
 		    // aloca para o novo membro
 		    alocaAtividadeMembro(alocarPara, atividade);
-		} else if(mensagem.getAssunto().equals("inicioAtividade")) {
+		} else if (mensagem.getAssunto().equals("inicioAtividade")) {
 		    Atividade atividade = (Atividade) mensagem.getMensagem();
 		    atividade = gestor.findAtividadeById(atividade.getId());
 		    atividade.setEstado(TipoEstado.ALOCADA);
-		} else if(mensagem.getAssunto().equals("terminoAtividade")) {
+		} else if (mensagem.getAssunto().equals("terminoAtividade")) {
 		    Atividade atividade = (Atividade) mensagem.getMensagem();
 		    atividade = gestor.findAtividadeById(atividade.getId());
+		    broadCastAguardandoTarefa();
 		    atividade.setEstado(TipoEstado.CONCLUIDA);
 		}
 	    } else {
@@ -81,24 +89,49 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 	}
     }
 
+    private void broadCastAguardandoTarefa() throws IOException {
+	List<String> membros = ControleMembro.getInstance().getListaAgentesEtapa(
+		TipoEtapaNegociacao.AGUARDANDO_ATIVIDADE_COMPATIVEL);
+
+	if (membros.size() == 0) {
+	    return;
+	}
+	System.out.println("Gestor: Notificando parados");
+	ACLMessage consulta = new ACLMessage(ACLMessage.REQUEST);
+	MensagemTO mensagem = new MensagemTO();
+	mensagem.setAssunto("liberado");
+	mensagem.setMensagem("continue");
+	for (String membroDestino : membros) {
+	    consulta.addReceiver(new AID(membroDestino, AID.ISLOCALNAME));
+	}
+	consulta.setContentObject(mensagem);
+	gestor.send(consulta);
+    }
+
     /**
-     * Notifica todos os membros 
+     * Notifica todos os membros
+     * 
      * @param localName
      * @param atividade
      * @throws IOException
      */
     private void broadcastEscolha(String localName, Atividade atividade) throws IOException {
-	List<String> membros = ControleMembro.getInstance().getListaAgentesEtapa(TipoEtapaNegociacao.EXECUCAO_ATIVIDADE);
-	ControleGestor.getInstance().gestorNotificaSimuladores(membros.size());
-	for (String membroDestino : membros) {
-	    MensagemTO mensagem = new MensagemTO();
-	    ACLMessage consulta = new ACLMessage(ACLMessage.REQUEST);
-	    mensagem.setAssunto(localName);
-	    mensagem.setMensagem(gestor.getListaAtividadesDisponiveis());
-	    consulta.setContentObject(mensagem);
-	    consulta.addReceiver(new AID(membroDestino, AID.ISLOCALNAME));
-	    gestor.send(consulta);
+	List<String> membros = ControleMembro.getInstance()
+		.getListaAgentesEtapa(TipoEtapaNegociacao.EXECUCAO_ATIVIDADE);
+	if (membros.size() == 0) {
+	    return;
 	}
+	ControleGestor.getInstance().gestorNotificaSimuladores(membros.size());
+
+	ACLMessage consulta = new ACLMessage(ACLMessage.REQUEST);
+	MensagemTO mensagem = new MensagemTO();
+	mensagem.setAssunto(localName);
+	mensagem.setMensagem(gestor.getListaAtividadesDisponiveis());
+	for (String membroDestino : membros) {
+	    consulta.addReceiver(new AID(membroDestino, AID.ISLOCALNAME));
+	}
+	consulta.setContentObject(mensagem);
+	gestor.send(consulta);
     }
 
     private void desalocaAtividadeMembro(String nomeMembro, Atividade atividade) {
@@ -118,12 +151,12 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 		&& !gestor.getHashAtividadesMembroAlocadas().get(atividade.getId()).equals(nomeMembro)) {
 	    return false;
 	}
-	
+
 	// caso o membro esteja em execucao nao pode alocar uma tarefa para ele
-	if(ControleMembro.getInstance().getEtapa(nomeMembro).equals(TipoEtapaNegociacao.EXECUCAO_ATIVIDADE)) {
+	if (ControleMembro.getInstance().getEtapa(nomeMembro).equals(TipoEtapaNegociacao.EXECUCAO_ATIVIDADE)) {
 	    return false;
 	}
-	
+
 	// nao esta alocada
 
 	atividade = gestor.findAtividadeById(atividade.getId());

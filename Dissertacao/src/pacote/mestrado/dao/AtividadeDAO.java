@@ -40,10 +40,51 @@ public class AtividadeDAO
 	    }	    	    
 	    rs.close();
 	    stmt.close();
+	    
+	    getRequisitosAtividades(atividades);
+	    
 	    return atividades;
 	} catch (SQLException e) {
 	    throw new RuntimeException(e);
 	}	 
+    }
+
+    private void getRequisitosAtividades(List<Atividade> atividades) {
+	
+	try {
+	    String sql = "SELECT * FROM atividades_predecessoras";	   
+	    PreparedStatement stmt = this.connection.prepareStatement(sql);	 
+	    ResultSet rs = stmt.executeQuery();	    
+	    while (rs.next()) {
+		int idAtividade = rs.getInt("fk_idAtividade");
+		int idAtividadePredecessora = rs.getInt("fk_idAtividadePredecessora");
+		Atividade atividade = encontraAtividade(idAtividade, atividades);
+		Atividade atividadePredecessora = encontraAtividade(idAtividadePredecessora, atividades);
+		if(atividade != null && atividadePredecessora != null) {
+		    atividade.getAtividadesPredecessoras().add(atividadePredecessora);
+		}
+	    }
+	    rs.close();
+	    stmt.close();
+	    	    
+	} catch (SQLException e) {
+	    throw new RuntimeException(e);
+	}
+	
+    }
+
+    private Atividade encontraAtividade(int idAtividade, List<Atividade> atividades) {
+	for (Atividade atividade : atividades) {
+	    if(atividade.getId() == idAtividade) {
+		return atividade;
+	    }
+	}
+	return null;
+    }
+
+    private void getRequisitos() {
+	
+	
     }
   
 

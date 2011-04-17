@@ -13,6 +13,7 @@ import pacote.mestrado.dao.AtividadeDAO;
 import pacote.mestrado.dao.HabilidadeDAO;
 import pacote.mestrado.dominios.TipoEstado;
 import pacote.mestrado.entidades.Atividade;
+import pacote.mestrado.services.ControleAtividade;
 
 public class Gestor extends Agent {
     private static final long serialVersionUID = -7779496563622856447L;
@@ -57,6 +58,20 @@ public class Gestor extends Agent {
 	    atividade.setRequisitosHabilidades(daoHab.getHabilidades(atividade.getId(), "Atividade"));
 	    System.out.println(atividade.toString());
 	}
+	
+	ajustaDataInicioProjeto();
+    }
+
+    /**
+     * Ajusta no ControleAtividade a Data de inicio da primeira atividade do projeto
+     */
+    private void ajustaDataInicioProjeto() {
+	for (Atividade atividade : getListaAtividadesDisponiveis()) {
+	    if(ControleAtividade.getInstance().getDataAtual() == null
+		    || ControleAtividade.getInstance().getDataAtual().after(atividade.getDataInicial())) {
+		ControleAtividade.getInstance().setDataAtual(atividade.getDataInicial());
+	    }
+	}
     }
 
     public Collection<Atividade> getListaAtividades() {
@@ -78,11 +93,22 @@ public class Gestor extends Agent {
     public Collection<Atividade> getListaAtividadesDisponiveis() {
 	Collection<Atividade> retorno = new LinkedList<Atividade>();
 	for (Atividade atividade : getListaAtividades()) {
-	    if(atividade.getEstado().equals(TipoEstado.DISPONIVEL)) {
+	    if(atividade.getEstado().equals(TipoEstado.DISPONIVEL) && preRequisitosConcluidos(atividade)) {
 		retorno.add(atividade);
 	    }
 	}
 	return retorno;
+    }
+
+    private boolean preRequisitosConcluidos(Atividade atividade) {
+	if(atividade.getAtividadesPredecessoras() != null) {
+	    for (Atividade ativPredecessora : atividade.getAtividadesPredecessoras()) {
+		if(!ativPredecessora.getEstado().equals(TipoEstado.CONCLUIDA)) {
+		    return false;
+		}
+	    }
+	}
+	return true;
     }
 
     public Atividade findAtividadeById(int id) {
@@ -92,6 +118,16 @@ public class Gestor extends Agent {
 	    }
 	}
 	return null;
+    }
+
+    public boolean terminouTarefas() {
+	Collection<Atividade> retorno = new LinkedList<Atividade>();
+	for (Atividade atividade : getListaAtividades()) {
+	    if(!atividade.getEstado().equals(TipoEstado.DISPONIVEL)) {
+		return true;
+	    }
+	}
+	return false;
     }
 
 }
