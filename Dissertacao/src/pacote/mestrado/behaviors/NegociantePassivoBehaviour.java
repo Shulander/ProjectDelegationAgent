@@ -10,11 +10,13 @@ import java.util.Collection;
 
 import pacote.mestrado.Membro;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
-import pacote.mestrado.entidades.ControleGestor;
-import pacote.mestrado.entidades.ControleMembro;
 import pacote.mestrado.entidades.Habilidade;
 import pacote.mestrado.entidades.MensagemTO;
 import pacote.mestrado.services.CompatibilidadeTarefaService;
+import pacote.mestrado.services.ControleAtividade;
+import pacote.mestrado.services.ControleGestor;
+import pacote.mestrado.services.ControleMembro;
+import pacote.mestrado.services.TempoExecucaoService;
 
 /**
  * Esse Behaviour se inicia quando o Agente Membro ja encontrou uma tarefa. Ele
@@ -32,6 +34,7 @@ public class NegociantePassivoBehaviour extends SimpleBehaviour {
 
     public NegociantePassivoBehaviour(Membro membro) {
 	ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.NEGOCIACAO_PASSIVO);
+	ControleAtividade.getInstance().adiciona(membro.getAID().getLocalName(), TempoExecucaoService.calculcaDataEntrega(membro.getAID().getLocalName(), membro.getAtividadeEscolhida(), membro.getHabilidades()));
 	this.membro = membro;
 	terminou = false;
 	System.out.println(membro.getAID().getLocalName() + ":trocou para o comportamento: NegociantePassivoBehaviour");
@@ -67,6 +70,7 @@ public class NegociantePassivoBehaviour extends SimpleBehaviour {
 	    // caso a Troca foi aceita, troca o dono da atividade para o nome
 	    // requisitado. nofica o gestor da troca e recomeça a procura
 	    if (trocaAceita) {
+		ControleAtividade.getInstance().remove(membro.getAID().getLocalName());
 		membro.getAtividadeEscolhida().setMembroNome(nomeRequisicao);
 		notificaGestor();
 		membro.setAtividadeEscolhida(null);

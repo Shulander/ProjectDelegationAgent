@@ -1,15 +1,17 @@
 package pacote.mestrado.behaviors;
 
+import jade.core.AID;
+import jade.core.behaviours.SimpleBehaviour;
+import jade.lang.acl.ACLMessage;
+
 import java.io.IOException;
 
 import pacote.mestrado.Membro;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
-import pacote.mestrado.entidades.ControleGestor;
-import pacote.mestrado.entidades.ControleMembro;
 import pacote.mestrado.entidades.MensagemTO;
-import jade.core.AID;
-import jade.core.behaviours.SimpleBehaviour;
-import jade.lang.acl.ACLMessage;
+import pacote.mestrado.services.ControleAtividade;
+import pacote.mestrado.services.ControleGestor;
+import pacote.mestrado.services.ControleMembro;
 
 public class ExecucaoAtividadeBehavior extends SimpleBehaviour {
     private static final long serialVersionUID = 2605429686659053550L;
@@ -33,21 +35,33 @@ public class ExecucaoAtividadeBehavior extends SimpleBehaviour {
     public void action() {
 
 	if (!terminou) {
-	    block(250);
-	    System.out.println(membro.getAID().getLocalName() + ":passo de execucao " + passo);
-	    passo++;
-	    if (passo >= 10) {
-		try {
-		    notificaGestorTerminoTarefa();
-		    terminou = true;
-		} catch (IOException e) {
-		    System.out.println(membro.getAID().getLocalName()
-			    + ":ERRO ao comunicar o gestor do termino da tarefa");
-		}
+	    if (ControleMembro.getInstance().contaAgentesEtapa(TipoEtapaNegociacao.BUSCA_GESTOR) == 0
+		    && ControleMembro.getInstance().contaAgentesEtapa(TipoEtapaNegociacao.NEGOCIACAO_ATIVO) == 0
+		    && ControleMembro.getInstance().contaAgentesEtapa(TipoEtapaNegociacao.NEGOCIACAO_PASSIVO) == 0
+		    && ControleAtividade.getInstance().getTerminei(membro.getAID().getLocalName())) {
+		executa();
+	    } else {
+		block(10);
 	    }
 	} else {
 	    block(250);
 	}
+    }
+
+    private void executa() {
+	System.out.println(membro.getAID().getLocalName() + ":terminei execucaoTarefa " + passo);
+	try {
+	    calculaXPganho(membro);
+	    notificaGestorTerminoTarefa();
+	    terminou = true;
+	} catch (IOException e) {
+	    System.out.println(membro.getAID().getLocalName() + ":ERRO ao comunicar o gestor do termino da tarefa");
+	}
+    }
+
+    private void calculaXPganho(Membro membro2) {
+	// TODO Auto-generated method stub
+	
     }
 
     private void notificaGestorTerminoTarefa() throws IOException {
@@ -58,7 +72,8 @@ public class ExecucaoAtividadeBehavior extends SimpleBehaviour {
 	consulta.setContentObject(mensagem);
 	consulta.addReceiver(new AID("gestor", AID.ISLOCALNAME));
 	membro.send(consulta);
-	System.out.println(membro.getAID().getLocalName() + ": terminoTarefa Atividade: "+ membro.getAtividadeEscolhida().getId());
+	System.out.println(membro.getAID().getLocalName() + ": terminoTarefa Atividade: "
+		+ membro.getAtividadeEscolhida().getId());
     }
 
     @Override

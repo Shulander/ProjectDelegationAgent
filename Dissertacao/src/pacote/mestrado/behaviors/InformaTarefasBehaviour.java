@@ -12,9 +12,9 @@ import pacote.mestrado.Gestor;
 import pacote.mestrado.dominios.TipoEstado;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
-import pacote.mestrado.entidades.ControleGestor;
-import pacote.mestrado.entidades.ControleMembro;
 import pacote.mestrado.entidades.MensagemTO;
+import pacote.mestrado.services.ControleGestor;
+import pacote.mestrado.services.ControleMembro;
 
 public class InformaTarefasBehaviour extends CyclicBehaviour {
     private static final long serialVersionUID = -1703109073768236603L;
