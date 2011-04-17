@@ -27,7 +27,9 @@ public class TempoExecucaoService {
 	
 	diasTerminoNova = (int) Math.ceil(diasTerminoNova * (2.0-CompatibilidadeTarefaService.calculaGrauCompatibilidade(atividadeEscolhida, habilidades)));
 	
-	return DateUtil.adicionaDiasUteis(dataInicio, diasTerminoNova+diasTerminoAtual);
+	atividadeEscolhida.setDataInicioExecucao(dataInicio);
+	atividadeEscolhida.setDataTerminoExecucao(DateUtil.adicionaDiasUteis(dataInicio, diasTerminoNova+diasTerminoAtual));
+	return atividadeEscolhida.getDataTerminoExecucao();
     }
 
 }
