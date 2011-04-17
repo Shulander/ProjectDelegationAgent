@@ -12,9 +12,10 @@ import java.util.List;
 import pacote.mestrado.Membro;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
-import pacote.mestrado.entidades.ControleMembro;
 import pacote.mestrado.entidades.MensagemTO;
 import pacote.mestrado.services.CompatibilidadeTarefaService;
+import pacote.mestrado.services.ControleAtividade;
+import pacote.mestrado.services.ControleMembro;
 
 /**
  * Esse agente irá iniciar a execução da primeira etapa de negociação com o
@@ -36,6 +37,7 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 
     public BuscaTarefaBehaviour(Membro membro) {
 	ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.BUSCA_GESTOR);
+	ControleAtividade.getInstance().remove(membro.getAID().getLocalName());
 	this.membro = membro;
 	membro.setAtividadeEscolhida(null);
 	setTerminou(false);
@@ -50,9 +52,6 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 	    switch (passo) {
 	    case 0:
 		solicitaListaAtividades();
-		++passo;
-		break;
-	    case 1:
 		lista = recebeListaAtividades();
 		if (!lista.isEmpty()) {
 		    System.out.println(membro.getAID().getLocalName() + " recebeu lista de atividades");
@@ -60,23 +59,22 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 		    Atividade atividadeEscolhida = CompatibilidadeTarefaService.selecionaAtividadeHabilidade(lista,
 			    membro.getHabilidades(), membro.getAtividadesInvalidas());
 		    if (atividadeEscolhida != null) {
+			ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.BUSCA_GESTOR);
 			notificaGestor(atividadeEscolhida);
 			membro.setAtividadeEscolhida(atividadeEscolhida);
 			++passo;
 		    } else {
-			setTerminou(true);
+			ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.AGUARDANDO_ATIVIDADE_COMPATIVEL);
 			passo = 0;
-			System.out.println(membro.getAID().getLocalName() + "Terminou por faltar novas tarefas");
+			System.out.println(membro.getAID().getLocalName() + " Nenhuma tarefa disponivel atualmente");
 		    }
 		} else {
-		    System.out.println(membro.getAID().getLocalName() + "Lista de atividades está vazia! WTF :(");
 		    setTerminou(true);
 		    passo = 0;
-		    System.out.println(membro.getAID().getLocalName() + "Terminou por faltar novas tarefas");
+		    System.out.println(membro.getAID().getLocalName() + " Terminou por faltar novas tarefas");
 		}
 		break;
-	    case 2:
-		// TODO: recebe a confirmacao do gestor da alocacao da
+	    case 1:
 		recebeConfirmacaoAtividadeEscolhida();
 		++passo;
 		break;
@@ -101,17 +99,12 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 		MensagemTO mensagem = (MensagemTO) resposta.getContentObject();
 		Atividade atividade = (Atividade) mensagem.getMensagem();
 		// caso a atividade enviada pelo gestor seja designada para
-		// o agente, caso contrario reinicia do passo 1;
+		// o agente, caso contrario tenta negociar;
 		if (atividade.getMembroNome().equals(membro.getAID().getLocalName())) {
 		    membro.setAtividadeEscolhida(atividade);
 		    setTerminou(true);
 		    membro.addBehaviour(new NegociantePassivoBehaviour(membro));
 		} else {
-		    // TODO esse trexo de codigo se aplica quando
-		    // invalida a atividade para uma proxima selecao
-		    // membro.getAtividadesInvalidas().add(atividade);
-		    // membro.setAtividadeEscolhida(null);
-		    // passo = -1;
 		    membro.setAtividadeEscolhida(atividade);
 		    setTerminou(true);
 		    membro.addBehaviour(new NegocianteAtivoBehaviour(membro));

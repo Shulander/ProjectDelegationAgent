@@ -9,12 +9,10 @@ import java.io.IOException;
 import java.util.Collection;
 
 import pacote.mestrado.Membro;
-import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
-import pacote.mestrado.entidades.ControleGestor;
-import pacote.mestrado.entidades.ControleMembro;
 import pacote.mestrado.entidades.MensagemTO;
 import pacote.mestrado.services.CompatibilidadeTarefaService;
+import pacote.mestrado.services.ControleGestor;
 
 /**
  * Esse Behaviour inicia pela notificacao do gestor que algum agente escolheu
