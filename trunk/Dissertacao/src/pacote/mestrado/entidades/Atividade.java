@@ -13,7 +13,7 @@ public class Atividade implements Serializable {
     private Integer id;
     private String nome;
     private String tipo;
-    private Collection<Integer> atividadesPredecessoras; // ids das atividades
+    private Collection<Atividade> atividadesPredecessoras; // ids das atividades
 							 // que precedem a
 							 // atividade
     private Date dataInicial;
@@ -28,7 +28,7 @@ public class Atividade implements Serializable {
     private String membroNome;
 
     public Atividade() {
-	atividadesPredecessoras = new ArrayList<Integer>();
+	atividadesPredecessoras = new ArrayList<Atividade>();
 	requisitosHabilidades = new ArrayList<Habilidade>();
 	if (dataInicial != null && dataEntrega != null) {
 	    calculaDuracao();
@@ -63,11 +63,11 @@ public class Atividade implements Serializable {
 	this.tipo = tipo;
     }
 
-    public Collection<Integer> getAtividadesPredecessoras() {
+    public Collection<Atividade> getAtividadesPredecessoras() {
 	return atividadesPredecessoras;
     }
 
-    public void setAtividadesPredecessoras(ArrayList<Integer> atividadesPredecessoras) {
+    public void setAtividadesPredecessoras(ArrayList<Atividade> atividadesPredecessoras) {
 	this.atividadesPredecessoras = atividadesPredecessoras;
     }
 
@@ -126,8 +126,8 @@ public class Atividade implements Serializable {
 	// imprime atividades predecessoras
 	if (!atividadesPredecessoras.isEmpty()) {
 	    str.append("-Atividades Predecessoras-" + "\n");
-	    for (int idAtiv : atividadesPredecessoras) {
-		str.append(idAtiv + "\n");
+	    for (Atividade ativ : atividadesPredecessoras) {
+		str.append(ativ.getId() + "\n");
 	    }
 	    str.append("--------------------------" + "\n");
 	} else {

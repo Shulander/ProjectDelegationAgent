@@ -48,30 +48,36 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
     public void action() {
 	System.out.println(membro.getAID().getLocalName() + " - Passo: " + passo);
 	List<Atividade> lista = new ArrayList<Atividade>();
+
 	try {
 	    switch (passo) {
 	    case 0:
 		solicitaListaAtividades();
-		lista = recebeListaAtividades();
-		if (!lista.isEmpty()) {
-		    System.out.println(membro.getAID().getLocalName() + " recebeu lista de atividades");
-		    // escolher atividade compativel com a do membro
-		    Atividade atividadeEscolhida = CompatibilidadeTarefaService.selecionaAtividadeHabilidade(lista,
-			    membro.getHabilidades(), membro.getAtividadesInvalidas());
-		    if (atividadeEscolhida != null) {
-			ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.BUSCA_GESTOR);
-			notificaGestor(atividadeEscolhida);
-			membro.setAtividadeEscolhida(atividadeEscolhida);
-			++passo;
-		    } else {
-			ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.AGUARDANDO_ATIVIDADE_COMPATIVEL);
-			passo = 0;
-			System.out.println(membro.getAID().getLocalName() + " Nenhuma tarefa disponivel atualmente");
-		    }
-		} else {
+		MensagemTO resposta = recebeListaAtividades();
+		if(resposta.getAssunto().equals("resListaAtividadesNOT")) {
 		    setTerminou(true);
+		    System.out.println(membro.getAID().getLocalName() + " TERMINOU POR FALTA DE TAREFAS");
+		    return;
+		} else {
+		    lista = (List<Atividade>) resposta.getMensagem();
+		}
+		// escolher atividade compativel com a do membro
+		Atividade atividadeEscolhida = CompatibilidadeTarefaService.selecionaAtividadeHabilidade(lista,
+			membro.getHabilidades(), membro.getAtividadesInvalidas());
+		if (atividadeEscolhida != null) {
+		    System.out.println(membro.getAID().getLocalName() + " recebeu lista de atividades");
+		    ControleMembro.getInstance().notifica(membro.getAID().getLocalName(),
+			    TipoEtapaNegociacao.BUSCA_GESTOR);
+		    notificaGestor(atividadeEscolhida);
+		    membro.setAtividadeEscolhida(atividadeEscolhida);
+		    ++passo;
+		} else {
+		    ControleMembro.getInstance().notifica(membro.getAID().getLocalName(),
+			    TipoEtapaNegociacao.AGUARDANDO_ATIVIDADE_COMPATIVEL);
 		    passo = 0;
-		    System.out.println(membro.getAID().getLocalName() + " Terminou por faltar novas tarefas");
+		    System.out.println(membro.getAID().getLocalName() + " Nenhuma tarefa disponivel atualmente");
+		    // aguardaBloqueado
+		    membro.blockingReceive();
 		}
 		break;
 	    case 1:
@@ -80,12 +86,14 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 		break;
 	    default:
 		setTerminou(true);
-		membro.addBehaviour(new BTeste());
 		// doDelete();
 		System.out.println("Tarefa a realizar: " + membro.getAtividadeEscolhida().getNome());
 	    }
 	} catch (IOException e) {
 	    System.out.println("Erro ao notificar o Gestor");
+	    System.exit(1);
+	} catch (UnreadableException e) {
+	    System.out.println("Erro ao receber mensagem do gestor");
 	    System.exit(1);
 	}
     }
@@ -127,7 +135,8 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 	consulta.setContentObject(mensagem);
 	consulta.addReceiver(new AID("gestor", AID.ISLOCALNAME));
 	membro.send(consulta);
-	System.out.println(membro.getAID().getLocalName() + ": notificaGestor Atividade Escolhida: "+ atividadeEscolhida.getId());
+	System.out.println(membro.getAID().getLocalName() + ": notificaGestor Atividade Escolhida: "
+		+ atividadeEscolhida.getId());
     }
 
     public void solicitaListaAtividades() throws IOException {
@@ -141,22 +150,13 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Atividade> recebeListaAtividades() {
+    public MensagemTO recebeListaAtividades() throws UnreadableException {
 	System.out.println(membro.getAID().getLocalName() + ": Esperando receber lista de atividades do gestor.");
 	ACLMessage resposta = membro.blockingReceive();
-	List<Atividade> listaAtividades = new ArrayList<Atividade>();
-	if (resposta == null) {
-	    System.out.println(membro.getAID().getLocalName() + ": Erro ao receber a lista de atividades do gestor!");
-	} else {
-	    try {
-		MensagemTO mensagem = (MensagemTO) resposta.getContentObject();
-		listaAtividades = (List<Atividade>) mensagem.getMensagem();
-	    } catch (UnreadableException e) {
-		System.out.println("Problema ao converter a lista de atividades");
-		e.printStackTrace();
-	    }
-	}
-	return listaAtividades;
+	MensagemTO mensagem = (MensagemTO) resposta.getContentObject();
+
+	return mensagem;
+
     }
 
     @Override
@@ -165,13 +165,13 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
     }
 
     private boolean terminou() {
-        return terminou;
+	return terminou;
     }
 
     private void setTerminou(boolean terminou) {
-	if(terminou) {
+	if (terminou) {
 	    ControleMembro.getInstance().remove(membro.getAID().getLocalName());
 	}
-        this.terminou = terminou;
+	this.terminou = terminou;
     }
 }

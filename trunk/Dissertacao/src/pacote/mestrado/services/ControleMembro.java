@@ -81,6 +81,11 @@ public class ControleMembro {
 	return instance;
     }
     
+    public synchronized boolean verificaTodosEtapa(TipoEtapaNegociacao etapa) {
+	int nAgentes = contaAgentesEtapa(etapa);
+	return nAgentes == situacao.size();
+    }
+    
     public String toString() {
 	StringBuilder str = new StringBuilder();
 	for (String agenteNome : situacao.keySet()) {

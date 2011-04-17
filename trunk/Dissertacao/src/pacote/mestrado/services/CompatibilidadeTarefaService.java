@@ -5,8 +5,7 @@ import java.util.Collection;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
 
-public class CompatibilidadeTarefaService 
-{
+public class CompatibilidadeTarefaService {
 
     private static final double MESMA_HABILIDADE = 1;
     private static final double MESMA_AREA = 0.6;
@@ -20,8 +19,7 @@ public class CompatibilidadeTarefaService
      * @param habilidades
      * @return retorna a media dos coeficientes encontrados.
      */
-    public static double calculaGrauCompatibilidade(Atividade atividade, Collection<Habilidade> habilidades) 
-    {
+    public static double calculaGrauCompatibilidade(Atividade atividade, Collection<Habilidade> habilidades) {
 	double retorno = 0.0;
 	int divisorPonderado = 0;
 
@@ -53,8 +51,7 @@ public class CompatibilidadeTarefaService
      * @param hab2
      * @return grau de compatibilidade 0.0 - 1.0
      */
-    public static double calculaGrauCompatibilidade(Habilidade hab, Habilidade hab2) 
-    {
+    public static double calculaGrauCompatibilidade(Habilidade hab, Habilidade hab2) {
 	double coefHabilide;
 	// caso encontremos a mesma habilidade
 	// caso seja a mesma area
@@ -79,29 +76,31 @@ public class CompatibilidadeTarefaService
     }
 
     /**
-     * Calcula a atividade mais compativel de acordo com uma lista de habilidades
+     * Calcula a atividade mais compativel de acordo com uma lista de
+     * habilidades
+     * 
      * @param atividadesDisponiveis
      * @param habilidades
      * @param atividadesInvalidas
      * @return atividade
      */
     public static Atividade selecionaAtividadeHabilidade(Collection<Atividade> atividadesDisponiveis,
-	    Collection<Habilidade> habilidades, Collection<Atividade> atividadesInvalidas) 
-    {
+	    Collection<Habilidade> habilidades, Collection<Atividade> atividadesInvalidas) {
 	double compatibilidade = 0.5;
 	Atividade retorno = null;
-
-	// verifica todas as atividades disponiveis
-	for (Atividade atividade : atividadesDisponiveis) {
-	    // caso a atividade nao esta na lista de atividades a ignorar
-	    if (atividadesInvalidas == null || !atividadesInvalidas.contains(atividade)) {
-		// calcula a compatibilidade nova
-		double compatNova = calculaGrauCompatibilidade(atividade, habilidades);
-		// caso a nova compatibilidade seja maior
-		// substituimos a antiga
-		if (compatNova > compatibilidade) {
-		    compatibilidade = compatNova;
-		    retorno = atividade;
+	if (atividadesDisponiveis != null) {
+	    // verifica todas as atividades disponiveis
+	    for (Atividade atividade : atividadesDisponiveis) {
+		// caso a atividade nao esta na lista de atividades a ignorar
+		if (atividadesInvalidas == null || !atividadesInvalidas.contains(atividade)) {
+		    // calcula a compatibilidade nova
+		    double compatNova = calculaGrauCompatibilidade(atividade, habilidades);
+		    // caso a nova compatibilidade seja maior
+		    // substituimos a antiga
+		    if (compatNova > compatibilidade) {
+			compatibilidade = compatNova;
+			retorno = atividade;
+		    }
 		}
 	    }
 	}

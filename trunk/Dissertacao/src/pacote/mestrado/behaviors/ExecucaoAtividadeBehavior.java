@@ -41,10 +41,10 @@ public class ExecucaoAtividadeBehavior extends SimpleBehaviour {
 		    && ControleAtividade.getInstance().getTerminei(membro.getAID().getLocalName())) {
 		executa();
 	    } else {
-		block(10);
+		block(5);
 	    }
 	} else {
-	    block(250);
+	    block(5);
 	}
     }
 
