@@ -3,6 +3,7 @@ package pacote.mestrado;
 import jade.core.Agent;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import pacote.mestrado.behaviors.BuscaTarefaBehaviour;
 import pacote.mestrado.dao.HabilidadeDAO;
@@ -70,6 +71,7 @@ public class Membro extends Agent {
     private void inicializaMembro() {
 	MembroDAO daoMemb = new MembroDAO();
 	Membro temp = daoMemb.get(getLocalName());
+//	Membro temp = daoMemb.get("henrique");
 	// Inicializa dados do agente
 	this.id = temp.getId();
 	this.nome = temp.getNome();
@@ -77,6 +79,7 @@ public class Membro extends Agent {
 	// Inicializa habilidades
 	HabilidadeDAO daoHab = new HabilidadeDAO();
 	habilidades = daoHab.getHabilidades(this.id, "Membro");
+	atividadesInvalidas = new LinkedList<Atividade>();
 	/*
 	 * System.out.println(toString()); for (Habilidade habilidade :
 	 * habilidades) { System.out.println(habilidade.toString()); }

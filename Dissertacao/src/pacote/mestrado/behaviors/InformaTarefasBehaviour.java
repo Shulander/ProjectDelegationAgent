@@ -22,9 +22,12 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 
     // Gestor ao qual o Behaviour esta associado
     private Gestor gestor;
+    
+    private GeraCronogramaBehaviour geraCronogramaBehaviour;
 
     public InformaTarefasBehaviour(Gestor gestor) {
 	this.gestor = gestor;
+	geraCronogramaBehaviour = null;
     }
 
     public void action() {
@@ -42,6 +45,10 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 			msgResposta.setAssunto("resListaAtividades");
 			msgResposta.setMensagem(gestor.getListaAtividadesDisponiveis());
 		    } else {
+			if(geraCronogramaBehaviour == null) {
+			    geraCronogramaBehaviour = new GeraCronogramaBehaviour(gestor);
+			    gestor.addBehaviour(geraCronogramaBehaviour);
+			}
 			msgResposta.setAssunto("resListaAtividadesNOT");
 			msgResposta.setMensagem("mensagensTerminaram");
 		    }
@@ -73,15 +80,16 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 		    atividade.setEstado(TipoEstado.ALOCADA);
 		} else if (mensagem.getAssunto().equals("terminoAtividade")) {
 		    Atividade atividade = (Atividade) mensagem.getMensagem();
-		    atividade = gestor.findAtividadeById(atividade.getId());
+		    Atividade atividadeGestor = gestor.findAtividadeById(atividade.getId());
 		    broadCastAguardandoTarefa();
-		    atividade.setEstado(TipoEstado.CONCLUIDA);
+		    atividadeGestor.setDataInicioExecucao(atividade.getDataInicioExecucao());
+		    atividadeGestor.setDataTerminoExecucao(atividade.getDataTerminoExecucao());
+		    atividadeGestor.setEstado(TipoEstado.CONCLUIDA);
 		}
 	    } else {
 		// System.out.println("Gestor: Entao mensagem eh null");
 	    }
 	} catch (UnreadableException e1) {
-	    // TODO Auto-generated catch block
 	    e1.printStackTrace();
 	} catch (IOException e) {
 	    System.out.println("Gestor: Erro ao enviar listaAtividades ao " + msg.getSender().getLocalName() + "!");
@@ -137,7 +145,7 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
     private void desalocaAtividadeMembro(String nomeMembro, Atividade atividade) {
 	// verifica se a tarefa esta alocada para o membro
 	if (gestor.getHashAtividadesMembroAlocadas().containsKey(atividade.getId())
-		&& !gestor.getHashAtividadesMembroAlocadas().get(atividade.getId()).equals(nomeMembro)) {
+		&& gestor.getHashAtividadesMembroAlocadas().get(atividade.getId()).equals(nomeMembro)) {
 	    // remove das hashs
 	    gestor.getHashAtividadesMembroAlocadas().remove(atividade.getId());
 	    gestor.getHashMembroAtividadeAlocadas().remove(nomeMembro);

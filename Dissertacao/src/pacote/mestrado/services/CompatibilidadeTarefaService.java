@@ -10,6 +10,7 @@ public class CompatibilidadeTarefaService {
     private static final double MESMA_HABILIDADE = 1;
     private static final double MESMA_AREA = 0.6;
     private static final double COEFICIENTE_NIVEL_CONHECIMENTO = 0.2;
+    private static boolean ignoraNivelAcima = false;
 
     /**
      * Calcula o grau de compatibilidade entre uma atividade e um conjunto de
@@ -66,7 +67,9 @@ public class CompatibilidadeTarefaService {
 
 	// calculamos a diferenca de niveis de conhecimento
 	Integer diferenca = hab.getNivel().diferencaNiveis(hab2.getNivel());
-	diferenca = Math.abs(diferenca);
+	if(!getIgnoraNivelAcima()) {
+	    diferenca = Math.abs(diferenca);
+	}
 	// e descontamos pelo coeficiente de 1 que seria o ideal
 	double coefNivel = 1 - (diferenca * COEFICIENTE_NIVEL_CONHECIMENTO);
 
@@ -107,5 +110,21 @@ public class CompatibilidadeTarefaService {
 
 	// retornamos a atividade mais compativel de acordo com as habilidade
 	return retorno;
+    }
+
+    public static double calculaGrauCompatibilidade(Atividade atividadeEscolhida, Collection<Habilidade> habilidades,
+	    boolean ignoraNivelAcima) {
+	setIgnoraNivelAcima(ignoraNivelAcima);
+	double retorno = calculaGrauCompatibilidade(atividadeEscolhida, habilidades);
+	setIgnoraNivelAcima(false);
+	return retorno;
+    }
+
+    private static void setIgnoraNivelAcima(boolean nivelIgnorado) {
+	ignoraNivelAcima = nivelIgnorado;
+    }
+    
+    private static boolean getIgnoraNivelAcima() {
+	return ignoraNivelAcima;
     }
 }

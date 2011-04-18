@@ -58,7 +58,7 @@ public class NegocianteSimulacaoBehaviour extends SimpleBehaviour {
 	  
 	    // A atividade escolhida foi destinada ao membro que originou a notificadao.
 	    // tentaremos negociar com ele para deixar pra mim
-	    if(atividadeEscolhida.getMembroNome() != null && atividadeEscolhida.getMembroNome().equals(membroNome)) {
+	    if(atividadeEscolhida != null && atividadeEscolhida.getMembroNome() != null && atividadeEscolhida.getMembroNome().equals(membroNome)) {
 		solicitaTrocaAtividade(atividadeEscolhida);
 	    }
 	    ControleGestor.getInstance().mutexCheck();

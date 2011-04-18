@@ -56,6 +56,7 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 		MensagemTO resposta = recebeListaAtividades();
 		if(resposta.getAssunto().equals("resListaAtividadesNOT")) {
 		    setTerminou(true);
+		    ControleMembro.getInstance().remove(membro.getAID().getLocalName());
 		    System.out.println(membro.getAID().getLocalName() + " TERMINOU POR FALTA DE TAREFAS");
 		    return;
 		} else {
@@ -169,9 +170,6 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
     }
 
     private void setTerminou(boolean terminou) {
-	if (terminou) {
-	    ControleMembro.getInstance().remove(membro.getAID().getLocalName());
-	}
 	this.terminou = terminou;
     }
 }

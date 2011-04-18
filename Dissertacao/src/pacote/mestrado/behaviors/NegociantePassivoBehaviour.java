@@ -7,9 +7,11 @@ import jade.lang.acl.UnreadableException;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 
 import pacote.mestrado.Membro;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
+import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
 import pacote.mestrado.entidades.MensagemTO;
 import pacote.mestrado.services.CompatibilidadeTarefaService;
@@ -65,8 +67,14 @@ public class NegociantePassivoBehaviour extends SimpleBehaviour {
 	    double pontuacaoRequisicao = CompatibilidadeTarefaService.calculaGrauCompatibilidade(
 		    membro.getAtividadeEscolhida(), habilidadesRequisicao);
 
-	    boolean trocaAceita = minhaPontuacao < pontuacaoRequisicao;
-
+	    boolean trocaAceita =  minhaPontuacao < pontuacaoRequisicao;
+	    if(trocaAceita) {
+		Date minhaDataTermino = TempoExecucaoService.calculcaDataEntrega(membro.getAID().getLocalName(),
+			    membro.getAtividadeEscolhida(), membro.getHabilidades());
+		Date dataRequisicao = TempoExecucaoService.calculcaDataEntrega(nomeRequisicao,
+			    membro.getAtividadeEscolhida(), habilidadesRequisicao);
+		trocaAceita = minhaDataTermino.after(dataRequisicao);
+	    }
 	    // caso a Troca foi aceita, troca o dono da atividade para o nome
 	    // requisitado. nofica o gestor da troca e recomeça a procura
 	    if (trocaAceita) {
