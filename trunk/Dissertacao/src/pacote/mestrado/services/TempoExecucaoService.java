@@ -25,10 +25,12 @@ public class TempoExecucaoService {
 	int diasTerminoAtual = ControleAtividade.getInstance().getDiasParaTermino(membroNome);
 	int diasTerminoNova = DateUtil.getDiferencaEmDiasUteis(atividadeEscolhida.getDataInicial(), atividadeEscolhida.getDataEntrega());
 	
-	diasTerminoNova = (int) Math.ceil(diasTerminoNova * (2.0-CompatibilidadeTarefaService.calculaGrauCompatibilidade(atividadeEscolhida, habilidades)));
+	diasTerminoNova = (int) Math.ceil(diasTerminoNova * (2.0-CompatibilidadeTarefaService.calculaGrauCompatibilidade(atividadeEscolhida, habilidades, true)));
 	
+	// OS dias do termino da atual ja levam em conta dias uteis
+	dataInicio = DateUtil.adicionaDias(dataInicio, diasTerminoAtual);
 	atividadeEscolhida.setDataInicioExecucao(dataInicio);
-	atividadeEscolhida.setDataTerminoExecucao(DateUtil.adicionaDiasUteis(dataInicio, diasTerminoNova+diasTerminoAtual));
+	atividadeEscolhida.setDataTerminoExecucao(DateUtil.adicionaDiasUteis(dataInicio, diasTerminoNova));
 	return atividadeEscolhida.getDataTerminoExecucao();
     }
 
