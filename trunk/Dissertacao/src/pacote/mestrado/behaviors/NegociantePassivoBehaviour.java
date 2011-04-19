@@ -36,7 +36,10 @@ public class NegociantePassivoBehaviour extends SimpleBehaviour {
 
     public NegociantePassivoBehaviour(Membro membro) {
 	ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.NEGOCIACAO_PASSIVO);
-	ControleAtividade.getInstance().adiciona(membro.getAID().getLocalName(), TempoExecucaoService.calculcaDataEntrega(membro.getAID().getLocalName(), membro.getAtividadeEscolhida(), membro.getHabilidades()));
+	ControleAtividade.getInstance().adiciona(
+		membro.getAID().getLocalName(),
+		TempoExecucaoService.calculcaDataEntrega(membro.getAID().getLocalName(),
+			membro.getAtividadeEscolhida(), membro.getHabilidades()));
 	this.membro = membro;
 	terminou = false;
 	System.out.println(membro.getAID().getLocalName() + ":trocou para o comportamento: NegociantePassivoBehaviour");
@@ -67,12 +70,12 @@ public class NegociantePassivoBehaviour extends SimpleBehaviour {
 	    double pontuacaoRequisicao = CompatibilidadeTarefaService.calculaGrauCompatibilidade(
 		    membro.getAtividadeEscolhida(), habilidadesRequisicao);
 
-	    boolean trocaAceita =  minhaPontuacao < pontuacaoRequisicao;
-	    if(trocaAceita) {
+	    boolean trocaAceita = minhaPontuacao < pontuacaoRequisicao;
+	    if (trocaAceita) {
 		Date minhaDataTermino = TempoExecucaoService.calculcaDataEntrega(membro.getAID().getLocalName(),
-			    membro.getAtividadeEscolhida(), membro.getHabilidades());
+			membro.getAtividadeEscolhida(), membro.getHabilidades());
 		Date dataRequisicao = TempoExecucaoService.calculcaDataEntrega(nomeRequisicao,
-			    membro.getAtividadeEscolhida(), habilidadesRequisicao);
+			membro.getAtividadeEscolhida(), habilidadesRequisicao);
 		trocaAceita = minhaDataTermino.after(dataRequisicao);
 	    }
 	    // caso a Troca foi aceita, troca o dono da atividade para o nome
@@ -81,6 +84,7 @@ public class NegociantePassivoBehaviour extends SimpleBehaviour {
 		ControleAtividade.getInstance().remove(membro.getAID().getLocalName());
 		membro.getAtividadeEscolhida().setMembroNome(nomeRequisicao);
 		notificaGestor();
+		membro.getAtividadesInvalidas().add(membro.getAtividadeEscolhida());
 		membro.setAtividadeEscolhida(null);
 		membro.addBehaviour(new BuscaTarefaBehaviour(membro));
 		terminou = true;
@@ -95,7 +99,8 @@ public class NegociantePassivoBehaviour extends SimpleBehaviour {
 		notificaGestorInicioTarefa();
 		membro.addBehaviour(new ExecucaoAtividadeBehavior(membro));
 	    } else {
-		System.out.println(membro.getAID().getLocalName() + ":ALGUEM ESTA FAZENDO MERDA... NAO TA DEIXANDO EU EXECUTAR A TAREFA: "
+		System.out.println(membro.getAID().getLocalName()
+			+ ":ALGUEM ESTA FAZENDO MERDA... NAO TA DEIXANDO EU EXECUTAR A TAREFA: "
 			+ ControleMembro.getInstance().contaAgentesEtapa(TipoEtapaNegociacao.BUSCA_GESTOR) + " - "
 			+ ControleMembro.getInstance().contaAgentesEtapa(TipoEtapaNegociacao.NEGOCIACAO_ATIVO) + " - "
 			+ ControleGestor.getInstance().mutexReady());
@@ -112,7 +117,8 @@ public class NegociantePassivoBehaviour extends SimpleBehaviour {
 	consulta.setContentObject(mensagem);
 	consulta.addReceiver(new AID("gestor", AID.ISLOCALNAME));
 	membro.send(consulta);
-	System.out.println(membro.getAID().getLocalName() + ": trocaAtividade notifica gestor Atividade: "+ membro.getAtividadeEscolhida().getId());
+	System.out.println(membro.getAID().getLocalName() + ": trocaAtividade notifica gestor Atividade: "
+		+ membro.getAtividadeEscolhida().getId());
     }
 
     private void notificaGestorInicioTarefa() throws IOException {
@@ -123,17 +129,21 @@ public class NegociantePassivoBehaviour extends SimpleBehaviour {
 	consulta.setContentObject(mensagem);
 	consulta.addReceiver(new AID("gestor", AID.ISLOCALNAME));
 	membro.send(consulta);
-	System.out.println(membro.getAID().getLocalName() + ": trocaAtividade gestor Atividade: "+ membro.getAtividadeEscolhida().getId());
+	System.out.println(membro.getAID().getLocalName() + ": trocaAtividade gestor Atividade: "
+		+ membro.getAtividadeEscolhida().getId());
     }
 
     private void enviaConfirmacao(ACLMessage msg, boolean trocaAceita) throws IOException {
-	ACLMessage resposta = msg.createReply();
-	MensagemTO msgResposta = new MensagemTO();
-	msgResposta.setAssunto("trocaAceita");
-	msgResposta.setMensagem(trocaAceita);
-	resposta.setContentObject(msgResposta);
-	System.out.println("Membro: enviei a resposta ao " + msg.getSender().getLocalName() + ".");
-	membro.send(resposta);
+	if (ControleMembro.getInstance().getEtapa(msg.getSender().getLocalName())
+		.equals(TipoEtapaNegociacao.NEGOCIACAO_ATIVO)) {
+	    ACLMessage resposta = msg.createReply();
+	    MensagemTO msgResposta = new MensagemTO();
+	    msgResposta.setAssunto("trocaAceita");
+	    msgResposta.setMensagem(trocaAceita);
+	    resposta.setContentObject(msgResposta);
+	    System.out.println("Membro: enviei a resposta ao " + msg.getSender().getLocalName() + ".");
+	    membro.send(resposta);
+	}
     }
 
     @Override

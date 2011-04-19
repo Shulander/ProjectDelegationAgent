@@ -54,7 +54,7 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 	    case 0:
 		solicitaListaAtividades();
 		MensagemTO resposta = recebeListaAtividades();
-		if(resposta.getAssunto().equals("resListaAtividadesNOT")) {
+		if (resposta.getAssunto().equals("resListaAtividadesNOT")) {
 		    setTerminou(true);
 		    ControleMembro.getInstance().remove(membro.getAID().getLocalName());
 		    System.out.println(membro.getAID().getLocalName() + " TERMINOU POR FALTA DE TAREFAS");
@@ -114,9 +114,14 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 		    setTerminou(true);
 		    membro.addBehaviour(new NegociantePassivoBehaviour(membro));
 		} else {
-		    membro.setAtividadeEscolhida(atividade);
-		    setTerminou(true);
-		    membro.addBehaviour(new NegocianteAtivoBehaviour(membro));
+		    if (ControleMembro.getInstance().contaAgentesEtapa(TipoEtapaNegociacao.NEGOCIACAO_ATIVO) == 0) {
+			membro.setAtividadeEscolhida(atividade);
+			setTerminou(true);
+			membro.addBehaviour(new NegocianteAtivoBehaviour(membro));
+		    } else {
+			block(50);
+			passo = -1;
+		    }
 		}
 	    } catch (UnreadableException e) {
 		System.out.println("Problema ao converter a lista de atividades");

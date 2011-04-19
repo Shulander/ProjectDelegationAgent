@@ -45,10 +45,6 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 			msgResposta.setAssunto("resListaAtividades");
 			msgResposta.setMensagem(gestor.getListaAtividadesDisponiveis());
 		    } else {
-			if(geraCronogramaBehaviour == null) {
-			    geraCronogramaBehaviour = new GeraCronogramaBehaviour(gestor);
-			    gestor.addBehaviour(geraCronogramaBehaviour);
-			}
 			msgResposta.setAssunto("resListaAtividadesNOT");
 			msgResposta.setMensagem("mensagensTerminaram");
 		    }
@@ -85,6 +81,7 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 		    atividadeGestor.setDataInicioExecucao(atividade.getDataInicioExecucao());
 		    atividadeGestor.setDataTerminoExecucao(atividade.getDataTerminoExecucao());
 		    atividadeGestor.setEstado(TipoEstado.CONCLUIDA);
+		    verificaTodasConcluidas();
 		}
 	    } else {
 		// System.out.println("Gestor: Entao mensagem eh null");
@@ -94,6 +91,13 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 	} catch (IOException e) {
 	    System.out.println("Gestor: Erro ao enviar listaAtividades ao " + msg.getSender().getLocalName() + "!");
 	    e.printStackTrace();
+	}
+    }
+
+    private void verificaTodasConcluidas() {
+	if(gestor.verificaTodasConcluidas() && geraCronogramaBehaviour == null) {
+	    geraCronogramaBehaviour = new GeraCronogramaBehaviour(gestor);
+	    gestor.addBehaviour(geraCronogramaBehaviour);
 	}
     }
 

@@ -110,6 +110,15 @@ public class Gestor extends Agent {
 	}
 	return true;
     }
+    
+    public boolean verificaTodasConcluidas() {
+	for (Atividade atividade : getListaAtividades()) {
+	    if(!atividade.getEstado().equals(TipoEstado.CONCLUIDA) && !atividade.getEstado().equals(TipoEstado.BLOQUEADA)) {
+		return false;
+	    }
+	}
+	return true;
+    }
 
     public Atividade findAtividadeById(int id) {
 	for (Atividade atividade : listaAtividades) {

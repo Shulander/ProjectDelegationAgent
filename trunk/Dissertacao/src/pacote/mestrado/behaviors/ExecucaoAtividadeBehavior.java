@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import pacote.mestrado.Membro;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
+import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.MensagemTO;
 import pacote.mestrado.services.ControleAtividade;
 import pacote.mestrado.services.ControleGestor;
@@ -50,37 +51,38 @@ public class ExecucaoAtividadeBehavior extends SimpleBehaviour {
 
     private void executa() {
 	System.out.println(membro.getAID().getLocalName() + ":terminei execucaoTarefa " + passo);
-	try {
-	    calculaXPganho(membro);
-	    notificaGestorTerminoTarefa();
-	    terminou = true;
-	} catch (IOException e) {
-	    System.out.println(membro.getAID().getLocalName() + ":ERRO ao comunicar o gestor do termino da tarefa");
-	}
+	calculaXPganho(membro);
+	terminou = true;
     }
 
     private void calculaXPganho(Membro membro2) {
 	// TODO Auto-generated method stub
-	
+
     }
 
-    private void notificaGestorTerminoTarefa() throws IOException {
+    private void notificaGestorTerminoTarefa(Atividade atividade) throws IOException {
 	MensagemTO mensagem = new MensagemTO();
 	ACLMessage consulta = new ACLMessage(ACLMessage.REQUEST);
 	mensagem.setAssunto("terminoAtividade");
-	mensagem.setMensagem(membro.getAtividadeEscolhida());
+	mensagem.setMensagem(atividade);
 	consulta.setContentObject(mensagem);
 	consulta.addReceiver(new AID("gestor", AID.ISLOCALNAME));
 	membro.send(consulta);
 	System.out.println(membro.getAID().getLocalName() + ": terminoTarefa Atividade: "
-		+ membro.getAtividadeEscolhida().getId());
+		+ atividade.getId());
     }
 
     @Override
     public boolean done() {
 	if (terminou && ControleGestor.getInstance().mutexReady()) {
 	    negocianteBehavior.setTerminou(true);
+	    Atividade atividade = membro.getAtividadeEscolhida();
 	    membro.addBehaviour(new BuscaTarefaBehaviour(membro));
+	    try {
+		notificaGestorTerminoTarefa(atividade);
+	    } catch (IOException e) {
+		System.out.println(membro.getAID().getLocalName() + ":ERRO ao comunicar o gestor do termino da tarefa");
+	    }
 	    return true;
 	} else {
 	    return false;

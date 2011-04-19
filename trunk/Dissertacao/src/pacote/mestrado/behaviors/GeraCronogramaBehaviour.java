@@ -22,7 +22,7 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
     @Override
     public void action() {
 	try {
-	    Thread.sleep(500);
+	    Thread.sleep(1000);
 	} catch (InterruptedException e) {
 	}
 	System.out.println("------------ Atividades -----------");
@@ -33,6 +33,8 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 	    System.out.print(atividade.getNome()+"\t");
 	    System.out.print(format.format(atividade.getDataInicioExecucao())+"\t");
 	    System.out.print(format.format(atividade.getDataTerminoExecucao())+"\t");
+//	    System.out.print(atividade.getDataInicioExecucao()+"\t");
+//	    System.out.print(atividade.getDataTerminoExecucao()+"\t");
 	    System.out.println("");
 	}
 	System.out.println("------------ Atividades -----------");

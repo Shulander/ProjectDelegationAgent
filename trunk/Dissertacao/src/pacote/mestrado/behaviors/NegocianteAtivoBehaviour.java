@@ -28,17 +28,35 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
     private boolean terminou;
 
     public NegocianteAtivoBehaviour(Membro membro) {
-	ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.NEGOCIACAO_ATIVO);
-	this.membro = membro;
-	terminou = false;
-	System.out.println(membro.getAID().getLocalName() + ":trocou para o comportamento: NegocianteAtivoBehaviour");
+//	ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.NEGOCIACAO_ATIVO);
+	// Caso nao consiga o lock unico de ativo, começa novamente.
+	if(!ControleMembro.getInstance().notificaUnico(membro.getAID().getLocalName(), TipoEtapaNegociacao.NEGOCIACAO_ATIVO)) {
+	    terminou = true;
+	    membro.addBehaviour(new BuscaTarefaBehaviour(membro));
+	} else {
+	    this.membro = membro;
+	    terminou = false;
+	    System.out.println(membro.getAID().getLocalName() + ":trocou para o comportamento: NegocianteAtivoBehaviour");
+	}
     }
 
     @Override
     public void action() {
+	
+	if(terminou) {
+	    return;
+	}
+	
 	try {
-	    solicitaTrocaAtividade();
-	    recebeConfirmacao();
+	    TipoEtapaNegociacao etapa = ControleMembro.getInstance().getEtapa(
+		    membro.getAtividadeEscolhida().getMembroNome());
+	    if (TipoEtapaNegociacao.NEGOCIACAO_PASSIVO.equals(etapa)) {
+		solicitaTrocaAtividade();
+		recebeConfirmacao();
+	    } else {
+		terminou = true;
+		membro.addBehaviour(new BuscaTarefaBehaviour(membro));
+	    }
 	} catch (IOException e) {
 	    System.out.println("Falha ao enviar a mensagem ao Membro");
 	} catch (UnreadableException e) {
@@ -52,13 +70,17 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
 	    System.out.println(membro.getAID().getLocalName() + ": Erro ao receber a confirmacao da troca!");
 	} else {
 	    MensagemTO mensagem = (MensagemTO) resposta.getContentObject();
-	    Boolean trocaAceita = (Boolean) mensagem.getMensagem();
-	    if(trocaAceita) {
-		membro.getAtividadeEscolhida().setMembroNome(membro.getAID().getLocalName());
-		membro.addBehaviour(new NegociantePassivoBehaviour(membro));
-	    } else {
-		membro.getAtividadesInvalidas().add(membro.getAtividadeEscolhida());
+	    if (mensagem.getMensagem() == null) {
 		membro.addBehaviour(new BuscaTarefaBehaviour(membro));
+	    } else {
+		Boolean trocaAceita = (Boolean) mensagem.getMensagem();
+		if (trocaAceita) {
+		    membro.getAtividadeEscolhida().setMembroNome(membro.getAID().getLocalName());
+		    membro.addBehaviour(new NegociantePassivoBehaviour(membro));
+		} else {
+		    membro.getAtividadesInvalidas().add(membro.getAtividadeEscolhida());
+		    membro.addBehaviour(new BuscaTarefaBehaviour(membro));
+		}
 	    }
 	    terminou = true;
 	}
@@ -66,6 +88,7 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
     }
 
     private void solicitaTrocaAtividade() throws IOException {
+
 	MensagemTO mensagem = new MensagemTO();
 	ACLMessage consulta = new ACLMessage(ACLMessage.REQUEST);
 	mensagem.setAssunto(membro.getAID().getLocalName());
@@ -73,7 +96,9 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
 	consulta.setContentObject(mensagem);
 	consulta.addReceiver(new AID(membro.getAtividadeEscolhida().getMembroNome(), AID.ISLOCALNAME));
 	membro.send(consulta);
-	System.out.println(membro.getAID().getLocalName() + ": troca Atividade com: "+ membro.getAtividadeEscolhida().getMembroNome());
+	System.out.println(membro.getAID().getLocalName() + ": troca Atividade com: "
+		+ membro.getAtividadeEscolhida().getMembroNome());
+
     }
 
     @Override

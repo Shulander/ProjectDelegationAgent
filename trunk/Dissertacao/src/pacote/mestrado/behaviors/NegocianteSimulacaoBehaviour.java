@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.util.Collection;
 
 import pacote.mestrado.Membro;
+import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.MensagemTO;
 import pacote.mestrado.services.CompatibilidadeTarefaService;
 import pacote.mestrado.services.ControleGestor;
+import pacote.mestrado.services.ControleMembro;
 
 /**
  * Esse Behaviour inicia pela notificacao do gestor que algum agente escolheu
@@ -29,16 +31,37 @@ public class NegocianteSimulacaoBehaviour extends SimpleBehaviour {
     // Membro ao qual o Behaviour esta associado
     private Membro membro;
     private boolean terminou;
+    private int passo;
+    private MensagemTO mensagem;
 
     public NegocianteSimulacaoBehaviour(Membro membro) {
+	passo = 0;
 	this.membro = membro;
 	terminou = false;
+	mensagem = null;
     }
 
     @Override
     public void action() {
 	try {
-	    recebeNotificacaoSelecao();
+	    switch (passo) {
+	    case 0:
+		mensagem = recebeNotificacaoSelecao();
+		if (mensagem != null) {
+		    passo++;
+		}
+		break;
+	    case 1:
+		if (ControleMembro.getInstance().notificaUnico(membro.getAID().getLocalName() + "Sim",
+			TipoEtapaNegociacao.NEGOCIACAO_ATIVO)) {
+		    processaNotificacaoSelecao(mensagem);
+		    ControleMembro.getInstance().remove(membro.getAID().getLocalName() + "Sim");
+		    passo = 0;
+		} else {
+		    block(20);
+		}
+		break;
+	    }
 	} catch (IOException e) {
 	    System.out.println("Falha ao enviar a mensagem ao Membro");
 	} catch (UnreadableException e) {
@@ -47,23 +70,31 @@ public class NegocianteSimulacaoBehaviour extends SimpleBehaviour {
 
     }
 
-    private void recebeNotificacaoSelecao() throws UnreadableException, IOException {
+    private MensagemTO recebeNotificacaoSelecao() throws UnreadableException, IOException {
 	ACLMessage resposta = membro.blockingReceive(50);
 	if (resposta != null) {
 	    MensagemTO mensagem = (MensagemTO) resposta.getContentObject();
-	    String membroNome = mensagem.getAssunto();
+	    return mensagem;
+	}
+	return null;
+    }
+
+    private void processaNotificacaoSelecao(MensagemTO mensagem) throws UnreadableException, IOException {
+	String membroNome = mensagem.getAssunto();
+	if (ControleMembro.getInstance().getEtapa(membroNome).equals(TipoEtapaNegociacao.NEGOCIACAO_PASSIVO)) {
 	    Collection<Atividade> atividades = (Collection<Atividade>) mensagem.getMensagem();
 	    Atividade atividadeEscolhida = CompatibilidadeTarefaService.selecionaAtividadeHabilidade(atividades,
-			membro.getHabilidades(), membro.getAtividadesInvalidas());
-	  
-	    // A atividade escolhida foi destinada ao membro que originou a notificadao.
+		    membro.getHabilidades(), membro.getAtividadesInvalidas());
+
+	    // A atividade escolhida foi destinada ao membro que originou a
+	    // notificadao.
 	    // tentaremos negociar com ele para deixar pra mim
-	    if(atividadeEscolhida != null && atividadeEscolhida.getMembroNome() != null && atividadeEscolhida.getMembroNome().equals(membroNome)) {
+	    if (atividadeEscolhida != null && atividadeEscolhida.getMembroNome() != null
+		    && atividadeEscolhida.getMembroNome().equals(membroNome)) {
 		solicitaTrocaAtividade(atividadeEscolhida);
 	    }
-	    ControleGestor.getInstance().mutexCheck();
 	}
-
+	ControleGestor.getInstance().mutexCheck();
     }
 
     private void solicitaTrocaAtividade(Atividade atividadeEscolhida) throws IOException {
@@ -74,15 +105,16 @@ public class NegocianteSimulacaoBehaviour extends SimpleBehaviour {
 	consulta.setContentObject(mensagem);
 	consulta.addReceiver(new AID(atividadeEscolhida.getMembroNome(), AID.ISLOCALNAME));
 	membro.send(consulta);
-	System.out.println(membro.getAID().getLocalName() + ": trocaAtividade Simulcacao Membro: "+ atividadeEscolhida.getMembroNome());
+	System.out.println(membro.getAID().getLocalName() + ": trocaAtividade Simulcacao Membro: "
+		+ atividadeEscolhida.getMembroNome());
     }
 
     @Override
     public boolean done() {
 	return terminou;
     }
-    
+
     public void setTerminou(boolean terminou) {
-        this.terminou = terminou;
+	this.terminou = terminou;
     }
 }

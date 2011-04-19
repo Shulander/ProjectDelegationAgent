@@ -26,7 +26,7 @@ public class ControleGestor {
      * @param i
      */
     public synchronized void gestorNotificaSimuladores(int i) {
-	mutexConfirmacaoSimulacao = i;
+	mutexConfirmacaoSimulacao += i;
     }
 
     /**
@@ -34,7 +34,9 @@ public class ControleGestor {
      * que o agente ja executou e que liberou o agente prosseguir
      */
     public synchronized void mutexCheck() {
-	--mutexConfirmacaoSimulacao;
+	if(mutexConfirmacaoSimulacao > 0) {
+	    --mutexConfirmacaoSimulacao;
+	}
     }
 
     /**
