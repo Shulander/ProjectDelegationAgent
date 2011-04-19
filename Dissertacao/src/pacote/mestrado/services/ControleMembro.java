@@ -26,6 +26,23 @@ public class ControleMembro {
 	situacao.put(agente, etapa);
     }
 
+
+    public boolean notificaUnico(String agente, TipoEtapaNegociacao etapa) {
+	int nAgentes = contaAgentesEtapa(etapa);
+	TipoEtapaNegociacao etapaAgente = getEtapa(agente);
+	if(nAgentes > 1) return false;
+	if(nAgentes == 1) {
+	    if(etapaAgente == null || !etapaAgente.equals(etapa)) { 
+		return false;
+	    } else {
+		return true;
+	    }
+	}
+	
+	notifica(agente, etapa);
+	return true;
+    }
+
     /**
      * Remove um agente
      * 
