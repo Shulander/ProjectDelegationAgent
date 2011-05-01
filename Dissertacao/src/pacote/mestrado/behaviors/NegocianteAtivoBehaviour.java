@@ -54,6 +54,13 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
 		solicitaTrocaAtividade();
 		recebeConfirmacao();
 	    } else {
+
+		try {
+		    Thread.sleep(30);
+		} catch (InterruptedException e) {
+		    e.printStackTrace();
+		    System.exit(1);
+		}
 		terminou = true;
 		membro.addBehaviour(new BuscaTarefaBehaviour(membro));
 	    }
@@ -74,6 +81,7 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
 		membro.addBehaviour(new BuscaTarefaBehaviour(membro));
 	    } else {
 		Boolean trocaAceita = (Boolean) mensagem.getMensagem();
+		ControleMembro.getInstance().remove(membro.getAID().getLocalName());
 		if (trocaAceita) {
 		    membro.getAtividadeEscolhida().setMembroNome(membro.getAID().getLocalName());
 		    membro.addBehaviour(new NegociantePassivoBehaviour(membro));
