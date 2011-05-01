@@ -3,9 +3,11 @@ package pacote.mestrado.behaviors;
 import jade.core.behaviours.SimpleBehaviour;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import pacote.mestrado.Gestor;
 import pacote.mestrado.entidades.Atividade;
+import pacote.mestrado.services.DateUtil;
 
 public class GeraCronogramaBehaviour extends SimpleBehaviour {
     private static final long serialVersionUID = -6753054189571569660L;
@@ -32,7 +34,8 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 	    System.out.print(atividade.getMembroNome()+"\t");
 	    System.out.print(atividade.getNome()+"\t");
 	    System.out.print(format.format(atividade.getDataInicioExecucao())+"\t");
-	    System.out.print(format.format(atividade.getDataTerminoExecucao())+"\t");
+	    System.out.print(format.format(DateUtil.subtraiDiasUteis(atividade.getDataTerminoExecucao(), 1))+"\t");
+	    System.out.print(DateUtil.getDiferencaEmDiasUteis(atividade.getDataInicioExecucao(), atividade.getDataTerminoExecucao())+"\t");
 //	    System.out.print(atividade.getDataInicioExecucao()+"\t");
 //	    System.out.print(atividade.getDataTerminoExecucao()+"\t");
 	    System.out.println("");
