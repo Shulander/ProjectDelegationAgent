@@ -9,6 +9,19 @@ import pacote.mestrado.entidades.Habilidade;
 public class TempoExecucaoService {
 
     /**
+     * Calcula o numero de dias uteis para a execução da tarefa
+     * 
+     * @param membroNome
+     * @param atividadeEscolhida
+     * @param habilidades
+     * @return
+     */
+    public static int calculaDiasUteisEntrega(String membroNome, Atividade atividadeEscolhida, Collection<Habilidade> habilidades) {
+	int diasTerminoNova = DateUtil.getDiferencaEmDiasUteis(atividadeEscolhida.getDataInicial(), atividadeEscolhida.getDataEntrega());
+	return (int) Math.ceil(diasTerminoNova * (2.0-CompatibilidadeTarefaService.calculaGrauCompatibilidade(atividadeEscolhida, habilidades, true)));
+    }
+    
+    /**
      * Calcula a data de entrega
      * 
      * @param membroNome
@@ -23,9 +36,7 @@ public class TempoExecucaoService {
 	}
 	
 	int diasTerminoAtual = ControleAtividade.getInstance().getDiasParaTermino(membroNome);
-	int diasTerminoNova = DateUtil.getDiferencaEmDiasUteis(atividadeEscolhida.getDataInicial(), atividadeEscolhida.getDataEntrega());
-	
-	diasTerminoNova = (int) Math.ceil(diasTerminoNova * (2.0-CompatibilidadeTarefaService.calculaGrauCompatibilidade(atividadeEscolhida, habilidades, true)));
+	int diasTerminoNova = calculaDiasUteisEntrega(membroNome, atividadeEscolhida, habilidades);
 	
 	// OS dias do termino da atual ja levam em conta dias uteis
 	dataInicio = DateUtil.adicionaDias(dataInicio, diasTerminoAtual);

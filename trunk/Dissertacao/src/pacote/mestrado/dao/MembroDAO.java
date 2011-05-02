@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import pacote.mestrado.Membro;
+import pacote.mestrado.services.CustoService;
 
 public class MembroDAO 
 {
@@ -27,7 +28,8 @@ public class MembroDAO
 	    while (rs.next()) {		
 		membro.setId(rs.getInt("id"));
 		membro.setNome(rs.getString("nome"));
-		membro.setSalario(rs.getDouble("salario"));		
+		membro.setSalario(rs.getDouble("salario"));	
+		CustoService.getInstance().adicionaCusto(membro.getNome(), membro.getSalario());
 	    }	    	    
 	    rs.close();
 	    stmt.close();
