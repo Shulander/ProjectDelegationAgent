@@ -14,10 +14,11 @@ public class Atividade implements Serializable {
     private String nome;
     private String tipo;
     private Collection<Atividade> atividadesPredecessoras; // ids das atividades
-							 // que precedem a
-							 // atividade
+							   // que precedem a
+							   // atividade
     private Date dataInicial;
     private Date dataEntrega;
+    // private Periodo periodoExecucao;
     private Date dataInicioExecucao;
     private Date dataTerminoExecucao;
     private Double orcamento;
@@ -30,14 +31,14 @@ public class Atividade implements Serializable {
     public Atividade() {
 	atividadesPredecessoras = new ArrayList<Atividade>();
 	requisitosHabilidades = new ArrayList<Habilidade>();
-	if (dataInicial != null && dataEntrega != null) {
-	    calculaDuracao();
-	}
+	// if (dataInicial != null && dataEntrega != null) {
+	// calculaDuracao();
+	// }
     }
 
-    void calculaDuracao() {
-	this.setDuracao(0.0); // calcular duracao
-    }
+    // void calculaDuracao() {
+    // this.setDuracao(0.0); // calcular duracao
+    // }
 
     public int getId() {
 	return id;
@@ -119,6 +120,12 @@ public class Atividade implements Serializable {
 	str.append("ID: " + this.id + "\n");
 	str.append("Nome: " + this.nome + "\n");
 	str.append("Tipo: " + this.tipo + "\n");
+	// if(this.periodoExecucao != null) {
+	// str.append("Data de início: " + this.periodoExecucao.getInicio() +
+	// "\n");
+	// str.append("Data de entrega: " + this.periodoExecucao.getFim() +
+	// "\n");
+	// }
 	str.append("Data de início: " + this.dataInicial + "\n");
 	str.append("Data de entrega: " + this.dataEntrega + "\n");
 	str.append("Orçamento: " + this.orcamento + "\n");
@@ -187,19 +194,19 @@ public class Atividade implements Serializable {
     }
 
     public Date getDataInicioExecucao() {
-        return dataInicioExecucao;
+	return dataInicioExecucao;
     }
 
     public void setDataInicioExecucao(Date dataInicioExecucao) {
-        this.dataInicioExecucao = dataInicioExecucao;
+	this.dataInicioExecucao = dataInicioExecucao;
     }
 
     public Date getDataTerminoExecucao() {
-        return dataTerminoExecucao;
+	return dataTerminoExecucao;
     }
 
     public void setDataTerminoExecucao(Date dataTerminoExecucao) {
-        this.dataTerminoExecucao = dataTerminoExecucao;
+	this.dataTerminoExecucao = dataTerminoExecucao;
     }
 
 }

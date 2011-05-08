@@ -9,7 +9,7 @@ public class ControleAtividade {
     private static ControleAtividade instance = null;
 
     private static Map<String, Date> datasTermino = new HashMap<String, Date>();
-    
+
     private static Date dataAtual = null;
 
     private ControleAtividade() {
@@ -24,13 +24,14 @@ public class ControleAtividade {
     public synchronized void adiciona(String agente, Date dataFim) {
 	datasTermino.put(agente, dataFim);
     }
-    
+
     public Date getDataAtual() {
 	return dataAtual;
     }
-    
+
     /**
-     * Chamado pelo gestor no inicio da carga de tarefas, setada para a primeira data de inicio de uma tarefa
+     * Chamado pelo gestor no inicio da carga de tarefas, setada para a primeira
+     * data de inicio de uma tarefa
      * 
      * @param novaDataAtual
      */
@@ -57,7 +58,7 @@ public class ControleAtividade {
     public synchronized Date getDataFim(String agente) {
 	return datasTermino.get(agente);
     }
-    
+
     /**
      * Busca Verifica se o agente Terminou sua execucao;
      * 
@@ -84,15 +85,15 @@ public class ControleAtividade {
 	}
 	return instance;
     }
-    
+
     public synchronized int getDiasParaTermino(String agente) {
 	Date dataTermino = getDataFim(agente);
-	if(dataTermino == null || dataAtual == null ) {
+	if (dataTermino == null || dataAtual == null) {
 	    return 0;
 	}
 	return DateUtil.getDiferencaEmDiasUteis(dataAtual, dataTermino);
     }
-    
+
     public String toString() {
 	StringBuilder str = new StringBuilder();
 	for (String agenteNome : datasTermino.keySet()) {
@@ -101,7 +102,7 @@ public class ControleAtividade {
 	    str.append(datasTermino.get(agenteNome));
 	    str.append("\n");
 	}
-	
+
 	return str.toString();
     }
 }

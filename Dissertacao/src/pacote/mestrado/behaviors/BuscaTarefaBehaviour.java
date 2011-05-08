@@ -13,7 +13,6 @@ import pacote.mestrado.Membro;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.MensagemTO;
-import pacote.mestrado.services.CompatibilidadeTarefaService;
 import pacote.mestrado.services.ControleAtividade;
 import pacote.mestrado.services.ControleMembro;
 
@@ -63,8 +62,13 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 		    lista = (List<Atividade>) resposta.getMensagem();
 		}
 		// escolher atividade compativel com a do membro
-		Atividade atividadeEscolhida = CompatibilidadeTarefaService.selecionaAtividadeHabilidade(lista,
-			membro.getHabilidades(), membro.getAtividadesInvalidas());
+		// TODO remover esse comentario caso funcione o sistema com
+		// service
+		// Atividade atividadeEscolhida =
+		// CompatibilidadeTarefaService.selecionaAtividadeHabilidade(lista,
+		// membro.getHabilidades(), membro.getAtividadesInvalidas());
+		Atividade atividadeEscolhida = membro.getEscolhaTarefaService().selecionaAtividadeHabilidade(lista,
+			membro.getAID().getLocalName(), membro.getHabilidades(), membro.getAtividadesInvalidas());
 		if (atividadeEscolhida != null) {
 		    System.out.println(membro.getAID().getLocalName() + " recebeu lista de atividades");
 		    ControleMembro.getInstance().notifica(membro.getAID().getLocalName(),

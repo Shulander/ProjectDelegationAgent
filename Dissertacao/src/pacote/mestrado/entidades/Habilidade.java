@@ -4,8 +4,7 @@ import java.io.Serializable;
 
 import pacote.mestrado.dominios.TipoNivel;
 
-public class Habilidade implements Serializable 
-{
+public class Habilidade implements Serializable {
     private static final long serialVersionUID = 8586683260521276748L;
 
     private int id;
@@ -13,9 +12,8 @@ public class Habilidade implements Serializable
     private String nome;
     private TipoNivel nivel;
     private Integer xp;
-  
-    public String toString() 
-    {
+
+    public String toString() {
 	StringBuilder str = new StringBuilder();
 	str.append("--Habilidade--" + "\n");
 	str.append("ID: " + this.id + "\n");
@@ -26,62 +24,44 @@ public class Habilidade implements Serializable
 	return str.toString();
     }
 
-    public int getId() 
-    {
-        return id;
+    public int getId() {
+	return id;
     }
 
-    public void setId(int id) 
-    {
-        this.id = id;
+    public void setId(int id) {
+	this.id = id;
     }
 
-
-    public String getArea() 
-    {
-        return area;
+    public String getArea() {
+	return area;
     }
 
-
-    public void setArea(String area) 
-    {
-        this.area = area;
+    public void setArea(String area) {
+	this.area = area;
     }
 
-
-    public String getNome() 
-    {
-        return nome;
+    public String getNome() {
+	return nome;
     }
 
-
-    public void setNome(String nome) 
-    {
-        this.nome = nome;
+    public void setNome(String nome) {
+	this.nome = nome;
     }
 
-
-    public TipoNivel getNivel() 
-    {
-        return nivel;
+    public TipoNivel getNivel() {
+	return nivel;
     }
 
-
-    public void setNivel(TipoNivel tipoNivel) 
-    {
-        this.nivel = tipoNivel;
+    public void setNivel(TipoNivel tipoNivel) {
+	this.nivel = tipoNivel;
     }
 
-
-    public Integer getXp() 
-    {
-        return xp;
+    public Integer getXp() {
+	return xp;
     }
 
-
-    public void setXp(Integer xp) 
-    {
-        this.xp = xp;
+    public void setXp(Integer xp) {
+	this.xp = xp;
     }
 
 }

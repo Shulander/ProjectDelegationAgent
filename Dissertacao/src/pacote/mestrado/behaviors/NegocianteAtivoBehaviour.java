@@ -28,25 +28,28 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
     private boolean terminou;
 
     public NegocianteAtivoBehaviour(Membro membro) {
-//	ControleMembro.getInstance().notifica(membro.getAID().getLocalName(), TipoEtapaNegociacao.NEGOCIACAO_ATIVO);
+	// ControleMembro.getInstance().notifica(membro.getAID().getLocalName(),
+	// TipoEtapaNegociacao.NEGOCIACAO_ATIVO);
 	// Caso nao consiga o lock unico de ativo, começa novamente.
-	if(!ControleMembro.getInstance().notificaUnico(membro.getAID().getLocalName(), TipoEtapaNegociacao.NEGOCIACAO_ATIVO)) {
+	if (!ControleMembro.getInstance().notificaUnico(membro.getAID().getLocalName(),
+		TipoEtapaNegociacao.NEGOCIACAO_ATIVO)) {
 	    terminou = true;
 	    membro.addBehaviour(new BuscaTarefaBehaviour(membro));
 	} else {
 	    this.membro = membro;
 	    terminou = false;
-	    System.out.println(membro.getAID().getLocalName() + ":trocou para o comportamento: NegocianteAtivoBehaviour");
+	    System.out.println(membro.getAID().getLocalName()
+		    + ":trocou para o comportamento: NegocianteAtivoBehaviour");
 	}
     }
 
     @Override
     public void action() {
-	
-	if(terminou) {
+
+	if (terminou) {
 	    return;
 	}
-	
+
 	try {
 	    TipoEtapaNegociacao etapa = ControleMembro.getInstance().getEtapa(
 		    membro.getAtividadeEscolhida().getMembroNome());

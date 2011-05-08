@@ -18,7 +18,7 @@ public enum TipoEstado {
 	throw new IllegalArgumentException("O codigo informado (" + codigo
 		+ ") é invalido para a obtenção do TipoEstado");
     }
-    
+
     public String toString() {
 	return codigo;
     }

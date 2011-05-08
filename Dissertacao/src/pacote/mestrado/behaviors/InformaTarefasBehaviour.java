@@ -22,7 +22,7 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 
     // Gestor ao qual o Behaviour esta associado
     private Gestor gestor;
-    
+
     private GeraCronogramaBehaviour geraCronogramaBehaviour;
 
     public InformaTarefasBehaviour(Gestor gestor) {
@@ -41,9 +41,9 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
 		    ACLMessage resposta = msg.createReply();
 		    MensagemTO msgResposta = new MensagemTO();
 		    Collection<Atividade> atividades = gestor.getListaAtividadesDisponiveis();
-		    if(atividades.size() > 0 || !gestor.terminouTarefas()) {
+		    if (atividades.size() > 0 || !gestor.terminouTarefas()) {
 			msgResposta.setAssunto("resListaAtividades");
-			msgResposta.setMensagem(gestor.getListaAtividadesDisponiveis());
+			msgResposta.setMensagem(atividades);
 		    } else {
 			msgResposta.setAssunto("resListaAtividadesNOT");
 			msgResposta.setMensagem("mensagensTerminaram");
@@ -95,7 +95,7 @@ public class InformaTarefasBehaviour extends CyclicBehaviour {
     }
 
     private void verificaTodasConcluidas() {
-	if(gestor.verificaTodasConcluidas() && geraCronogramaBehaviour == null) {
+	if (gestor.verificaTodasConcluidas() && geraCronogramaBehaviour == null) {
 	    geraCronogramaBehaviour = new GeraCronogramaBehaviour(gestor);
 	    gestor.addBehaviour(geraCronogramaBehaviour);
 	}

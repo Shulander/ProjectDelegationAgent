@@ -11,6 +11,8 @@ import pacote.mestrado.dao.MembroDAO;
 import pacote.mestrado.entidades.Agenda;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
+import pacote.mestrado.services.EscolhaTarefaService;
+import pacote.mestrado.services.impl.EscolhaTarefaMenorCustoServiceImpl;
 
 /**
  * Classe que corresponde ao agente membro de um projeto
@@ -32,6 +34,8 @@ public class Membro extends Agent {
 						       // algum motivo nao pode
 						       // ter e devem ser
 						       // descartadas
+    // Service de escolha de tarefas
+    private EscolhaTarefaService escolhaTarefaService;
 
     /**
      * Metodo de inicializacao de agentes
@@ -39,23 +43,27 @@ public class Membro extends Agent {
     protected void setup() {
 	System.out.println("Agente " + getAID().getLocalName() + " vivo! :)");
 	inicializaMembro();
+	// para trocar o comportamento, trocamos a implementacao da escolha da
+	// Tarefa
+	// escolhaTarefaService = new EscolhaTarefaMaisCompativelServiceImpl();
+	escolhaTarefaService = new EscolhaTarefaMenorCustoServiceImpl();
 	addBehaviour(new BuscaTarefaBehaviour(this));
     }
-    
+
     public Atividade getAtividadeEscolhida() {
-        return atividadeEscolhida;
+	return atividadeEscolhida;
     }
 
     public void setAtividadeEscolhida(Atividade atividadeEscolhida) {
-        this.atividadeEscolhida = atividadeEscolhida;
+	this.atividadeEscolhida = atividadeEscolhida;
     }
 
     public Collection<Atividade> getAtividadesInvalidas() {
-        return atividadesInvalidas;
+	return atividadesInvalidas;
     }
 
     public void setAtividadesInvalidas(Collection<Atividade> atividadesInvalidas) {
-        this.atividadesInvalidas = atividadesInvalidas;
+	this.atividadesInvalidas = atividadesInvalidas;
     }
 
     /**
@@ -71,7 +79,7 @@ public class Membro extends Agent {
     private void inicializaMembro() {
 	MembroDAO daoMemb = new MembroDAO();
 	Membro temp = daoMemb.get(getLocalName());
-//	Membro temp = daoMemb.get("henrique");
+	// Membro temp = daoMemb.get("henrique");
 	// Inicializa dados do agente
 	this.id = temp.getId();
 	this.nome = temp.getNome();
@@ -116,6 +124,14 @@ public class Membro extends Agent {
 
     public void setNome(String nome) {
 	this.nome = nome;
+    }
+
+    public EscolhaTarefaService getEscolhaTarefaService() {
+	return escolhaTarefaService;
+    }
+
+    public void setEscolhaTarefaService(EscolhaTarefaService escolhaTarefaService) {
+	this.escolhaTarefaService = escolhaTarefaService;
     }
 
     public String toString() {
