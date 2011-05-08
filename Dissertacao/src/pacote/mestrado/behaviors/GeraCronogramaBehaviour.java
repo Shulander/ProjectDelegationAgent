@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pacote.mestrado.Gestor;
+import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
+import pacote.mestrado.services.ControleMembro;
 import pacote.mestrado.services.CustoService;
 import pacote.mestrado.services.DateUtil;
 
@@ -29,35 +31,35 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 
     @Override
     public void action() {
-	try {
-	    Thread.sleep(1000);
-	} catch (InterruptedException e) {
+	if (ControleMembro.getInstance().verificaTodosTerminaram()) {
+	    System.out.println("------------ Atividades -----------");
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+	    DecimalFormat reaisFormat = new DecimalFormat();
+	    reaisFormat.applyPattern("R$ #,##0.00");
+	    for (Atividade atividade : gestor.getListaAtividades()) {
+		System.out.print(atividade.getId() + "\t");
+		System.out.print(atividade.getMembroNome() + "\t");
+		System.out.print(atividade.getNome() + "\t");
+		System.out.print(dateFormat.format(atividade.getDataInicioExecucao()) + "\t");
+		System.out.print(dateFormat.format(DateUtil.subtraiDiasUteis(atividade.getDataTerminoExecucao(), 1))
+			+ "\t");
+		System.out.print(DateUtil.getDiferencaEmDiasUteis(atividade.getDataInicioExecucao(),
+			atividade.getDataTerminoExecucao())
+			+ "\t");
+		System.out.print(reaisFormat.format(calculaCusto(atividade,
+			CustoService.getInstance().getCusto(atividade.getMembroNome())))
+			+ "\t");
+		System.out.println("");
+	    }
+	    System.out.println("Total:");
+	    for (String projeto : custoProjeto.keySet()) {
+		System.out.println(projeto + ": " + reaisFormat.format(custoProjeto.get(projeto)));
+	    }
+	    System.out.println("------------ Atividades -----------");
+	    terminou = true;
+	} else {
+	    block(50);
 	}
-	System.out.println("------------ Atividades -----------");
-	SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-	DecimalFormat reaisFormat = new DecimalFormat();
-	reaisFormat.applyPattern("R$ #,##0.00");
-	for (Atividade atividade : gestor.getListaAtividades()) {
-	    System.out.print(atividade.getId() + "\t");
-	    System.out.print(atividade.getMembroNome() + "\t");
-	    System.out.print(atividade.getNome() + "\t");
-	    System.out.print(dateFormat.format(atividade.getDataInicioExecucao()) + "\t");
-	    System.out
-		    .print(dateFormat.format(DateUtil.subtraiDiasUteis(atividade.getDataTerminoExecucao(), 1)) + "\t");
-	    System.out.print(DateUtil.getDiferencaEmDiasUteis(atividade.getDataInicioExecucao(),
-		    atividade.getDataTerminoExecucao())
-		    + "\t");
-	    System.out.print(reaisFormat.format(calculaCusto(atividade,
-		    CustoService.getInstance().getCusto(atividade.getMembroNome())))
-		    + "\t");
-	    System.out.println("");
-	}
-	System.out.println("Total:");
-	for (String projeto : custoProjeto.keySet()) {
-	    System.out.println(projeto + ": " + reaisFormat.format(custoProjeto.get(projeto)));
-	}
-	System.out.println("------------ Atividades -----------");
-	terminou = true;
     }
 
     private Double calculaCusto(Atividade atividade, double custo) {

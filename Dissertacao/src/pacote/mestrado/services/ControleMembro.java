@@ -114,4 +114,8 @@ public class ControleMembro {
 
 	return str.toString();
     }
+    
+    public synchronized boolean verificaTodosTerminaram() {
+	return situacao.size() == 0;
+    }
 }
