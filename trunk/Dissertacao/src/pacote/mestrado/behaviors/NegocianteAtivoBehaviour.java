@@ -58,12 +58,12 @@ public class NegocianteAtivoBehaviour extends SimpleBehaviour {
 		recebeConfirmacao();
 	    } else {
 
-		try {
-		    Thread.sleep(30);
-		} catch (InterruptedException e) {
-		    e.printStackTrace();
-		    System.exit(1);
-		}
+//		try {
+//		    Thread.sleep(30);
+//		} catch (InterruptedException e) {
+//		    e.printStackTrace();
+//		    System.exit(1);
+//		}
 		terminou = true;
 		membro.addBehaviour(new BuscaTarefaBehaviour(membro));
 	    }
