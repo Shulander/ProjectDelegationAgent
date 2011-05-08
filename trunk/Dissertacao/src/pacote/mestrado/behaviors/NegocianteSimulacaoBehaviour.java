@@ -12,7 +12,6 @@ import pacote.mestrado.Membro;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.MensagemTO;
-import pacote.mestrado.services.CompatibilidadeTarefaService;
 import pacote.mestrado.services.ControleGestor;
 import pacote.mestrado.services.ControleMembro;
 
@@ -83,8 +82,11 @@ public class NegocianteSimulacaoBehaviour extends SimpleBehaviour {
 	String membroNome = mensagem.getAssunto();
 	if (ControleMembro.getInstance().getEtapa(membroNome).equals(TipoEtapaNegociacao.NEGOCIACAO_PASSIVO)) {
 	    Collection<Atividade> atividades = (Collection<Atividade>) mensagem.getMensagem();
-	    Atividade atividadeEscolhida = CompatibilidadeTarefaService.selecionaAtividadeHabilidade(atividades,
-		    membro.getHabilidades(), membro.getAtividadesInvalidas());
+	    Atividade atividadeEscolhida = membro.getEscolhaTarefaService().selecionaAtividadeHabilidade(atividades,
+		    membro.getAID().getLocalName(), membro.getHabilidades(), membro.getAtividadesInvalidas());
+	    // Atividade atividadeEscolhida =
+	    // CompatibilidadeTarefaService.selecionaAtividadeHabilidade(atividades,
+	    // membro.getHabilidades(), membro.getAtividadesInvalidas());
 
 	    // A atividade escolhida foi destinada ao membro que originou a
 	    // notificadao.

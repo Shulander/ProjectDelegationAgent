@@ -1,6 +1,8 @@
 package pacote.mestrado.services;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
@@ -11,6 +13,7 @@ public class CompatibilidadeTarefaService {
     private static final double MESMA_AREA = 0.6;
     private static final double COEFICIENTE_NIVEL_CONHECIMENTO = 0.2;
     private static boolean ignoraNivelAcima = false;
+    private static final double GRAU_COMPATIBILIDADE_MINIMO = 0.5;
 
     /**
      * Calcula o grau de compatibilidade entre uma atividade e um conjunto de
@@ -67,7 +70,7 @@ public class CompatibilidadeTarefaService {
 
 	// calculamos a diferenca de niveis de conhecimento
 	Integer diferenca = hab.getNivel().diferencaNiveis(hab2.getNivel());
-	if(!getIgnoraNivelAcima()) {
+	if (!getIgnoraNivelAcima()) {
 	    diferenca = Math.abs(diferenca);
 	}
 	// e descontamos pelo coeficiente de 1 que seria o ideal
@@ -89,7 +92,7 @@ public class CompatibilidadeTarefaService {
      */
     public static Atividade selecionaAtividadeHabilidade(Collection<Atividade> atividadesDisponiveis,
 	    Collection<Habilidade> habilidades, Collection<Atividade> atividadesInvalidas) {
-	double compatibilidade = 0.5;
+	double compatibilidade = GRAU_COMPATIBILIDADE_MINIMO;
 	Atividade retorno = null;
 	if (atividadesDisponiveis != null) {
 	    // verifica todas as atividades disponiveis
@@ -112,6 +115,30 @@ public class CompatibilidadeTarefaService {
 	return retorno;
     }
 
+    public static List<Atividade> selecionaAtividadesCompativeis(Collection<Atividade> atividadesDisponiveis,
+	    Collection<Habilidade> habilidades, Collection<Atividade> atividadesInvalidas) {
+	List<Atividade> retorno = new LinkedList<Atividade>();
+
+	if (atividadesDisponiveis != null) {
+	    // verifica todas as atividades disponiveis
+	    for (Atividade atividade : atividadesDisponiveis) {
+		// caso a atividade nao esta na lista de atividades a ignorar
+		if (atividadesInvalidas == null || !atividadesInvalidas.contains(atividade)) {
+		    // calcula a compatibilidade nova
+		    double compatNova = calculaGrauCompatibilidade(atividade, habilidades);
+		    // caso a compatibilidade seja maior que a compatibilidade
+		    // minima
+		    // adicionammos a tarefa ao retorno
+		    if (compatNova > GRAU_COMPATIBILIDADE_MINIMO) {
+			retorno.add(atividade);
+		    }
+		}
+	    }
+	}
+
+	return retorno;
+    }
+
     public static double calculaGrauCompatibilidade(Atividade atividadeEscolhida, Collection<Habilidade> habilidades,
 	    boolean ignoraNivelAcima) {
 	setIgnoraNivelAcima(ignoraNivelAcima);
@@ -123,7 +150,7 @@ public class CompatibilidadeTarefaService {
     private static void setIgnoraNivelAcima(boolean nivelIgnorado) {
 	ignoraNivelAcima = nivelIgnorado;
     }
-    
+
     private static boolean getIgnoraNivelAcima() {
 	return ignoraNivelAcima;
     }

@@ -68,8 +68,8 @@ public class ExecucaoAtividadeBehavior extends SimpleBehaviour {
 	consulta.setContentObject(mensagem);
 	consulta.addReceiver(new AID("gestor", AID.ISLOCALNAME));
 	membro.send(consulta);
-	System.out.println(membro.getAID().getLocalName() + ": terminoTarefa Atividade: "
-		+ atividade.getId());
+	System.out.println(membro.getAID().getLocalName() + ": terminoTarefa Atividade: " + atividade.getId() + " "
+		+ atividade.getNome());
     }
 
     @Override

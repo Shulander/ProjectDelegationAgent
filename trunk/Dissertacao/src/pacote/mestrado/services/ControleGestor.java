@@ -1,6 +1,5 @@
 package pacote.mestrado.services;
 
-
 public class ControleGestor {
 
     private static ControleGestor instance = null;
@@ -8,7 +7,7 @@ public class ControleGestor {
     private static int mutexConfirmacaoSimulacao = 0;
 
     private ControleGestor() {
-	
+
     }
 
     public static ControleGestor getInstance() {
@@ -34,7 +33,7 @@ public class ControleGestor {
      * que o agente ja executou e que liberou o agente prosseguir
      */
     public synchronized void mutexCheck() {
-	if(mutexConfirmacaoSimulacao > 0) {
+	if (mutexConfirmacaoSimulacao > 0) {
 	    --mutexConfirmacaoSimulacao;
 	}
     }

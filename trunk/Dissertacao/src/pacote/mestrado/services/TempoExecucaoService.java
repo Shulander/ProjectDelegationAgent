@@ -16,11 +16,16 @@ public class TempoExecucaoService {
      * @param habilidades
      * @return
      */
-    public static int calculaDiasUteisEntrega(String membroNome, Atividade atividadeEscolhida, Collection<Habilidade> habilidades) {
-	int diasTerminoNova = DateUtil.getDiferencaEmDiasUteis(atividadeEscolhida.getDataInicial(), atividadeEscolhida.getDataEntrega());
-	return (int) Math.ceil(diasTerminoNova * (2.0-CompatibilidadeTarefaService.calculaGrauCompatibilidade(atividadeEscolhida, habilidades, true)));
+    public static int calculaDiasUteisEntrega(String membroNome, Atividade atividadeEscolhida,
+	    Collection<Habilidade> habilidades) {
+	int diasTerminoNova = DateUtil.getDiferencaEmDiasUteis(atividadeEscolhida.getDataInicial(),
+		atividadeEscolhida.getDataEntrega());
+	return (int) Math
+		.ceil(diasTerminoNova
+			* (2.0 - CompatibilidadeTarefaService.calculaGrauCompatibilidade(atividadeEscolhida,
+				habilidades, true)));
     }
-    
+
     /**
      * Calcula a data de entrega
      * 
@@ -29,15 +34,16 @@ public class TempoExecucaoService {
      * @param habilidades
      * @return
      */
-    public static Date calculcaDataEntrega(String membroNome, Atividade atividadeEscolhida, Collection<Habilidade> habilidades) {
+    public static Date calculcaDataEntrega(String membroNome, Atividade atividadeEscolhida,
+	    Collection<Habilidade> habilidades) {
 	Date dataInicio = ControleAtividade.getInstance().getDataAtual();
-	if(dataInicio == null) {
-	    dataInicio = atividadeEscolhida.getDataInicial();
-	}
-	
+	// if(dataInicio == null) {
+	// dataInicio = atividadeEscolhida.getDataInicial();
+	// }
+
 	int diasTerminoAtual = ControleAtividade.getInstance().getDiasParaTermino(membroNome);
 	int diasTerminoNova = calculaDiasUteisEntrega(membroNome, atividadeEscolhida, habilidades);
-	
+
 	// OS dias do termino da atual ja levam em conta dias uteis
 	dataInicio = DateUtil.adicionaDias(dataInicio, diasTerminoAtual);
 	atividadeEscolhida.setDataInicioExecucao(dataInicio);

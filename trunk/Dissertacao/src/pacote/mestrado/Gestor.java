@@ -58,16 +58,17 @@ public class Gestor extends Agent {
 	    atividade.setRequisitosHabilidades(daoHab.getHabilidades(atividade.getId(), "Atividade"));
 	    System.out.println(atividade.toString());
 	}
-	
+
 	ajustaDataInicioProjeto();
     }
 
     /**
-     * Ajusta no ControleAtividade a Data de inicio da primeira atividade do projeto
+     * Ajusta no ControleAtividade a Data de inicio da primeira atividade do
+     * projeto
      */
     private void ajustaDataInicioProjeto() {
 	for (Atividade atividade : getListaAtividadesDisponiveis()) {
-	    if(ControleAtividade.getInstance().getDataAtual() == null
+	    if (ControleAtividade.getInstance().getDataAtual() == null
 		    || ControleAtividade.getInstance().getDataAtual().after(atividade.getDataInicial())) {
 		ControleAtividade.getInstance().setDataAtual(atividade.getDataInicial());
 	    }
@@ -93,7 +94,7 @@ public class Gestor extends Agent {
     public Collection<Atividade> getListaAtividadesDisponiveis() {
 	Collection<Atividade> retorno = new LinkedList<Atividade>();
 	for (Atividade atividade : getListaAtividades()) {
-	    if(atividade.getEstado().equals(TipoEstado.DISPONIVEL) && preRequisitosConcluidos(atividade)) {
+	    if (atividade.getEstado().equals(TipoEstado.DISPONIVEL) && preRequisitosConcluidos(atividade)) {
 		retorno.add(atividade);
 	    }
 	}
@@ -101,19 +102,20 @@ public class Gestor extends Agent {
     }
 
     private boolean preRequisitosConcluidos(Atividade atividade) {
-	if(atividade.getAtividadesPredecessoras() != null) {
+	if (atividade.getAtividadesPredecessoras() != null) {
 	    for (Atividade ativPredecessora : atividade.getAtividadesPredecessoras()) {
-		if(!ativPredecessora.getEstado().equals(TipoEstado.CONCLUIDA)) {
+		if (!ativPredecessora.getEstado().equals(TipoEstado.CONCLUIDA)) {
 		    return false;
 		}
 	    }
 	}
 	return true;
     }
-    
+
     public boolean verificaTodasConcluidas() {
 	for (Atividade atividade : getListaAtividades()) {
-	    if(!atividade.getEstado().equals(TipoEstado.CONCLUIDA) && !atividade.getEstado().equals(TipoEstado.BLOQUEADA)) {
+	    if (!atividade.getEstado().equals(TipoEstado.CONCLUIDA)
+		    && !atividade.getEstado().equals(TipoEstado.BLOQUEADA)) {
 		return false;
 	    }
 	}
@@ -132,11 +134,11 @@ public class Gestor extends Agent {
     public boolean terminouTarefas() {
 	Collection<Atividade> retorno = new LinkedList<Atividade>();
 	for (Atividade atividade : getListaAtividades()) {
-	    if(!atividade.getEstado().equals(TipoEstado.DISPONIVEL)) {
-		return true;
+	    if (atividade.getEstado().equals(TipoEstado.DISPONIVEL)) {
+		return false;
 	    }
 	}
-	return false;
+	return true;
     }
 
 }
