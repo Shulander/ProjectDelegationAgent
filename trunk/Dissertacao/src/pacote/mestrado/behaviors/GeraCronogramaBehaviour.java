@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pacote.mestrado.Gestor;
-import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.services.ControleMembro;
 import pacote.mestrado.services.CustoService;
@@ -31,7 +30,13 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 
     @Override
     public void action() {
-	if (ControleMembro.getInstance().verificaTodosTerminaram()) {
+//	try {
+//	    Thread.sleep(500);
+//	} catch (InterruptedException e) {
+//	    // TODO Auto-generated catch block
+//	    e.printStackTrace();
+//	}
+//	if (ControleMembro.getInstance().verificaTodosTerminaram()) {
 	    System.out.println("------------ Atividades -----------");
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 	    DecimalFormat reaisFormat = new DecimalFormat();
@@ -41,14 +46,9 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 		System.out.print(atividade.getMembroNome() + "\t");
 		System.out.print(atividade.getNome() + "\t");
 		System.out.print(dateFormat.format(atividade.getDataInicioExecucao()) + "\t");
-		System.out.print(dateFormat.format(DateUtil.subtraiDiasUteis(atividade.getDataTerminoExecucao(), 1))
-			+ "\t");
-		System.out.print(DateUtil.getDiferencaEmDiasUteis(atividade.getDataInicioExecucao(),
-			atividade.getDataTerminoExecucao())
-			+ "\t");
-		System.out.print(reaisFormat.format(calculaCusto(atividade,
-			CustoService.getInstance().getCusto(atividade.getMembroNome())))
-			+ "\t");
+		System.out.print(dateFormat.format(DateUtil.subtraiDiasUteis(atividade.getDataTerminoExecucao(), 1)) + "\t");
+		System.out.print(DateUtil.getDiferencaEmDiasUteis(atividade.getDataInicioExecucao(), atividade.getDataTerminoExecucao()) + "\t");
+		System.out.print(reaisFormat.format(calculaCusto(atividade, CustoService.getInstance().getCusto(atividade.getMembroNome()))) + "\t");
 		System.out.println("");
 	    }
 	    System.out.println("Total:");
@@ -56,10 +56,12 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 		System.out.println(projeto + ": " + reaisFormat.format(custoProjeto.get(projeto)));
 	    }
 	    System.out.println("------------ Atividades -----------");
+	    System.out.println(ControleMembro.getInstance().toString());
+	    
 	    terminou = true;
-	} else {
-	    block(50);
-	}
+//	} else {
+//	    block(50);
+//	}
     }
 
     private Double calculaCusto(Atividade atividade, double custo) {

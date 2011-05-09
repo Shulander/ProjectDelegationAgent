@@ -13,6 +13,7 @@ import pacote.mestrado.entidades.MensagemTO;
 import pacote.mestrado.services.ControleAtividade;
 import pacote.mestrado.services.ControleGestor;
 import pacote.mestrado.services.ControleMembro;
+import pacote.mestrado.services.ExperienciaService;
 
 public class ExecucaoAtividadeBehavior extends SimpleBehaviour {
     private static final long serialVersionUID = 2605429686659053550L;
@@ -55,9 +56,8 @@ public class ExecucaoAtividadeBehavior extends SimpleBehaviour {
 	terminou = true;
     }
 
-    private void calculaXPganho(Membro membro2) {
-	// TODO Auto-generated method stub
-
+    private void calculaXPganho(Membro membro) {
+	membro = ExperienciaService.calculaExperienciaGanha(membro);
     }
 
     private void notificaGestorTerminoTarefa(Atividade atividade) throws IOException {

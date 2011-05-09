@@ -35,6 +35,8 @@ public class HabilidadeDAO {
 		habilidade.setArea(rs.getString("area"));
 		habilidade.setNome(rs.getString("nome"));
 		habilidade.setNivel(TipoNivel.obterPorCodigo(rs.getInt("nivel")));
+		//TODO recuperar a experiencia do banco
+		habilidade.setXp(0);
 		habilidades.add(habilidade);
 		System.out.println(habilidade.toString());
 	    }
