@@ -91,7 +91,6 @@ public class BuscaTarefaBehaviour extends SimpleBehaviour {
 		break;
 	    default:
 		setTerminou(true);
-		// doDelete();
 		System.out.println("Tarefa a realizar: " + membro.getAtividadeEscolhida().getNome());
 	    }
 	} catch (IOException e) {

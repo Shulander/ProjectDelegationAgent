@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
+import pacote.mestrado.behaviors.GeraCronogramaBehaviour;
 import pacote.mestrado.behaviors.InformaTarefasBehaviour;
 import pacote.mestrado.dao.AtividadeDAO;
 import pacote.mestrado.dao.HabilidadeDAO;
@@ -30,6 +31,7 @@ public class Gestor extends Agent {
 	System.out.println("Agente " + getAID().getLocalName() + " vivo! :)");
 	inicializaListaAtividades();
 	addBehaviour(new InformaTarefasBehaviour(this));
+	
     }
 
     public HashMap<String, Atividade> getHashMembroAtividadeAlocadas() {
