@@ -9,12 +9,12 @@ import java.io.IOException;
 import java.util.Collection;
 
 import pacote.mestrado.Membro;
+import pacote.mestrado.controle.ControleAtividade;
+import pacote.mestrado.controle.ControleGestor;
+import pacote.mestrado.controle.ControleMembro;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Habilidade;
 import pacote.mestrado.entidades.MensagemTO;
-import pacote.mestrado.services.ControleAtividade;
-import pacote.mestrado.services.ControleGestor;
-import pacote.mestrado.services.ControleMembro;
 import pacote.mestrado.services.TempoExecucaoService;
 
 /**

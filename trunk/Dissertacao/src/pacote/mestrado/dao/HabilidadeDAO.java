@@ -19,7 +19,7 @@ public class HabilidadeDAO {
 
     public List<Habilidade> getHabilidades(int id, String atributo) {
 	try {
-	    if (!atributo.equals("Membro") && !atributo.equals("Atividade")) {
+	    if (!atributo.equals("Membro") && !atributo.equals("Atividade") && !atributo.equals("MembroAprendizado")) {
 		System.out.println("Erro! Atributo tem que ser Membro ou Atividade!");
 		return null;
 	    }

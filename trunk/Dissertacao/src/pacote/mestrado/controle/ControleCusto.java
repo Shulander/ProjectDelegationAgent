@@ -1,4 +1,4 @@
-package pacote.mestrado.services;
+package pacote.mestrado.controle;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -6,10 +6,11 @@ import java.util.Map;
 
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
+import pacote.mestrado.services.TempoExecucaoService;
 
-public class CustoService {
+public class ControleCusto {
 
-    private static CustoService instance;
+    private static ControleCusto instance;
 
     private static Map<String, Double> custosMembro = new HashMap<String, Double>();
 
@@ -21,9 +22,9 @@ public class CustoService {
 	return custosMembro.get(membro);
     }
 
-    public static CustoService getInstance() {
+    public static ControleCusto getInstance() {
 	if (instance == null) {
-	    instance = new CustoService();
+	    instance = new ControleCusto();
 	}
 	return instance;
     }

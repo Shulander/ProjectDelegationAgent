@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pacote.mestrado.Gestor;
+import pacote.mestrado.controle.ControleCusto;
+import pacote.mestrado.controle.ControleMembro;
 import pacote.mestrado.entidades.Atividade;
-import pacote.mestrado.services.ControleMembro;
-import pacote.mestrado.services.CustoService;
 import pacote.mestrado.services.DateUtil;
 
 public class GeraCronogramaBehaviour extends SimpleBehaviour {
@@ -33,7 +33,6 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 //	try {
 //	    Thread.sleep(500);
 //	} catch (InterruptedException e) {
-//	    // TODO Auto-generated catch block
 //	    e.printStackTrace();
 //	}
 //	if (ControleMembro.getInstance().verificaTodosTerminaram()) {
@@ -48,7 +47,7 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 		System.out.print(dateFormat.format(atividade.getDataInicioExecucao()) + "\t");
 		System.out.print(dateFormat.format(DateUtil.subtraiDiasUteis(atividade.getDataTerminoExecucao(), 1)) + "\t");
 		System.out.print(DateUtil.getDiferencaEmDiasUteis(atividade.getDataInicioExecucao(), atividade.getDataTerminoExecucao()) + "\t");
-		System.out.print(reaisFormat.format(calculaCusto(atividade, CustoService.getInstance().getCusto(atividade.getMembroNome()))) + "\t");
+		System.out.print(reaisFormat.format(calculaCusto(atividade, ControleCusto.getInstance().getCusto(atividade.getMembroNome()))) + "\t");
 		System.out.println("");
 	    }
 	    System.out.println("Total:");

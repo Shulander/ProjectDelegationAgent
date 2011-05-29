@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pacote.mestrado.Membro;
+import pacote.mestrado.controle.ControleAtividade;
+import pacote.mestrado.controle.ControleMembro;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.MensagemTO;
-import pacote.mestrado.services.ControleAtividade;
-import pacote.mestrado.services.ControleMembro;
 
 /**
  * Esse agente irá iniciar a execução da primeira etapa de negociação com o

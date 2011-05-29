@@ -24,7 +24,7 @@ public class ExperienciaService {
     public static Membro calculaExperienciaGanha(Membro membro) {
 	Collection<Habilidade> habilidades = new LinkedList<Habilidade>();
 	habilidades.addAll(membro.getHabilidades());
-	// para cada habilide
+	// para cada habilidade
 	for (Habilidade habMembro : habilidades) {
 	    // encontra a habilidade da tarefa mais compativel
 	    Habilidade habTarefa = encontraMelhorHabilidade(habMembro, membro.getAtividadeEscolhida()
@@ -41,45 +41,89 @@ public class ExperienciaService {
 	return membro;
     }
 
-    private static void calculaExperiencia(Habilidade habMembro, Habilidade habTarefa, int diasTrabalhados,
-	    Collection<Habilidade> habilidades) {
+    /**
+     * Calcula o numero de pontos de exeperiencia ganho para uma habilidade do
+     * membro
+     * 
+     * @param habMembro
+     *            Habilidade do membro que calcularemos a exeperiencia
+     * @param habilidadesTarefa
+     *            Habilidades da tarefa
+     * @return
+     */
+    public static double calculaExperienciaHabilidade(Habilidade habMembro, Collection<Habilidade> habilidadesTarefa) {
+	Habilidade habTarefa = encontraMelhorHabilidade(habMembro, habilidadesTarefa);
+	if (habTarefa != null) {
+	    return calculaExperienciaGanha(habTarefa, habMembro);
+	}
+	return 0;
+    }
+
+    /**
+     * Calcula o numero de pontos de exeperiencia ganho para uma habilidade do
+     * membro
+     * 
+     * @param habTarefa
+     * @param habMembro
+     * @return
+     */
+    public static double calculaExperienciaGanha(Habilidade habTarefa, Habilidade habMembro) {
+	// caso os parametros sejam nulos reotorno 0 como experiencia ganha
+	if (habTarefa == null || habMembro == null) {
+	    return 0;
+	}
 
 	// calcula a diferença entre o nivel da tarefa e o nivel do membro
 	// tarefas mais dificies serao um numero positivo
 	// tarefas mais faceis serao um numero negativo
 	Integer diferencaNiveis = habTarefa.getNivel().diferencaNiveis(habMembro.getNivel());
+	double xp = 0;
 	// caso a diferença seja maior do que 1 nao fazemos nada pois nao é
 	// possivel realizar ou aprender
 	if (Math.abs(diferencaNiveis) <= 1) {
 	    // xp basico por dia e o numero de dias
-	    int xp = XP_GANHO_POR_DIA * diasTrabalhados;
-	    
+	    xp = XP_GANHO_POR_DIA;
+
 	    // aplicamos o modificador de niveis
 	    if (diferencaNiveis == -1) {
 		xp *= XP_MODIFICADOR_NIVEL_ABAIXO;
 	    } else if (diferencaNiveis == 1) {
 		xp *= XP_MODIFICADOR_NIVEL_ACIMA;
 	    }
-	    
+	}
+	return xp;
+    }
+
+    private static void calculaExperiencia(Habilidade habMembro, Habilidade habTarefa, int diasTrabalhados,
+	    Collection<Habilidade> habilidades) {
+
+	double xp = calculaExperienciaGanha(habTarefa, habMembro);
+	xp *= diasTrabalhados;
+	// caso o xp seja positivo, foi possivel ganhar xp com a tarefa
+	// possivel realizar ou aprender
+	if (xp > 0) {
 	    Habilidade habXPGanho;
 	    if (habMembro.getNome().equals(habTarefa.getNome())) {
-		// caso a habilidade tenha o mesmo nome utilizamos a atividade do membro
+		// caso a habilidade tenha o mesmo nome utilizamos a atividade
+		// do membro
 		habXPGanho = habMembro;
 	    } else {
-		// caso contrario é buscada uma outra tarefa para ganhar experiencia
+		// caso contrario é buscada uma outra tarefa para ganhar
+		// experiencia
 		// caso nao encontre é criada uma nova habilidade
 		habXPGanho = buscaTarefaMesmaHabilidade(habTarefa, habilidades);
 	    }
 
 	    // calcula o xp para a habilidade
-	    habXPGanho.setXp(calculaXP(habXPGanho, xp));
+	    habXPGanho.setXp(calculaXP(habXPGanho, (int) xp));
 	    // verifica se deve trocar de nivel
 	    habXPGanho.setNivel(calculaNovoNivel(habXPGanho.getXp()));
 	}
     }
 
     /**
-     * Calcula o novo nivel  a partir do xp
+     * Calcula o novo nivel a partir do xp
+     * 
      * @param xp
      * @return
      */
@@ -97,6 +141,7 @@ public class ExperienciaService {
 
     /**
      * Retorna o novo xp baseado no nivel e no xp ganho.
+     * 
      * @param habXPGanho
      * @param xp
      * @return
@@ -122,37 +167,42 @@ public class ExperienciaService {
 
     /**
      * Busca uma habilidade que tenha o mesmo nome de habilidae
+     * 
      * @param habTarefa
      * @param habilidades
      * @return
      */
     private static Habilidade buscaTarefaMesmaHabilidade(Habilidade habTarefa, Collection<Habilidade> habilidades) {
 	// caso encontre uma tarefa com o mesmo nome retorna
-	for (Habilidade habilidade : habilidades) {
-	    if (habilidade.getNome().equals(habTarefa.getNome())) {
-		return habilidade;
+	if (habilidades != null) {
+	    for (Habilidade habilidade : habilidades) {
+		if (habilidade.getNome().equals(habTarefa.getNome())) {
+		    return habilidade;
+		}
 	    }
 	}
 
-	// caso contrario cria uma nova habilidade e adiciona a lista de habilidades
+	// caso contrario cria uma nova habilidade e adiciona a lista de
+	// habilidades
 	Habilidade retorno = new Habilidade();
 	retorno.setArea(habTarefa.getArea());
 	retorno.setNivel(TipoNivel.JUNIOR);
 	retorno.setNome(habTarefa.getNome());
 	retorno.setXp(0);
-	
+
 	habilidades.add(retorno);
 	return retorno;
     }
 
     /**
-     * procura a habilidade de requisitos da atividade mais compativel com a habilidade do membro 
+     * procura a habilidade de requisitos da atividade mais compativel com a
+     * habilidade do membro
+     * 
      * @param habMembro
      * @param requisitosHabilidades
      * @return
      */
-    private static Habilidade encontraMelhorHabilidade(Habilidade habMembro,
-	    Collection<Habilidade> requisitosHabilidades) {
+    public static Habilidade encontraMelhorHabilidade(Habilidade habMembro, Collection<Habilidade> requisitosHabilidades) {
 
 	Habilidade retorno = null;
 	double coef = -1;
@@ -176,6 +226,17 @@ public class ExperienciaService {
 	}
 
 	return retorno;
+    }
+
+    /**
+     * Calcula o percentual que o parametro equivale com a experiencia maxima
+     * possivel de ganhar em 1 dia.
+     * 
+     * @param experienciaAtual
+     * @return
+     */
+    public static double calculaPercentualRelativoMaximoDia(double experienciaAtual) {
+	return experienciaAtual / (XP_GANHO_POR_DIA * XP_MODIFICADOR_NIVEL_ACIMA);
     }
 
 }
