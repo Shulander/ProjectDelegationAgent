@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import pacote.mestrado.Membro;
-import pacote.mestrado.services.CustoService;
+import pacote.mestrado.controle.ControleCusto;
 
 public class MembroDAO {
     private Connection connection;
@@ -26,7 +26,7 @@ public class MembroDAO {
 		membro.setId(rs.getInt("id"));
 		membro.setNome(rs.getString("nome"));
 		membro.setSalario(rs.getDouble("salario"));
-		CustoService.getInstance().adicionaCusto(membro.getNome(), membro.getSalario());
+		ControleCusto.getInstance().adicionaCusto(membro.getNome(), membro.getSalario());
 	    }
 	    rs.close();
 	    stmt.close();

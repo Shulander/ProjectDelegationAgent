@@ -3,10 +3,10 @@ package pacote.mestrado.services.impl;
 import java.util.Collection;
 import java.util.List;
 
+import pacote.mestrado.controle.ControleCusto;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
 import pacote.mestrado.services.CompatibilidadeTarefaService;
-import pacote.mestrado.services.CustoService;
 import pacote.mestrado.services.EscolhaTarefaService;
 import pacote.mestrado.services.TempoExecucaoService;
 
@@ -25,7 +25,7 @@ public class EscolhaTarefaMenorCustoServiceImpl implements EscolhaTarefaService 
 	// para cada atividade encontrada calculo o custo
 	for (Atividade atividade : atividades) {
 	    TempoExecucaoService.calculcaDataEntrega(nomeMembro, atividade, habilidades);
-	    double custo = CustoService.calculaCustoEntrega(nomeMembro, atividade, habilidades);
+	    double custo = ControleCusto.calculaCustoEntrega(nomeMembro, atividade, habilidades);
 
 	    // caso o custo seja menor que o custo atual, entao encontramos uma
 	    // tarefa mais barata em ser feita
@@ -46,10 +46,10 @@ public class EscolhaTarefaMenorCustoServiceImpl implements EscolhaTarefaService 
 
 	// TempoExecucaoService.calculcaDataEntrega(nomeMembroA, atividade,
 	// habilidadesA);
-	double custoA = CustoService.calculaCustoEntrega(nomeMembroA, atividade, habilidadesA);
+	double custoA = ControleCusto.calculaCustoEntrega(nomeMembroA, atividade, habilidadesA);
 	// TempoExecucaoService.calculcaDataEntrega(nomeMembroB, atividade,
 	// habilidadesB);
-	double custoB = CustoService.calculaCustoEntrega(nomeMembroB, atividade, habilidadesB);
+	double custoB = ControleCusto.calculaCustoEntrega(nomeMembroB, atividade, habilidadesB);
 
 	return custoB < custoA;
     }

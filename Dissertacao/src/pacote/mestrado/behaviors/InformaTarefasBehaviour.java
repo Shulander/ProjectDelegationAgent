@@ -10,12 +10,12 @@ import java.util.Collection;
 import java.util.List;
 
 import pacote.mestrado.Gestor;
+import pacote.mestrado.controle.ControleGestor;
+import pacote.mestrado.controle.ControleMembro;
 import pacote.mestrado.dominios.TipoEstado;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.MensagemTO;
-import pacote.mestrado.services.ControleGestor;
-import pacote.mestrado.services.ControleMembro;
 
 public class InformaTarefasBehaviour extends CyclicBehaviour {
     private static final long serialVersionUID = -1703109073768236603L;

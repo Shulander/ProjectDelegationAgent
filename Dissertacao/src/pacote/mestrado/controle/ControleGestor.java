@@ -1,4 +1,4 @@
-package pacote.mestrado.services;
+package pacote.mestrado.controle;
 
 public class ControleGestor {
 

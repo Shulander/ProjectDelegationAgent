@@ -3,6 +3,7 @@ package pacote.mestrado.services;
 import java.util.Collection;
 import java.util.Date;
 
+import pacote.mestrado.controle.ControleAtividade;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
 

@@ -1,7 +1,5 @@
 package pacote.mestrado.services;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -83,41 +81,4 @@ public class DateUtil {
 	return cal.getTime();
     }
 
-    public static void main(String[] args) {
-	SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-	try {
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("28/05/2007"),
-		    (Date) format.parseObject("15/06/2007")));
-
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("28/05/2007"),
-		    (Date) format.parseObject("20/06/2007")));
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("20/06/2007"),
-		    (Date) format.parseObject("12/07/2007")));
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("20/06/2007"),
-		    (Date) format.parseObject("05/07/2007")));
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("20/06/2007"),
-		    (Date) format.parseObject("16/08/2007")));
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("05/07/2007"),
-		    (Date) format.parseObject("09/08/2007")));
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("12/07/2007"),
-		    (Date) format.parseObject("10/08/2007")));
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("16/08/2007"),
-		    (Date) format.parseObject("10/10/2007")));
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("28/05/2007"),
-		    (Date) format.parseObject("08/06/2007")));
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("08/06/2007"),
-		    (Date) format.parseObject("25/06/2007")));
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("08/06/2007"),
-		    (Date) format.parseObject("09/07/2007")));
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("25/06/2007"),
-		    (Date) format.parseObject("06/07/2007")));
-	    System.out.println(DateUtil.getDiferencaEmDiasUteis((Date) format.parseObject("09/07/2007"),
-		    (Date) format.parseObject("20/07/2007")));
-
-	} catch (ParseException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-
-    }
 }

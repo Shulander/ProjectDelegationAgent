@@ -1,8 +1,10 @@
-package pacote.mestrado.services;
+package pacote.mestrado.controle;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import pacote.mestrado.services.DateUtil;
 
 public class ControleAtividade {
 

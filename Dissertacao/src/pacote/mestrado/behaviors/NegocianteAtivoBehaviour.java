@@ -8,9 +8,9 @@ import jade.lang.acl.UnreadableException;
 import java.io.IOException;
 
 import pacote.mestrado.Membro;
+import pacote.mestrado.controle.ControleMembro;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.MensagemTO;
-import pacote.mestrado.services.ControleMembro;
 
 /**
  * Esse Behaviour se inicia quando o Agente encontrou uma tarefa para realizar,

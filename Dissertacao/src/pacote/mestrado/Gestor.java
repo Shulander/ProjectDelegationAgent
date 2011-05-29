@@ -8,13 +8,12 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
-import pacote.mestrado.behaviors.GeraCronogramaBehaviour;
 import pacote.mestrado.behaviors.InformaTarefasBehaviour;
+import pacote.mestrado.controle.ControleAtividade;
 import pacote.mestrado.dao.AtividadeDAO;
 import pacote.mestrado.dao.HabilidadeDAO;
 import pacote.mestrado.dominios.TipoEstado;
 import pacote.mestrado.entidades.Atividade;
-import pacote.mestrado.services.ControleAtividade;
 
 public class Gestor extends Agent {
     private static final long serialVersionUID = -7779496563622856447L;

@@ -4,8 +4,10 @@ import jade.core.Agent;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import pacote.mestrado.behaviors.BuscaTarefaBehaviour;
+import pacote.mestrado.controle.ControleAprendizado;
 import pacote.mestrado.dao.HabilidadeDAO;
 import pacote.mestrado.dao.MembroDAO;
 import pacote.mestrado.entidades.Agenda;
@@ -87,6 +89,10 @@ public class Membro extends Agent {
 	// Inicializa habilidades
 	HabilidadeDAO daoHab = new HabilidadeDAO();
 	habilidades = daoHab.getHabilidades(this.id, "Membro");
+	// Carrega lista de hbilidades de aprendizado
+	List<Habilidade> habilidadesAprendizado = daoHab.getHabilidades(this.id, "MembroAprendizado");
+	ControleAprendizado.getInstance().adicionaHabilidades(getAID().getLocalName(), habilidadesAprendizado);
+	
 	atividadesInvalidas = new LinkedList<Atividade>();
 	/*
 	 * System.out.println(toString()); for (Habilidade habilidade :
