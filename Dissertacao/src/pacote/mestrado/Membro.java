@@ -10,7 +10,6 @@ import pacote.mestrado.behaviors.BuscaTarefaBehaviour;
 import pacote.mestrado.controle.ControleAprendizado;
 import pacote.mestrado.dao.HabilidadeDAO;
 import pacote.mestrado.dao.MembroDAO;
-import pacote.mestrado.entidades.Agenda;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
 import pacote.mestrado.services.EscolhaTarefaService;
@@ -29,7 +28,6 @@ public class Membro extends Agent {
     private double salario; // homem/hora
     private Collection<Habilidade> habilidades; // habilidades que a pessoa
 						// possui
-    private Agenda agenda; // tempo disponivel da pessoa
     private Atividade atividadeEscolhida;
     private Collection<Atividade> atividadesInvalidas; // atividades que o
 						       // agente quis, mas por
