@@ -21,9 +21,7 @@ public class Atividade implements Serializable {
     // private Periodo periodoExecucao;
     private Date dataInicioExecucao;
     private Date dataTerminoExecucao;
-    private Double orcamento;
     private Collection<Habilidade> requisitosHabilidades;
-    private Double duracao;
     private TipoEstado estado; // bloqueada - disponivel - alocada
 
     private String membroNome;
@@ -88,14 +86,6 @@ public class Atividade implements Serializable {
 	this.dataEntrega = dataEntrega;
     }
 
-    public Double getOrcamento() {
-	return orcamento;
-    }
-
-    public void setOrcamento(Double orcamento) {
-	this.orcamento = orcamento;
-    }
-
     public Collection<Habilidade> getRequisitosHabilidades() {
 	return requisitosHabilidades;
     }
@@ -128,7 +118,6 @@ public class Atividade implements Serializable {
 	// }
 	str.append("Data de início: " + this.dataInicial + "\n");
 	str.append("Data de entrega: " + this.dataEntrega + "\n");
-	str.append("Orçamento: " + this.orcamento + "\n");
 	str.append("Estado: " + this.estado + "\n");
 	// imprime atividades predecessoras
 	if (!atividadesPredecessoras.isEmpty()) {
@@ -150,14 +139,6 @@ public class Atividade implements Serializable {
 	    str.append("Esta atividade nao possui requisitos." + "\n");
 	}
 	return str.toString();
-    }
-
-    public void setDuracao(Double duracao) {
-	this.duracao = duracao;
-    }
-
-    public double getDuracao() {
-	return duracao;
     }
 
     @Override
