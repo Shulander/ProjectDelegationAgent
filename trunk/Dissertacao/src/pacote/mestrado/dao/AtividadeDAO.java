@@ -33,9 +33,9 @@ public class AtividadeDAO {
 		// atividade.getPeriodoExecucao().setFim(rs.getDate("dataEntrega"));
 		atividade.setDataInicial(rs.getDate("dataInicial"));
 		atividade.setDataEntrega(rs.getDate("dataEntrega"));
-		atividade.setDuracao(rs.getDouble("duracao"));
+//		atividade.setDuracao(rs.getDouble("duracao"));
 		atividade.setEstado(TipoEstado.obterPorCodigo(rs.getString("estado")));
-		atividade.setOrcamento(rs.getDouble("orcamento"));
+//		atividade.setOrcamento(rs.getDouble("orcamento"));
 		atividades.add(atividade);
 	    }
 	    rs.close();
