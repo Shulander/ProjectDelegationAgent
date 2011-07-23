@@ -10,9 +10,6 @@ public interface EscolhaTarefaService {
     public Atividade selecionaAtividadeHabilidade(Collection<Atividade> atividadesDisponiveis, String nomeMembro,
 	    Collection<Habilidade> habilidades, Collection<Atividade> atividadesInvalidas);
 
-    // double calculaGrauCompatibilidade(Atividade atividade,
-    // Collection<Habilidade> habilidades);
-
     boolean verificaHabilidadesBMelhorHabilidadesA(Atividade atividade, String nomeMembroA,
 	    Collection<Habilidade> habilidadesA, String nomeMembroB, Collection<Habilidade> habilidadesB);
 
