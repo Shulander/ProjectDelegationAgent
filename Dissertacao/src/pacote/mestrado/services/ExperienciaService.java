@@ -13,7 +13,7 @@ public class ExperienciaService {
     private static final double XP_MODIFICADOR_NIVEL_ACIMA = 3;
     private static final double XP_MODIFICADOR_NIVEL_ABAIXO = 0.2;
 
-    private static final int XP_JUNIOR_TO_PLENO = 2600;
+    private static final int XP_JUNIOR_TO_PLENO = 26000;
     private static final int XP_PLENO_TO_SENIOR = XP_JUNIOR_TO_PLENO + 78000;
     private static final int XP_SENIOR_TO_MASTER = XP_PLENO_TO_SENIOR + 130000;
 
