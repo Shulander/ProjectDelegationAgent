@@ -43,7 +43,7 @@ public class EscolhaTarefaAprendizadoImpl implements EscolhaTarefaService {
     }
 
     private double calculaCompatibilidade(double compatibilidadeBase, double compatibilidadeAprendizado) {
-	return (compatibilidadeBase * ESCOLHA_TAREFA_RATIO + compatibilidadeAprendizado * (1 - ESCOLHA_TAREFA_RATIO)) / 2;
+	return (compatibilidadeBase * ESCOLHA_TAREFA_RATIO + compatibilidadeAprendizado * (1 - ESCOLHA_TAREFA_RATIO));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class EscolhaTarefaAprendizadoImpl implements EscolhaTarefaService {
 	double compatibilidadeAprendizadoB = AprendizadoService.calculaCompatibilidadeAprendizado(atividade, habilidadesB, habilidadesAprendizadoB);
 	double compatibilidadeB = calculaCompatibilidade(compatibilidadeBaseB, compatibilidadeAprendizadoB);
 
-	return compatibilidadeB < compatibilidadeA;
+	return compatibilidadeB > compatibilidadeA;
     }
 
 }

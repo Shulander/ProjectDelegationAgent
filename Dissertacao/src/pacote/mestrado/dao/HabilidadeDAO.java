@@ -34,7 +34,9 @@ public class HabilidadeDAO {
 		habilidade.setId(rs.getInt("fk_idHabilidade"));
 		habilidade.setArea(rs.getString("area"));
 		habilidade.setNome(rs.getString("nome"));
-		habilidade.setNivel(TipoNivel.obterPorCodigo(rs.getInt("nivel")));
+		if(!atributo.equals("MembroAprendizado")) {
+		    habilidade.setNivel(TipoNivel.obterPorCodigo(rs.getInt("nivel")));
+		}
 		//TODO recuperar a experiencia do banco
 		habilidade.setXp(0);
 		habilidades.add(habilidade);

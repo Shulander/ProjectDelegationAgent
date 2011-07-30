@@ -4,14 +4,19 @@ import jade.core.behaviours.SimpleBehaviour;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import pacote.mestrado.Gestor;
+import pacote.mestrado.Membro;
 import pacote.mestrado.controle.ControleCusto;
 import pacote.mestrado.controle.ControleMembro;
+import pacote.mestrado.controle.ControleXPMembro;
 import pacote.mestrado.entidades.Atividade;
+import pacote.mestrado.entidades.Habilidade;
 import pacote.mestrado.services.DateUtil;
+import pacote.mestrado.services.ExperienciaService;
 
 public class GeraCronogramaBehaviour extends SimpleBehaviour {
     private static final long serialVersionUID = -6753054189571569660L;
@@ -49,6 +54,7 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 		System.out.print(DateUtil.getDiferencaEmDiasUteis(atividade.getDataInicioExecucao(), atividade.getDataTerminoExecucao()) + "\t");
 		System.out.print(reaisFormat.format(calculaCusto(atividade, ControleCusto.getInstance().getCusto(atividade.getMembroNome()))) + "\t");
 		System.out.println("");
+		imprimeExperienciasGanhaAtividade(atividade);
 	    }
 	    System.out.println("Total:");
 	    for (String projeto : custoProjeto.keySet()) {
@@ -61,6 +67,29 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 //	} else {
 //	    block(50);
 //	}
+    }
+    
+    private void imprimeExperienciasGanhaAtividade(Atividade atividade) {
+	Collection<Habilidade> habilidades = ControleXPMembro.getInstance().getHabilidades(atividade.getMembroNome());
+	int diasUteis = DateUtil.getDiferencaEmDiasUteis(atividade.getDataInicioExecucao(), atividade.getDataTerminoExecucao());
+	for (Habilidade habMembro : habilidades) {
+	    
+	    if(habMembro.getArea().equals("Testes")) {
+		habMembro.getId();
+	    }
+	    
+	    // encontramos a habilidae da atividade que tenha melhor
+	    // compatibilidade com a tarefa do membro
+	    Habilidade habTarefa = ExperienciaService.encontraMelhorHabilidade(habMembro,
+		    atividade.getRequisitosHabilidades());
+	    
+	    // calculamos a experiencia que ela dará
+	    double experiencia = ExperienciaService.calculaExperienciaGanha(habTarefa, habMembro);
+	    if(experiencia > 0 && habMembro.getNome().equals(habTarefa.getNome())) {
+		experiencia = experiencia * diasUteis;
+		System.out.println("\t"+habMembro.getArea() + "\t" +  habMembro.getNome() + "\t"+experiencia);
+	    }
+	}
     }
 
     private Double calculaCusto(Atividade atividade, double custo) {
