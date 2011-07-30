@@ -2,3 +2,8 @@
 INSERT INTO `mestrado2`.`membros` (`id`, `nome`, `salario`) VALUES (NULL, 'marcos', '45');
 INSERT INTO `mestrado2`.`habilidades` (`id`, `fk_idMembro`, `fk_idHabilidade`, `fk_idAtividade`, `fk_idMembroAprendizado`, `nivel`, `xp`) VALUES (NULL, '15', '1', '0', '0', '2', ''), (NULL, '15', '2', '0', '0', '2', '');
 INSERT INTO `mestrado2`.`habilidades` (`id`, `fk_idMembro`, `fk_idHabilidade`, `fk_idAtividade`, `fk_idMembroAprendizado`, `nivel`, `xp`) VALUES (NULL, '', '1', '', '15', '', '');
+
+---Outros----
+INSERT INTO `mestrado2`.`habilidades` (`id`, `fk_idMembro`, `fk_idHabilidade`, `fk_idAtividade`, `fk_idMembroAprendizado`, `nivel`, `xp`) VALUES (NULL, '', '3', '', '5', '', ''), (NULL, '', '3', '', '8', '', '');
+INSERT INTO `mestrado2`.`habilidades` (`id`, `fk_idMembro`, `fk_idHabilidade`, `fk_idAtividade`, `fk_idMembroAprendizado`, `nivel`, `xp`) VALUES (NULL, '', '3', '', '9', '', ''), (NULL, '', '4', '', '9', '', '');
+INSERT INTO `mestrado2`.`habilidades` (`id`, `fk_idMembro`, `fk_idHabilidade`, `fk_idAtividade`, `fk_idMembroAprendizado`, `nivel`, `xp`) VALUES (NULL, '', '7', '', '12', '', ''), (NULL, '', '7', '', '13', '', ''), (NULL, '', '7', '', '14', '', '');
