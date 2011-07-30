@@ -1,0 +1,4 @@
+---Marcos----
+INSERT INTO `mestrado2`.`membros` (`id`, `nome`, `salario`) VALUES (NULL, 'marcos', '45');
+INSERT INTO `mestrado2`.`habilidades` (`id`, `fk_idMembro`, `fk_idHabilidade`, `fk_idAtividade`, `fk_idMembroAprendizado`, `nivel`, `xp`) VALUES (NULL, '15', '1', '0', '0', '2', ''), (NULL, '15', '2', '0', '0', '2', '');
+INSERT INTO `mestrado2`.`habilidades` (`id`, `fk_idMembro`, `fk_idHabilidade`, `fk_idAtividade`, `fk_idMembroAprendizado`, `nivel`, `xp`) VALUES (NULL, '', '1', '', '15', '', '');

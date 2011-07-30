@@ -30,11 +30,11 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 
     @Override
     public void action() {
-//	try {
-//	    Thread.sleep(500);
-//	} catch (InterruptedException e) {
-//	    e.printStackTrace();
-//	}
+	try {
+	    Thread.sleep(500);
+	} catch (InterruptedException e) {
+	    e.printStackTrace();
+	}
 //	if (ControleMembro.getInstance().verificaTodosTerminaram()) {
 	    System.out.println("------------ Atividades -----------");
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
