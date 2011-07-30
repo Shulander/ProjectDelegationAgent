@@ -26,11 +26,11 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
     private Gestor gestor;
 
     private static Map<String, Double> custoProjeto;
-    private static Map<String, Double> experienciaGanhaProjeto;
+    private static Map<String, Integer> experienciaGanhaProjeto;
 
     public GeraCronogramaBehaviour(Gestor gestor) {
 	custoProjeto = new HashMap<String, Double>();
-	experienciaGanhaProjeto = new HashMap<String, Double>();
+	experienciaGanhaProjeto = new HashMap<String, Integer>();
 	this.gestor = gestor;
 	terminou = false;
     }
@@ -46,7 +46,7 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 	    System.out.println("------------ Atividades -----------");
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 	    DecimalFormat reaisFormat = new DecimalFormat();
-	    reaisFormat.applyPattern("R$ #,##0.00");
+	    reaisFormat.applyPattern("#,##0.00");
 	    for (Atividade atividade : gestor.getListaAtividades()) {
 		System.out.print(atividade.getId() + "\t");
 		System.out.print(atividade.getMembroNome() + "\t");
@@ -86,20 +86,20 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 		    atividade.getRequisitosHabilidades());
 	    
 	    // calculamos a experiencia que ela dará
-	    double experiencia = ExperienciaService.calculaExperienciaGanha(habTarefa, habMembro);
+	    int experiencia = (int) ExperienciaService.calculaExperienciaGanha(habTarefa, habMembro);
 	    if(experiencia > 0 && habMembro.getNome().equals(habTarefa.getNome())) {
 		experiencia = experiencia * diasUteis;
-		System.out.println("\t"+habMembro.getArea() + "\t" +  habMembro.getNome() + "\t"+experiencia);
+		System.out.println("\t" +  habMembro.getNome() + "\t"+experiencia);
 		
 		adicionaExperienciaTotalProjeto(atividade.getNome(), experiencia);
 	    }
 	}
     }
     
-    private void adicionaExperienciaTotalProjeto(String nomeAtividade, double experiencia) {
+    private void adicionaExperienciaTotalProjeto(String nomeAtividade, int experiencia) {
 	String projeto = nomeAtividade.substring(0, 2);
 	if (!experienciaGanhaProjeto.containsKey(projeto)) {
-	    experienciaGanhaProjeto.put(projeto, 0.0);
+	    experienciaGanhaProjeto.put(projeto, 0);
 	}
 	experienciaGanhaProjeto.put(projeto, experienciaGanhaProjeto.get(projeto) + experiencia);
     }
