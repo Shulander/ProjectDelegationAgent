@@ -21,7 +21,7 @@ public class ConnectionFactory {
 		} catch (ClassNotFoundException e) {
 		    e.printStackTrace();
 		}
-		conexao = DriverManager.getConnection("jdbc:mysql://localhost/mestrado", "root", "");
+		conexao = DriverManager.getConnection("jdbc:mysql://localhost/mestrado2", "root", "");
 	    }
 	    return conexao;
 	} catch (SQLException e) {

@@ -26,9 +26,11 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
     private Gestor gestor;
 
     private static Map<String, Double> custoProjeto;
+    private static Map<String, Double> experienciaGanhaProjeto;
 
     public GeraCronogramaBehaviour(Gestor gestor) {
 	custoProjeto = new HashMap<String, Double>();
+	experienciaGanhaProjeto = new HashMap<String, Double>();
 	this.gestor = gestor;
 	terminou = false;
     }
@@ -55,10 +57,15 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 		System.out.print(reaisFormat.format(calculaCusto(atividade, ControleCusto.getInstance().getCusto(atividade.getMembroNome()))) + "\t");
 		System.out.println("");
 		imprimeExperienciasGanhaAtividade(atividade);
+		
 	    }
 	    System.out.println("Total:");
 	    for (String projeto : custoProjeto.keySet()) {
 		System.out.println(projeto + ": " + reaisFormat.format(custoProjeto.get(projeto)));
+	    }
+	    System.out.println("Experiência Total:");
+	    for (String projeto : experienciaGanhaProjeto.keySet()) {
+		System.out.println(projeto + ": " + experienciaGanhaProjeto.get(projeto));
 	    }
 	    System.out.println("------------ Atividades -----------");
 	    System.out.println(ControleMembro.getInstance().toString());
@@ -72,12 +79,7 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
     private void imprimeExperienciasGanhaAtividade(Atividade atividade) {
 	Collection<Habilidade> habilidades = ControleXPMembro.getInstance().getHabilidades(atividade.getMembroNome());
 	int diasUteis = DateUtil.getDiferencaEmDiasUteis(atividade.getDataInicioExecucao(), atividade.getDataTerminoExecucao());
-	for (Habilidade habMembro : habilidades) {
-	    
-	    if(habMembro.getArea().equals("Testes")) {
-		habMembro.getId();
-	    }
-	    
+	for (Habilidade habMembro : habilidades) {	    
 	    // encontramos a habilidae da atividade que tenha melhor
 	    // compatibilidade com a tarefa do membro
 	    Habilidade habTarefa = ExperienciaService.encontraMelhorHabilidade(habMembro,
@@ -88,8 +90,18 @@ public class GeraCronogramaBehaviour extends SimpleBehaviour {
 	    if(experiencia > 0 && habMembro.getNome().equals(habTarefa.getNome())) {
 		experiencia = experiencia * diasUteis;
 		System.out.println("\t"+habMembro.getArea() + "\t" +  habMembro.getNome() + "\t"+experiencia);
+		
+		adicionaExperienciaTotalProjeto(atividade.getNome(), experiencia);
 	    }
 	}
+    }
+    
+    private void adicionaExperienciaTotalProjeto(String nomeAtividade, double experiencia) {
+	String projeto = nomeAtividade.substring(0, 2);
+	if (!experienciaGanhaProjeto.containsKey(projeto)) {
+	    experienciaGanhaProjeto.put(projeto, 0.0);
+	}
+	experienciaGanhaProjeto.put(projeto, experienciaGanhaProjeto.get(projeto) + experiencia);
     }
 
     private Double calculaCusto(Atividade atividade, double custo) {
