@@ -10,6 +10,7 @@ import pacote.mestrado.Membro;
 import pacote.mestrado.controle.ControleAtividade;
 import pacote.mestrado.controle.ControleGestor;
 import pacote.mestrado.controle.ControleMembro;
+import pacote.mestrado.controle.ControleXPMembro;
 import pacote.mestrado.dominios.TipoEtapaNegociacao;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.MensagemTO;
@@ -58,6 +59,7 @@ public class ExecucaoAtividadeBehavior extends SimpleBehaviour {
 
     private void calculaXPganho(Membro membro) {
 	membro = ExperienciaService.calculaExperienciaGanha(membro);
+	ControleXPMembro.getInstance().adicionaHabilidades(membro.getAID().getLocalName(), membro.getHabilidades());
     }
 
     private void notificaGestorTerminoTarefa(Atividade atividade) throws IOException {

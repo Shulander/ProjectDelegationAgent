@@ -13,7 +13,9 @@ import pacote.mestrado.dao.MembroDAO;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
 import pacote.mestrado.services.EscolhaTarefaService;
+import pacote.mestrado.services.impl.EscolhaTarefaAprendizadoImpl;
 import pacote.mestrado.services.impl.EscolhaTarefaMaisCompativelServiceImpl;
+import pacote.mestrado.services.impl.EscolhaTarefaMenorCustoServiceImpl;
 
 /**
  * Classe que corresponde ao agente membro de um projeto
@@ -46,7 +48,8 @@ public class Membro extends Agent {
 	// para trocar o comportamento, trocamos a implementacao da escolha da
 	// Tarefa
 	escolhaTarefaService = new EscolhaTarefaMaisCompativelServiceImpl();
-	// escolhaTarefaService = new EscolhaTarefaMenorCustoServiceImpl();
+//	escolhaTarefaService = new EscolhaTarefaMenorCustoServiceImpl();
+//	escolhaTarefaService = new EscolhaTarefaAprendizadoImpl();
 	addBehaviour(new BuscaTarefaBehaviour(this));
     }
 
