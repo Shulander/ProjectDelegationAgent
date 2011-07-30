@@ -19,7 +19,7 @@ public class AtividadeDAO {
 
     public List<Atividade> getAtividades() {
 	try {
-	    String sql = "SELECT * FROM atividades";
+	    String sql = "SELECT * FROM atividades where idProjeto = 1";
 	    PreparedStatement stmt = this.connection.prepareStatement(sql);
 	    ResultSet rs = stmt.executeQuery();
 	    List<Atividade> atividades = new ArrayList<Atividade>();

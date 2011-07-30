@@ -13,7 +13,7 @@ import pacote.mestrado.dao.MembroDAO;
 import pacote.mestrado.entidades.Atividade;
 import pacote.mestrado.entidades.Habilidade;
 import pacote.mestrado.services.EscolhaTarefaService;
-import pacote.mestrado.services.impl.EscolhaTarefaMenorCustoServiceImpl;
+import pacote.mestrado.services.impl.EscolhaTarefaMaisCompativelServiceImpl;
 
 /**
  * Classe que corresponde ao agente membro de um projeto
@@ -45,8 +45,8 @@ public class Membro extends Agent {
 	inicializaMembro();
 	// para trocar o comportamento, trocamos a implementacao da escolha da
 	// Tarefa
-//	 escolhaTarefaService = new EscolhaTarefaMaisCompativelServiceImpl();
-	escolhaTarefaService = new EscolhaTarefaMenorCustoServiceImpl();
+	escolhaTarefaService = new EscolhaTarefaMaisCompativelServiceImpl();
+	// escolhaTarefaService = new EscolhaTarefaMenorCustoServiceImpl();
 	addBehaviour(new BuscaTarefaBehaviour(this));
     }
 
@@ -90,7 +90,7 @@ public class Membro extends Agent {
 	// Carrega lista de hbilidades de aprendizado
 	List<Habilidade> habilidadesAprendizado = daoHab.getHabilidades(this.id, "MembroAprendizado");
 	ControleAprendizado.getInstance().adicionaHabilidades(getAID().getLocalName(), habilidadesAprendizado);
-	
+
 	atividadesInvalidas = new LinkedList<Atividade>();
 	/*
 	 * System.out.println(toString()); for (Habilidade habilidade :
