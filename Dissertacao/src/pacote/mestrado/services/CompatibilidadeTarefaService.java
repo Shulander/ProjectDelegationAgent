@@ -70,12 +70,17 @@ public class CompatibilidadeTarefaService {
 
 	// calculamos a diferenca de niveis de conhecimento
 	Integer diferenca = hab.getNivel().diferencaNiveis(hab2.getNivel());
+
 	if (!getIgnoraNivelAcima()) {
 	    diferenca = Math.abs(diferenca);
 	}
+	
 	// e descontamos pelo coeficiente de 1 que seria o ideal
-	double coefNivel = 1 - (diferenca * COEFICIENTE_NIVEL_CONHECIMENTO);
-
+	double coefNivel = 0;
+	if(Math.abs(diferenca)<=1) {
+	    coefNivel = 1 - (diferenca * COEFICIENTE_NIVEL_CONHECIMENTO); 
+	}
+	
 	// calculamos e comparamos o novo coeficiente pelo antigo.
 	coefHabilide = coefHabilide * coefNivel;
 	return coefHabilide;
